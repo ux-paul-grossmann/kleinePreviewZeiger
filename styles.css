@@ -313,6 +313,43 @@
   background: rgba(255, 255, 255, 0.25);
 }
 
+.kb-copy-btn {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: rgba(0, 0, 0, 0.78);
+  color: #ffffff;
+  border: none;
+  font-size: 12px;
+  font-weight: 600;
+  padding: 8px 14px;
+  border-radius: 8px;
+  backdrop-filter: blur(4px);
+  cursor: pointer;
+  z-index: 4;
+  white-space: nowrap;
+  transition: background 0.15s ease, opacity 0.15s ease;
+}
+
+.kb-copy-btn:hover {
+  background: rgba(0, 0, 0, 0.9);
+}
+
+.kb-copy-hidden {
+  opacity: 0 !important;
+  pointer-events: none !important;
+}
+
+.kb-copy-success {
+  background: var(--kb-btn-primary-bg) !important;
+  color: var(--kb-btn-primary-text) !important;
+}
+
+.kb-image-container.kb-panning-locked {
+  cursor: default;
+}
+
 .kb-header {
   display: flex;
   justify-content: space-between;

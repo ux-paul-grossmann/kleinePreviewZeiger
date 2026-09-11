@@ -115,6 +115,7 @@
   function setupZoomPan(imgContainer, imgEl) {
     let isZoomed = false;
     let rotationAngle = 0;
+    let isPanningLocked = false;
 
     function applyZoomScale() {
       const numScale = parseFloat(currentZoomFactor);
@@ -146,17 +147,84 @@
       imgEl.style.transformOrigin = `${x}% ${y}%`;
     }
 
+    async function copyVisibleCropToClipboard() {
+      const rect = imgContainer.getBoundingClientRect();
+      const dpr = window.devicePixelRatio || 1;
+      const canvas = document.createElement("canvas");
+      canvas.width = Math.round(rect.width * dpr);
+      canvas.height = Math.round(rect.height * dpr);
+      const ctx = canvas.getContext("2d");
+      if (!ctx) throw new Error("Canvas context missing");
+      const zoomScale = parseFloat(currentZoomFactor) || 1;
+      const originStr = imgEl.style.transformOrigin || "center center";
+      let ox = 50, oy = 50;
+      const m = originStr.match(/([\d.]+)%\s+([\d.]+)%/);
+      if (m) { ox = parseFloat(m[1]); oy = parseFloat(m[2]); }
+      const imgW = imgEl.naturalWidth || rect.width;
+      const imgH = imgEl.naturalHeight || rect.height;
+      const coverScale = Math.max(rect.width / imgW, rect.height / imgH);
+      const drawW = imgW * coverScale;
+      const drawH = imgH * coverScale;
+      const originOffsetX = ((ox - 50) * rect.width) / 100;
+      const originOffsetY = ((oy - 50) * rect.height) / 100;
+      ctx.scale(dpr, dpr);
+      ctx.translate(rect.width / 2, rect.height / 2);
+      ctx.rotate((rotationAngle * Math.PI) / 180);
+      ctx.translate(originOffsetX, originOffsetY);
+      ctx.scale(isZoomed ? zoomScale : 1, isZoomed ? zoomScale : 1);
+      ctx.translate(-originOffsetX, -originOffsetY);
+      ctx.translate(-drawW / 2, -drawH / 2);
+      // Canvas darf nie mit tainted imgEl gezeichnet werden (taints bleibt), daher direkt via fetch/CORS
+      let drew = false;
+      try {
+        const res = await fetch(imgEl.src, { mode: "cors" });
+        if (!res.ok) throw new Error(`fetch ${res.status}`);
+        const blob = await res.blob();
+        const bitmap = await createImageBitmap(blob);
+        ctx.drawImage(bitmap, 0, 0, drawW, drawH);
+        drew = true;
+      } catch (e) {
+        console.warn("fetch draw failed", e);
+        // letzter Versuch: direkter draw (wird tainten, aber toBlob wird dann fehlschlagen)
+        try {
+          ctx.drawImage(imgEl, 0, 0, drawW, drawH);
+          drew = true;
+        } catch (ee) {
+          console.warn("direct draw failed", ee);
+        }
+      }
+      if (!drew) throw new Error("Bild konnte nicht gezeichnet werden (CORS)");
+      const blob = await new Promise((resolve, reject) => canvas.toBlob((b) => b ? resolve(b) : reject(new Error("toBlob failed")), "image/png"));
+      const ClipboardItemCtor = window.ClipboardItem || window.ClipboardItem;
+      if (navigator.clipboard && typeof ClipboardItemCtor !== "undefined") {
+        try {
+          await navigator.clipboard.write([new ClipboardItemCtor({ "image/png": blob })]);
+          return;
+        } catch (e) {
+          console.warn("clipboard.write image failed, fallback to text", e);
+        }
+      }
+      // Fallback: URL als Text
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        await navigator.clipboard.writeText(imgEl.src);
+        return;
+      }
+      throw new Error("Clipboard API unavailable");
+    }
+
     imgContainer.addEventListener("mousemove", (e) => {
-      if (isZoomed) {
+      if (isZoomed && !isPanningLocked) {
         updateZoomPosition(e);
       }
     });
 
     imgContainer.addEventListener("click", (e) => {
+      if (isPanningLocked) return;
       if (
         e.target.closest(".kb-nav-btn") ||
         e.target.closest(".kb-zoom-dropdown") ||
-        e.target.closest(".kb-rotate-btn")
+        e.target.closest(".kb-rotate-btn") ||
+        e.target.closest(".kb-copy-btn")
       ) {
         return;
       }
@@ -172,11 +240,23 @@
     });
 
     imgContainer.addEventListener("mouseleave", () => {
+      if (isPanningLocked) return;
       if (isZoomed) {
         isZoomed = false;
         imgContainer.classList.remove("kb-zoomed");
         imgEl.style.transformOrigin = "center center";
       }
+    });
+
+    imgContainer.addEventListener("contextmenu", (e) => {
+      if (!isZoomed) return;
+      e.preventDefault();
+      e.stopPropagation();
+      if (isPanningLocked) return;
+      isPanningLocked = true;
+      imgContainer.classList.add("kb-panning-locked");
+      const copyBtn = imgContainer.querySelector(".kb-copy-btn");
+      if (copyBtn) copyBtn.classList.remove("kb-copy-hidden");
     });
 
     const rotateBtn = imgContainer.querySelector(".kb-rotate-btn");
@@ -221,10 +301,49 @@
       });
     }
 
+    const copyBtn = imgContainer.querySelector(".kb-copy-btn");
+    if (copyBtn) {
+      copyBtn.addEventListener("click", async (e) => {
+        e.stopPropagation();
+        if (!isPanningLocked) return;
+        try {
+          await copyVisibleCropToClipboard();
+          copyBtn.classList.add("kb-copy-success");
+          copyBtn.textContent = "✓ Kopieren erfolgreich";
+          setTimeout(() => {
+            isPanningLocked = false;
+            imgContainer.classList.remove("kb-panning-locked");
+            copyBtn.classList.add("kb-copy-hidden");
+            copyBtn.classList.remove("kb-copy-success");
+            copyBtn.textContent = "Bildausschnitt in Zwischenablage kopieren";
+          }, 1000);
+        } catch (err) {
+          console.error("Copy failed:", err);
+          copyBtn.textContent = "Fehler beim Kopieren";
+          setTimeout(() => {
+            isPanningLocked = false;
+            imgContainer.classList.remove("kb-panning-locked");
+            copyBtn.classList.add("kb-copy-hidden");
+            copyBtn.textContent = "Bildausschnitt in Zwischenablage kopieren";
+          }, 1000);
+        }
+      });
+    }
+
     return {
       resetRotation: () => {
         rotationAngle = 0;
         imgContainer.style.setProperty("--kb-rotation", "0deg");
+      },
+      resetLock: () => {
+        isPanningLocked = false;
+        imgContainer.classList.remove("kb-panning-locked");
+        const b = imgContainer.querySelector(".kb-copy-btn");
+        if (b) {
+          b.classList.add("kb-copy-hidden");
+          b.classList.remove("kb-copy-success");
+          b.textContent = "Bildausschnitt in Zwischenablage kopieren";
+        }
       }
     };
   }
@@ -267,6 +386,7 @@
                </div>`
             : ""
         }
+        ${hasImages ? `<button class="kb-copy-btn kb-copy-hidden" aria-label="Bildausschnitt kopieren">Bildausschnitt in Zwischenablage kopieren</button>` : ""}
         ${
           hasImages && data.images.length > 1
             ? `<button class="kb-nav-btn kb-prev" aria-label="Vorheriges Bild">
@@ -319,7 +439,7 @@
         currentImgIdx = (currentImgIdx - 1 + data.images.length) % data.images.length;
         imgEl.src = data.images[currentImgIdx];
         counterEl.textContent = `${currentImgIdx + 1} / ${data.images.length}`;
-        if (zoomControls) zoomControls.resetRotation();
+        if (zoomControls) { zoomControls.resetRotation(); zoomControls.resetLock(); }
       });
 
       previewCard.querySelector(".kb-next").addEventListener("click", (e) => {
@@ -327,7 +447,7 @@
         currentImgIdx = (currentImgIdx + 1) % data.images.length;
         imgEl.src = data.images[currentImgIdx];
         counterEl.textContent = `${currentImgIdx + 1} / ${data.images.length}`;
-        if (zoomControls) zoomControls.resetRotation();
+        if (zoomControls) { zoomControls.resetRotation(); zoomControls.resetLock(); }
       });
     }
   }
