@@ -4,6 +4,7 @@
   let hoverTimeout = null;
   let currentMouseX = 0;
   let currentMouseY = 0;
+  let currentItemRect = null;
   let currentZoomFactor = "2.5x";
 
   function applyTheme(theme) {
@@ -356,6 +357,7 @@
     const zoomLevels = ["1.5x", "2.0x", "2.5x", "3.0x", "4.0x"];
 
     previewCard.innerHTML = `
+      <div class="kb-arrow" id="kb-arrow"></div>
       <div class="kb-image-container" id="kb-img-container">
         ${
           hasImages
@@ -456,26 +458,91 @@
     const cardWidth = 360;
     const cardHeight = previewCard.offsetHeight || 450;
     const padding = 15;
-
+    const gap = 12;
     const viewportWidth = window.innerWidth;
     const viewportHeight = window.innerHeight;
 
-    let left = currentMouseX + padding;
-    let top = currentMouseY + padding;
+    let left, top;
+    let arrowClass = "kb-arrow kb-arrow-left";
+    let arrowPos = null;
 
-    if (left + cardWidth > viewportWidth - padding) {
-      left = currentMouseX - cardWidth - padding;
+    if (currentItemRect) {
+      const r = currentItemRect;
+      // 3x3 zone based on mouse within item
+      const relX = (currentMouseX - r.left) / r.width;
+      const relY = (currentMouseY - r.top) / r.height;
+      const col = relX < 0.33 ? 0 : relX < 0.66 ? 1 : 2;
+      const row = relY < 0.33 ? 0 : relY < 0.66 ? 1 : 2;
+      const zoneMap = [
+        ["top-left", "top-center", "top-right"],
+        ["center-left", "center-center", "center-right"],
+        ["bottom-left", "bottom-center", "bottom-right"],
+      ];
+      const zone = zoneMap[row][col];
+      const placements = {
+        "top-left": { dx: -1, dy: -1 },
+        "top-center": { dx: 0, dy: -1 },
+        "top-right": { dx: 1, dy: -1 },
+        "center-left": { dx: -1, dy: 0 },
+        "center-center": { dx: 1, dy: 0 },
+        "center-right": { dx: 1, dy: 0 },
+        "bottom-left": { dx: -1, dy: 1 },
+        "bottom-center": { dx: 0, dy: 1 },
+        "bottom-right": { dx: 1, dy: 1 },
+      };
+      const p = placements[zone] || placements["center-right"];
+      if (p.dx === -1) left = r.left - cardWidth - gap;
+      else if (p.dx === 1) left = r.right + gap;
+      else left = r.left + (r.width - cardWidth) / 2;
+      if (p.dy === -1) top = r.top - cardHeight - gap;
+      else if (p.dy === 1) top = r.bottom + gap;
+      else top = r.top + (r.height - cardHeight) / 2;
+
+      // clamp to viewport
+      left = Math.max(padding, Math.min(left, viewportWidth - cardWidth - padding));
+      top = Math.max(padding, Math.min(top, viewportHeight - cardHeight - padding));
+
+      // arrow side - diagonals now use edge with mouse-continuous position and slight upward nudge
+      if (p.dx === 1 && p.dy === 0) { arrowClass = "kb-arrow kb-arrow-left"; arrowPos = { side: "left" }; }
+      else if (p.dx === -1 && p.dy === 0) { arrowClass = "kb-arrow kb-arrow-right"; arrowPos = { side: "right" }; }
+      else if (p.dx === 0 && p.dy === -1) { arrowClass = "kb-arrow kb-arrow-bottom"; arrowPos = { side: "bottom" }; }
+      else if (p.dx === 0 && p.dy === 1) { arrowClass = "kb-arrow kb-arrow-top"; arrowPos = { side: "top" }; }
+      else if (p.dx === -1 && p.dy === -1) { arrowClass = "kb-arrow kb-arrow-bottom"; arrowPos = { side: "bottom" }; top -= 8; }
+      else if (p.dx === 1 && p.dy === -1) { arrowClass = "kb-arrow kb-arrow-bottom"; arrowPos = { side: "bottom" }; top -= 8; }
+      else if (p.dx === -1 && p.dy === 1) { arrowClass = "kb-arrow kb-arrow-top"; arrowPos = { side: "top" }; top -= 8; }
+      else if (p.dx === 1 && p.dy === 1) { arrowClass = "kb-arrow kb-arrow-top"; arrowPos = { side: "top" }; top -= 8; }
+    } else {
+      // fallback mouse-based (loading)
+      left = currentMouseX + padding;
+      top = currentMouseY + padding;
+      if (left + cardWidth > viewportWidth - padding) left = currentMouseX - cardWidth - padding;
+      if (top + cardHeight > viewportHeight - padding) top = viewportHeight - cardHeight - padding;
+      left = Math.max(padding, Math.min(left, viewportWidth - cardWidth - padding));
+      top = Math.max(padding, Math.min(top, viewportHeight - cardHeight - padding));
+      arrowClass = left < currentMouseX ? "kb-arrow kb-arrow-right" : "kb-arrow kb-arrow-left";
+      arrowPos = { side: left < currentMouseX ? "right" : "left" };
     }
-
-    if (top + cardHeight > viewportHeight - padding) {
-      top = viewportHeight - cardHeight - padding;
-    }
-
-    if (left < padding) left = padding;
-    if (top < padding) top = padding;
 
     previewCard.style.top = `${Math.round(top)}px`;
     previewCard.style.left = `${Math.round(left)}px`;
+
+    const arrow = previewCard.querySelector("#kb-arrow");
+    if (arrow) {
+      arrow.className = arrowClass;
+      arrow.style.top = "";
+      arrow.style.bottom = "";
+      arrow.style.left = "";
+      arrow.style.right = "";
+      if (arrowPos.side === "left" || arrowPos.side === "right") {
+        let arrowTop = currentMouseY - top;
+        arrowTop = Math.max(16, Math.min(arrowTop, previewCard.offsetHeight - 16));
+        arrow.style.top = `${Math.round(arrowTop)}px`;
+      } else if (arrowPos.side === "top" || arrowPos.side === "bottom") {
+        let arrowLeft = currentMouseX - left;
+        arrowLeft = Math.max(16, Math.min(arrowLeft, cardWidth - 16));
+        arrow.style.left = `${Math.round(arrowLeft)}px`;
+      }
+    }
   }
 
   function attachHoverListeners() {
@@ -485,7 +552,7 @@
       if (item.dataset.kbBound) return;
       item.dataset.kbBound = "true";
 
-      item.addEventListener("mouseenter", () => {
+      item.addEventListener("mouseenter", (e) => {
         const linkEl = item.querySelector("a[href*='/s-anzeige/']");
         if (!linkEl) return;
 
@@ -496,6 +563,9 @@
 
         const priceEl = item.querySelector("p[class*='text-title'], [class*='font-bold'], [class*='price']");
         const price = priceEl ? priceEl.textContent.trim() : "";
+        currentItemRect = item.getBoundingClientRect();
+        currentMouseX = e.clientX;
+        currentMouseY = e.clientY;
 
         hoverTimeout = setTimeout(async () => {
           previewCard.innerHTML = `<div class="kb-loading">Lade Vorschau...</div>`;
@@ -508,6 +578,20 @@
             positionCardAtCursor();
           }
         }, 300);
+      });
+
+      item.addEventListener("mousemove", (e) => {
+        if (!previewCard.classList.contains("kb-card-hidden")) {
+          currentMouseX = e.clientX;
+          currentMouseY = e.clientY;
+          // update zone continuously
+          if (currentItemRect) {
+            const relX = (currentMouseX - currentItemRect.left) / currentItemRect.width;
+            const relY = (currentMouseY - currentItemRect.top) / currentItemRect.height;
+            // stay within item bounds for zone calc, but still update position
+          }
+          positionCardAtCursor();
+        }
       });
 
       item.addEventListener("mouseleave", () => {
