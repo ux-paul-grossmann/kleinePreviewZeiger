@@ -315,6 +315,22 @@
   background: rgba(255, 255, 255, 0.25);
 }
 
+@keyframes kb-staggerIn {
+  0% { opacity: 0; transform: translateX(6px) scale(0.96); }
+  60% { opacity: 1; transform: translateX(-1.2px) scale(1.02); }
+  100% { opacity: 1; transform: translateX(0) scale(1); }
+}
+
+.kb-zoom-dropdown.kb-open .kb-zoom-option {
+  animation: kb-staggerIn 0.32s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+}
+
+.kb-zoom-dropdown.kb-open .kb-zoom-option:nth-child(1) { animation-delay: 0ms; }
+.kb-zoom-dropdown.kb-open .kb-zoom-option:nth-child(2) { animation-delay: 32ms; }
+.kb-zoom-dropdown.kb-open .kb-zoom-option:nth-child(3) { animation-delay: 64ms; }
+.kb-zoom-dropdown.kb-open .kb-zoom-option:nth-child(4) { animation-delay: 96ms; }
+.kb-zoom-dropdown.kb-open .kb-zoom-option:nth-child(5) { animation-delay: 128ms; }
+
 .kb-copy-btn {
   position: absolute;
   top: 50%;
