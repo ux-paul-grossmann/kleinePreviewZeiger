@@ -20,6 +20,7 @@
     select {
       width: 100%;
       padding: 6px;
+      padding-right: 32px;
       border-radius: 6px;
       border: 1px solid #475569;
       background: #0f172a;
@@ -27,7 +28,14 @@
       font-size: 13px;
       outline: none;
       cursor: pointer;
+      appearance: none;
+      -webkit-appearance: none;
+      background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2394a3b8' stroke-width='2'><polyline points='6 9 12 15 18 9'/></svg>");
+      background-repeat: no-repeat;
+      background-position: right 8px center;
+      background-size: 12px;
     }
+    select::-ms-expand { display: none; }
   </style>
 </head>
 <body>
