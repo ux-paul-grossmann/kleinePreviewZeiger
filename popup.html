@@ -46,7 +46,10 @@
     <option value="dark">Dark</option>
   </select>
   <label for="home" style="margin-top:12px;">Wohnort (für Route)</label>
-  <input id="home" type="text" placeholder="z. B. 50823 Köln" style="width:100%; padding:6px; border-radius:6px; border:1px solid #475569; background:#0f172a; color:#f8fafc; font-size:13px; outline:none; box-sizing:border-box;">
+  <div style="position:relative;">
+    <input id="home" type="text" placeholder="z. B. 50823 Köln" style="width:100%; padding:6px 68px 6px 6px; border-radius:6px; border:1px solid #475569; background:#0f172a; color:#f8fafc; font-size:13px; outline:none; box-sizing:border-box;">
+    <button id="saveHome" style="position:absolute; right:4px; top:50%; transform:translateY(-50%); background:#38bdf8; color:#0f172a; border:none; font-size:11px; font-weight:600; padding:4px 8px; border-radius:4px; cursor:pointer;">Speichern</button>
+  </div>
   <div style="font-size:10px; color:#94a3b8; margin-top:4px;">Wird als Start bei Route planen verwendet · Leer lassen wenn unbekannt</div>
   <script src="popup.js"></script>
 </body>
