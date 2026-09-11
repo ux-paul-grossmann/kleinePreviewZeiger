@@ -250,6 +250,7 @@
   flex-direction: row-reverse;
   align-items: center;
   transition: opacity 0.15s ease;
+  pointer-events: none;
 }
 
 .kb-zoom-trigger {
@@ -264,6 +265,7 @@
   cursor: pointer;
   user-select: none;
   transition: background 0.15s ease;
+  pointer-events: auto;
 }
 
 .kb-zoom-trigger:hover {
