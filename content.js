@@ -468,7 +468,7 @@
 
     if (currentItemRect) {
       const r = currentItemRect;
-      // 3x3 zone based on mouse within item
+      // 3x3 zone based on mouse entry within item
       const relX = (currentMouseX - r.left) / r.width;
       const relY = (currentMouseY - r.top) / r.height;
       const col = relX < 0.33 ? 0 : relX < 0.66 ? 1 : 2;
@@ -479,38 +479,52 @@
         ["bottom-left", "bottom-center", "bottom-right"],
       ];
       const zone = zoneMap[row][col];
-      const placements = {
-        "top-left": { dx: -1, dy: -1 },
-        "top-center": { dx: 0, dy: -1 },
-        "top-right": { dx: 1, dy: -1 },
-        "center-left": { dx: -1, dy: 0 },
-        "center-center": { dx: 1, dy: 0 },
-        "center-right": { dx: 1, dy: 0 },
-        "bottom-left": { dx: -1, dy: 1 },
-        "bottom-center": { dx: 0, dy: 1 },
-        "bottom-right": { dx: 1, dy: 1 },
-      };
-      const p = placements[zone] || placements["center-right"];
-      if (p.dx === -1) left = r.left - cardWidth - gap;
-      else if (p.dx === 1) left = r.right + gap;
-      else left = r.left + (r.width - cardWidth) / 2;
-      if (p.dy === -1) top = r.top - cardHeight - gap;
-      else if (p.dy === 1) top = r.bottom + gap;
-      else top = r.top + (r.height - cardHeight) / 2;
+      // Dreieck bleibt an Card (child), Card folgt Maus kontinuierlich
+      if (zone === "center-center") {
+        left = currentMouseX + gap;
+        top = currentMouseY - cardHeight / 2;
+        arrowClass = "kb-arrow kb-arrow-left"; arrowPos = { side: "left" };
+      } else if (zone === "center-left") {
+        left = currentMouseX - cardWidth - gap;
+        top = currentMouseY - cardHeight / 2;
+        arrowClass = "kb-arrow kb-arrow-right"; arrowPos = { side: "right" };
+      } else if (zone === "center-right") {
+        left = currentMouseX + gap;
+        top = currentMouseY - cardHeight / 2;
+        arrowClass = "kb-arrow kb-arrow-left"; arrowPos = { side: "left" };
+      } else if (zone === "top-center") {
+        left = currentMouseX - cardWidth / 2;
+        top = currentMouseY - cardHeight - gap;
+        arrowClass = "kb-arrow kb-arrow-bottom"; arrowPos = { side: "bottom" };
+      } else if (zone === "bottom-center") {
+        left = currentMouseX - cardWidth / 2;
+        top = currentMouseY + gap;
+        arrowClass = "kb-arrow kb-arrow-top"; arrowPos = { side: "top" };
+      } else if (zone === "top-left") {
+        left = currentMouseX - cardWidth - gap;
+        top = currentMouseY - cardHeight - gap;
+        arrowClass = "kb-arrow kb-arrow-bottom-right"; arrowPos = { side: "custom", style: { right: "16px", bottom: "-6px", top: "auto", left: "auto", transform: "rotate(135deg)" } };
+      } else if (zone === "top-right") {
+        left = currentMouseX + gap;
+        top = currentMouseY - cardHeight - gap;
+        arrowClass = "kb-arrow kb-arrow-bottom-left"; arrowPos = { side: "custom", style: { left: "16px", bottom: "-6px", top: "auto", right: "auto", transform: "rotate(135deg)" } };
+      } else if (zone === "bottom-left") {
+        left = currentMouseX - cardWidth - gap;
+        top = currentMouseY + gap;
+        arrowClass = "kb-arrow kb-arrow-top-right"; arrowPos = { side: "custom", style: { right: "16px", top: "-6px", bottom: "auto", left: "auto", transform: "rotate(45deg)" } };
+      } else if (zone === "bottom-right") {
+        left = currentMouseX + gap;
+        top = currentMouseY + gap;
+        arrowClass = "kb-arrow kb-arrow-top-left"; arrowPos = { side: "custom", style: { left: "16px", top: "-6px", bottom: "auto", right: "auto", transform: "rotate(45deg)" } };
+      } else {
+        left = r.right + gap;
+        top = r.top + (r.height - cardHeight) / 2;
+        arrowClass = "kb-arrow kb-arrow-left"; arrowPos = { side: "left" };
+      }
 
-      // clamp to viewport
+      // clamp to viewport, Dreieck bleibt an Card
       left = Math.max(padding, Math.min(left, viewportWidth - cardWidth - padding));
       top = Math.max(padding, Math.min(top, viewportHeight - cardHeight - padding));
-
-      // arrow side - diagonals now use edge with mouse-continuous position and slight upward nudge
-      if (p.dx === 1 && p.dy === 0) { arrowClass = "kb-arrow kb-arrow-left"; arrowPos = { side: "left" }; }
-      else if (p.dx === -1 && p.dy === 0) { arrowClass = "kb-arrow kb-arrow-right"; arrowPos = { side: "right" }; }
-      else if (p.dx === 0 && p.dy === -1) { arrowClass = "kb-arrow kb-arrow-bottom"; arrowPos = { side: "bottom" }; }
-      else if (p.dx === 0 && p.dy === 1) { arrowClass = "kb-arrow kb-arrow-top"; arrowPos = { side: "top" }; }
-      else if (p.dx === -1 && p.dy === -1) { arrowClass = "kb-arrow kb-arrow-bottom"; arrowPos = { side: "bottom" }; top -= 8; }
-      else if (p.dx === 1 && p.dy === -1) { arrowClass = "kb-arrow kb-arrow-bottom"; arrowPos = { side: "bottom" }; top -= 8; }
-      else if (p.dx === -1 && p.dy === 1) { arrowClass = "kb-arrow kb-arrow-top"; arrowPos = { side: "top" }; top -= 8; }
-      else if (p.dx === 1 && p.dy === 1) { arrowClass = "kb-arrow kb-arrow-top"; arrowPos = { side: "top" }; top -= 8; }
     } else {
       // fallback mouse-based (loading)
       left = currentMouseX + padding;
@@ -533,6 +547,7 @@
       arrow.style.bottom = "";
       arrow.style.left = "";
       arrow.style.right = "";
+      arrow.style.transform = "";
       if (arrowPos.side === "left" || arrowPos.side === "right") {
         let arrowTop = currentMouseY - top;
         arrowTop = Math.max(16, Math.min(arrowTop, previewCard.offsetHeight - 16));
@@ -541,6 +556,8 @@
         let arrowLeft = currentMouseX - left;
         arrowLeft = Math.max(16, Math.min(arrowLeft, cardWidth - 16));
         arrow.style.left = `${Math.round(arrowLeft)}px`;
+      } else if (arrowPos.side === "custom" && arrowPos.style) {
+        Object.assign(arrow.style, arrowPos.style);
       }
     }
   }
