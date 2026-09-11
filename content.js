@@ -72,10 +72,11 @@
       const parser = new DOMParser();
       const doc = parser.parseFromString(html, "text/html");
 
+      const vipGallery = doc.querySelector(".vip-image-gallery");
       const mainImage = doc.querySelector("#viewad-image");
-      const galleryWrapper = mainImage
-        ? mainImage.closest("article, section, [class*='gallery'], div.relative")
-        : null;
+      const galleryWrapper =
+        vipGallery ||
+        (mainImage ? mainImage.closest("article, section, [class*='gallery'], div.relative") : null);
 
       let rawImgs = [];
       if (galleryWrapper) {
