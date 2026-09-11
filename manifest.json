@@ -1,0 +1,16 @@
+{
+  "manifest_version": 3,
+  "name": "kleinePreviewZeiger",
+  "version": "1.0",
+  "permissions": ["storage"],
+  "action": {
+    "default_popup": "popup.html"
+  },
+  "content_scripts": [
+    {
+      "matches": ["https://www.kleinanzeigen.de/*"],
+      "js": ["content.js"],
+      "css": ["styles.css"]
+    }
+  ]
+}

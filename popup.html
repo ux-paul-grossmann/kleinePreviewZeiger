@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <style>
+    body {
+      width: 180px;
+      padding: 12px;
+      font-family: system-ui, -apple-system, sans-serif;
+      background: #1e293b;
+      color: #f8fafc;
+      margin: 0;
+    }
+    label {
+      font-size: 13px;
+      font-weight: 600;
+      display: block;
+      margin-bottom: 8px;
+    }
+    select {
+      width: 100%;
+      padding: 6px;
+      border-radius: 6px;
+      border: 1px solid #475569;
+      background: #0f172a;
+      color: #f8fafc;
+      font-size: 13px;
+      outline: none;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <label for="theme">Erscheinungsbild</label>
+  <select id="theme">
+    <option value="system">System (Auto)</option>
+    <option value="light">Light</option>
+    <option value="dark">Dark</option>
+  </select>
+  <script src="popup.js"></script>
+</body>
+</html>
