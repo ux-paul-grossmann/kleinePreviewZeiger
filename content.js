@@ -6,6 +6,48 @@
   let currentMouseY = 0;
   let currentItemRect = null;
   let currentZoomFactor = "2.5x";
+  let currentHomeLocation = "";
+
+  const KB_SWATCHES = [
+    { id: "standard", name: "Standard", bg: "#fdfbff", border: "#e1e2ec", text: "#191c1e", textMuted: "#44474f", imgBg: "#e1e2ec", btnPrimary: "#4c662b", btnPrimaryText: "#ffffff", btnSecondary: "#0061a4", btnSecondaryText: "#ffffff" },
+    { id: "midnight", name: "Mitternacht", bg: "#0f172a", border: "#334155", text: "#f1f5f9", textMuted: "#94a3b8", imgBg: "#1e293b", btnPrimary: "#38bdf8", btnPrimaryText: "#0f172a", btnSecondary: "#818cf8", btnSecondaryText: "#ffffff" },
+    { id: "wald", name: "Wald", bg: "#f0fdf4", border: "#bbf7d0", text: "#14532d", textMuted: "#166534", imgBg: "#dcfce7", btnPrimary: "#15803d", btnPrimaryText: "#ffffff", btnSecondary: "#65a30d", btnSecondaryText: "#ffffff" },
+    { id: "ozean", name: "Ozean", bg: "#eff6ff", border: "#bfdbfe", text: "#1e3a8a", textMuted: "#1e40af", imgBg: "#dbeafe", btnPrimary: "#2563eb", btnPrimaryText: "#ffffff", btnSecondary: "#0ea5e9", btnSecondaryText: "#ffffff" },
+    { id: "sonne", name: "Sonne", bg: "#fffbeb", border: "#fde68a", text: "#92400e", textMuted: "#b45309", imgBg: "#fef3c7", btnPrimary: "#d97706", btnPrimaryText: "#ffffff", btnSecondary: "#ea580c", btnSecondaryText: "#ffffff" },
+    { id: "kirsche", name: "Kirsche", bg: "#fef2f2", border: "#fecaca", text: "#7f1d1d", textMuted: "#991b1b", imgBg: "#fee2e2", btnPrimary: "#dc2626", btnPrimaryText: "#ffffff", btnSecondary: "#be123c", btnSecondaryText: "#ffffff" },
+    { id: "nebel", name: "Nebel", bg: "#f8fafc", border: "#e2e8f0", text: "#334155", textMuted: "#64748b", imgBg: "#f1f5f9", btnPrimary: "#475569", btnPrimaryText: "#ffffff", btnSecondary: "#64748b", btnSecondaryText: "#ffffff" },
+    { id: "dunkelgruen", name: "Dunkelgrün", bg: "#022c22", border: "#064e3b", text: "#ecfdf5", textMuted: "#6ee7b7", imgBg: "#064e3b", btnPrimary: "#10b981", btnPrimaryText: "#022c22", btnSecondary: "#059669", btnSecondaryText: "#ffffff" },
+    { id: "koralle", name: "Koralle", bg: "#fff7ed", border: "#fed7aa", text: "#7c2d12", textMuted: "#9a3412", imgBg: "#ffedd5", btnPrimary: "#f97316", btnPrimaryText: "#ffffff", btnSecondary: "#fb923c", btnSecondaryText: "#ffffff" },
+    { id: "lavendel", name: "Lavendel", bg: "#faf5ff", border: "#e9d5ff", text: "#581c87", textMuted: "#6b21a8", imgBg: "#f3e8ff", btnPrimary: "#9333ea", btnPrimaryText: "#ffffff", btnSecondary: "#a855f7", btnSecondaryText: "#ffffff" },
+    { id: "sand", name: "Sand", bg: "#fefce8", border: "#fef08a", text: "#713f12", textMuted: "#854d0e", imgBg: "#fef9c3", btnPrimary: "#ca8a04", btnPrimaryText: "#ffffff", btnSecondary: "#eab308", btnSecondaryText: "#713f12" },
+    { id: "graphit", name: "Graphit", bg: "#18181b", border: "#27272a", text: "#f4f4f5", textMuted: "#a1a1aa", imgBg: "#27272a", btnPrimary: "#71717a", btnPrimaryText: "#ffffff", btnSecondary: "#52525b", btnSecondaryText: "#ffffff" },
+  ];
+
+  function applySwatchTheme(id) {
+    const s = KB_SWATCHES.find((x) => x.id === id);
+    if (!s) return;
+    previewCard.style.setProperty("--kb-bg", s.bg);
+    previewCard.style.setProperty("--kb-border", s.border);
+    previewCard.style.setProperty("--kb-text-main", s.text);
+    previewCard.style.setProperty("--kb-text-title", s.text);
+    previewCard.style.setProperty("--kb-text-muted", s.textMuted);
+    previewCard.style.setProperty("--kb-text-desc", s.textMuted);
+    previewCard.style.setProperty("--kb-img-bg", s.imgBg);
+    previewCard.style.setProperty("--kb-btn-primary-bg", s.btnPrimary);
+    previewCard.style.setProperty("--kb-btn-primary-text", s.btnPrimaryText);
+    previewCard.style.setProperty("--kb-btn-secondary-bg", s.btnSecondary);
+    previewCard.style.setProperty("--kb-btn-secondary-text", s.btnSecondaryText);
+    // update arrow bg/border to match
+    const arrow = previewCard.querySelector("#kb-arrow");
+    if (arrow) {
+      arrow.style.background = s.bg;
+      arrow.style.borderLeftColor = s.border;
+      arrow.style.borderTopColor = s.border;
+    }
+    previewCard.querySelectorAll(".kb-swatch").forEach((el) => el.classList.toggle("kb-active", el.dataset.theme === id));
+  }
+
+
 
   function applyTheme(theme) {
     if (theme === "light" || theme === "dark") {
@@ -16,16 +58,22 @@
   }
 
   if (typeof chrome !== "undefined" && chrome.storage) {
-    chrome.storage.local.get(["kbTheme", "kbZoomFactor"], (result) => {
+    chrome.storage.local.get(["kbTheme", "kbZoomFactor", "kbHomeLocation"], (result) => {
       applyTheme(result.kbTheme || "system");
       if (result.kbZoomFactor) {
         currentZoomFactor = result.kbZoomFactor;
+      }
+      if (result.kbHomeLocation) {
+        currentHomeLocation = result.kbHomeLocation;
       }
     });
 
     chrome.storage.onChanged.addListener((changes, area) => {
       if (area === "local" && changes.kbTheme) {
         applyTheme(changes.kbTheme.newValue);
+      }
+      if (area === "local" && changes.kbHomeLocation) {
+        currentHomeLocation = changes.kbHomeLocation.newValue || "";
       }
     });
   }
@@ -225,7 +273,9 @@
         e.target.closest(".kb-nav-btn") ||
         e.target.closest(".kb-zoom-dropdown") ||
         e.target.closest(".kb-rotate-btn") ||
-        e.target.closest(".kb-copy-btn")
+        e.target.closest(".kb-copy-btn") ||
+        e.target.closest(".kb-cancel-btn") ||
+        e.target.closest("#kb-copy-actions")
       ) {
         return;
       }
@@ -256,8 +306,8 @@
       if (isPanningLocked) return;
       isPanningLocked = true;
       imgContainer.classList.add("kb-panning-locked");
-      const copyBtn = imgContainer.querySelector(".kb-copy-btn");
-      if (copyBtn) copyBtn.classList.remove("kb-copy-hidden");
+      const copyActions = imgContainer.querySelector("#kb-copy-actions");
+      if (copyActions) copyActions.classList.remove("kb-copy-hidden");
     });
 
     const rotateBtn = imgContainer.querySelector(".kb-rotate-btn");
@@ -303,6 +353,8 @@
     }
 
     const copyBtn = imgContainer.querySelector(".kb-copy-btn");
+    const cancelBtn = imgContainer.querySelector(".kb-cancel-btn");
+    const copyActions = imgContainer.querySelector("#kb-copy-actions");
     if (copyBtn) {
       copyBtn.addEventListener("click", async (e) => {
         e.stopPropagation();
@@ -314,7 +366,7 @@
           setTimeout(() => {
             isPanningLocked = false;
             imgContainer.classList.remove("kb-panning-locked");
-            copyBtn.classList.add("kb-copy-hidden");
+            if (copyActions) copyActions.classList.add("kb-copy-hidden");
             copyBtn.classList.remove("kb-copy-success");
             copyBtn.textContent = "Bildausschnitt in Zwischenablage kopieren";
           }, 1000);
@@ -324,9 +376,22 @@
           setTimeout(() => {
             isPanningLocked = false;
             imgContainer.classList.remove("kb-panning-locked");
-            copyBtn.classList.add("kb-copy-hidden");
+            if (copyActions) copyActions.classList.add("kb-copy-hidden");
             copyBtn.textContent = "Bildausschnitt in Zwischenablage kopieren";
           }, 1000);
+        }
+      });
+    }
+    if (cancelBtn) {
+      cancelBtn.addEventListener("click", (e) => {
+        e.stopPropagation();
+        isPanningLocked = false;
+        imgContainer.classList.remove("kb-panning-locked");
+        if (copyActions) copyActions.classList.add("kb-copy-hidden");
+        // reset copy btn text in case it was in success state
+        if (copyBtn) {
+          copyBtn.classList.remove("kb-copy-success");
+          copyBtn.textContent = "Bildausschnitt in Zwischenablage kopieren";
         }
       });
     }
@@ -339,9 +404,9 @@
       resetLock: () => {
         isPanningLocked = false;
         imgContainer.classList.remove("kb-panning-locked");
+        if (copyActions) copyActions.classList.add("kb-copy-hidden");
         const b = imgContainer.querySelector(".kb-copy-btn");
         if (b) {
-          b.classList.add("kb-copy-hidden");
           b.classList.remove("kb-copy-success");
           b.textContent = "Bildausschnitt in Zwischenablage kopieren";
         }
@@ -352,7 +417,18 @@
   function renderCardContent(data, title, price, url) {
     let currentImgIdx = 0;
     const hasImages = data.images && data.images.length > 0;
-    const mapsUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(data.location)}`;
+    const dest = data.location && data.location !== "Standort unbekannt" ? data.location : "";
+    const origin = currentHomeLocation || "";
+    let mapsUrl;
+    if (dest && origin) {
+      mapsUrl = `https://www.google.com/maps/dir/?api=1&origin=${encodeURIComponent(origin)}&destination=${encodeURIComponent(dest)}`;
+    } else if (dest) {
+      mapsUrl = `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(dest)}`;
+    } else if (origin) {
+      mapsUrl = `https://www.google.com/maps/dir/?api=1&origin=${encodeURIComponent(origin)}`;
+    } else {
+      mapsUrl = `https://www.google.com/maps/search/?api=1&query=`;
+    }
 
     const zoomLevels = ["1.5x", "2.0x", "2.5x", "3.0x", "4.0x"];
 
@@ -388,7 +464,7 @@
                </div>`
             : ""
         }
-        ${hasImages ? `<button class="kb-copy-btn kb-copy-hidden" aria-label="Bildausschnitt kopieren">Bildausschnitt in Zwischenablage kopieren</button>` : ""}
+        ${hasImages ? `<div class="kb-copy-actions kb-copy-hidden" id="kb-copy-actions"><button class="kb-copy-btn" aria-label="Bildausschnitt kopieren">Bildausschnitt in Zwischenablage kopieren</button><button class="kb-cancel-btn" aria-label="Abbrechen">Abbrechen</button></div>` : ""}
         ${
           hasImages && data.images.length > 1
             ? `<button class="kb-nav-btn kb-prev" aria-label="Vorheriges Bild">
@@ -415,8 +491,14 @@
         <div class="kb-description"></div>
       </div>
       <div class="kb-actions">
-        <a href="${url}" class="kb-btn kb-btn-primary">Anzeige ansehen</a>
-        <a href="${mapsUrl}" target="_blank" rel="noopener noreferrer" class="kb-btn kb-btn-secondary">🗺️ Route planen</a>
+        <a href="${url}" target="_blank" rel="noopener noreferrer" class="kb-btn kb-btn-primary">Anzeige ansehen <svg class="kb-btn-icon" viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg></a>
+        <a href="${mapsUrl}" target="_blank" rel="noopener noreferrer" class="kb-btn kb-btn-secondary"><svg class="kb-btn-icon" viewBox="0 0 24 24" width="12" height="12" fill="currentColor"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5a2.5 2.5 0 1 1 0-5 2.5 2.5 0 0 1 0 5z"/></svg> Route planen</a>
+      </div>
+      <div class="kb-swatches-drawer" id="kb-swatches-drawer">
+        <button class="kb-swatches-toggle" id="kb-swatches-toggle" aria-label="Farben umschalten">Farben <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg></button>
+        <div class="kb-swatches-grid" id="kb-swatches-grid">
+          ${KB_SWATCHES.map((s) => `<button class="kb-swatch" data-theme="${s.id}" title="${s.name}" aria-label="${s.name}" style="background:${s.bg}; border-color:${s.border}; color:${s.text};">${s.name.slice(0,2)}</button>`).join("")}
+        </div>
       </div>
     `;
 
@@ -450,6 +532,21 @@
         imgEl.src = data.images[currentImgIdx];
         counterEl.textContent = `${currentImgIdx + 1} / ${data.images.length}`;
         if (zoomControls) { zoomControls.resetRotation(); zoomControls.resetLock(); }
+      });
+    }
+
+    const drawer = previewCard.querySelector("#kb-swatches-drawer");
+    const toggle = previewCard.querySelector("#kb-swatches-toggle");
+    if (drawer && toggle) {
+      toggle.addEventListener("click", (e) => {
+        e.stopPropagation();
+        drawer.classList.toggle("kb-open");
+      });
+      previewCard.querySelectorAll(".kb-swatch").forEach((btn) => {
+        btn.addEventListener("click", (e) => {
+          e.stopPropagation();
+          applySwatchTheme(btn.dataset.theme);
+        });
       });
     }
   }
@@ -507,7 +604,7 @@
       } else if (zone === "top-right") {
         left = currentMouseX + gap;
         top = currentMouseY - cardHeight - gap;
-        arrowClass = "kb-arrow kb-arrow-bottom-left"; arrowPos = { side: "custom", style: { left: "16px", bottom: "-6px", top: "auto", right: "auto", transform: "rotate(135deg)" } };
+        arrowClass = "kb-arrow kb-arrow-bottom-left"; arrowPos = { side: "custom", style: { left: "16px", bottom: "-6px", top: "auto", right: "auto", transform: "rotate(225deg)" } };
       } else if (zone === "bottom-left") {
         left = currentMouseX - cardWidth - gap;
         top = currentMouseY + gap;
@@ -515,7 +612,7 @@
       } else if (zone === "bottom-right") {
         left = currentMouseX + gap;
         top = currentMouseY + gap;
-        arrowClass = "kb-arrow kb-arrow-top-left"; arrowPos = { side: "custom", style: { left: "16px", top: "-6px", bottom: "auto", right: "auto", transform: "rotate(45deg)" } };
+        arrowClass = "kb-arrow kb-arrow-top-left"; arrowPos = { side: "custom", style: { left: "16px", top: "-6px", bottom: "auto", right: "auto", transform: "rotate(-45deg)" } };
       } else {
         left = r.right + gap;
         top = r.top + (r.height - cardHeight) / 2;
@@ -549,7 +646,16 @@
       arrow.style.right = "";
       arrow.style.transform = "";
       if (arrowPos.side === "left" || arrowPos.side === "right") {
-        let arrowTop = currentMouseY - top;
+        // center-left / center-right + gespiegelt: auf Höhe Titel-Zeile
+        const titleEl = previewCard.querySelector(".kb-title");
+        let arrowTop;
+        if (titleEl) {
+          const cardRect = previewCard.getBoundingClientRect();
+          const titleRect = titleEl.getBoundingClientRect();
+          arrowTop = titleRect.top + titleRect.height / 2 - cardRect.top;
+        } else {
+          arrowTop = currentMouseY - top;
+        }
         arrowTop = Math.max(16, Math.min(arrowTop, previewCard.offsetHeight - 16));
         arrow.style.top = `${Math.round(arrowTop)}px`;
       } else if (arrowPos.side === "top" || arrowPos.side === "bottom") {
