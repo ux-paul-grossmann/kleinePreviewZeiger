@@ -7,6 +7,88 @@
   let currentItemRect = null;
   let currentZoomFactor = "2.5x";
   let currentHomeLocation = "";
+  let showDebugZones = false;
+  let debugOverlay = null;
+  let showMouseMarker = false;
+  let mouseMarker = null;
+  let itemHover = false;
+  let mouseInCard = false;
+  let showItemLabels = false;
+  let stuckAbove = false;
+
+  function isExtensionAlive() {
+    try {
+      return typeof chrome !== "undefined" && !!(chrome.runtime && chrome.runtime.id);
+    } catch (e) {
+      return false;
+    }
+  }
+
+  function labelFor(i) {
+    let s = "";
+    i++;
+    do {
+      i--;
+      s = String.fromCharCode(65 + (i % 26)) + s;
+      i = Math.floor(i / 26);
+    } while (i > 0);
+    return s;
+  }
+
+  function updateItemLabels() {
+    document.querySelectorAll("li.relative.mb-xsmall").forEach((item, i) => {
+      let badge = item.querySelector(":scope > .kb-item-label");
+      if (showItemLabels) {
+        if (getComputedStyle(item).position === "static") item.style.position = "relative";
+        const label = labelFor(i);
+        if (!badge) {
+          badge = document.createElement("span");
+          badge.className = "kb-item-label";
+          badge.textContent = label;
+          item.appendChild(badge);
+        } else if (badge.textContent !== label) {
+          // nur bei Änderung schreiben — sonst Endlosschleife via MutationObserver
+          badge.textContent = label;
+        }
+      } else if (badge) {
+        badge.remove();
+      }
+    });
+  }
+
+  const ZONE_MAP = [
+    ["top-left", "top-center", "top-right"],
+    ["center-left", "center-center", "center-right"],
+    ["bottom-left", "bottom-center", "bottom-right"],
+  ];
+
+  function currentZone() {
+    if (!currentItemRect) return null;
+    const r = currentItemRect;
+    const relX = (currentMouseX - r.left) / r.width;
+    const relY = (currentMouseY - r.top) / r.height;
+    const col = relX < 0.33 ? 0 : relX < 0.66 ? 1 : 2;
+    const row = relY < 0.33 ? 0 : relY < 0.66 ? 1 : 2;
+    return ZONE_MAP[row][col];
+  }
+
+  function updateDebugOverlay() {
+    if (!debugOverlay) return;
+    if (!showDebugZones || !currentItemRect || previewCard.classList.contains("kb-card-hidden")) {
+      debugOverlay.style.display = "none";
+      return;
+    }
+    const r = currentItemRect;
+    debugOverlay.style.display = "grid";
+    debugOverlay.style.left = `${Math.round(r.left)}px`;
+    debugOverlay.style.top = `${Math.round(r.top)}px`;
+    debugOverlay.style.width = `${Math.round(r.width)}px`;
+    debugOverlay.style.height = `${Math.round(r.height)}px`;
+    const zone = currentZone();
+    debugOverlay.querySelectorAll(".kb-debug-cell").forEach((c) => {
+      c.classList.toggle("kb-active", c.dataset.zone === zone);
+    });
+  }
 
     const KB_SWATCHES = [
     { id: "standard", name: "Standard", mode: "light", bg: "#fdfbff", border: "#e1e2ec", text: "#191c1e", textMuted: "#44474f", imgBg: "#e1e2ec", btnPrimary: "#4c662b", btnPrimaryText: "#ffffff", btnSecondary: "#0061a4", btnSecondaryText: "#ffffff" },
@@ -112,6 +194,30 @@
       if (area === "local" && changes.kbHomeLocation) {
         currentHomeLocation = changes.kbHomeLocation.newValue || "";
       }
+      if (area === "local" && changes.kbSwatchTheme) {
+        chrome.storage.local.get(["kbThemeModuleEnabled"], (r2) => {
+          if (r2.kbThemeModuleEnabled !== false) applySwatchTheme(changes.kbSwatchTheme.newValue);
+        });
+      }
+      if (area === "local" && changes.kbThemeModuleEnabled) {
+        const drawerEl = previewCard.querySelector("#kb-swatches-drawer");
+        if (changes.kbThemeModuleEnabled.newValue === false) {
+          applySwatchTheme("standard");
+          if (drawerEl) drawerEl.style.display = "none";
+        } else {
+          if (drawerEl) drawerEl.style.display = "";
+          chrome.storage.local.get(["kbSwatchTheme"], (r2) => {
+            if (r2.kbSwatchTheme) applySwatchTheme(r2.kbSwatchTheme);
+          });
+        }
+      }
+    });
+    // Popup Theme-Modul: initial swatch anwenden
+    chrome.storage.local.get(["kbSwatchTheme", "kbThemeModuleEnabled"], (r) => {
+      if (r.kbThemeModuleEnabled !== false && r.kbSwatchTheme) {
+        // delay until previewCard exists
+        setTimeout(() => applySwatchTheme(r.kbSwatchTheme), 500);
+      }
     });
   }
 
@@ -128,9 +234,34 @@
 
   const previewCard = createPreviewCard();
 
+  debugOverlay = document.createElement("div");
+  debugOverlay.id = "kb-debug-overlay";
+  debugOverlay.style.display = "none";
+  debugOverlay.innerHTML = ZONE_MAP.flat().map((z) => `<div class="kb-debug-cell" data-zone="${z}">${z}</div>`).join("");
+  document.body.appendChild(debugOverlay);
+
+  mouseMarker = document.createElement("div");
+  mouseMarker.id = "kb-mouse-marker";
+  mouseMarker.style.display = "none";
+  document.body.appendChild(mouseMarker);
+
+  previewCard.addEventListener("mouseenter", () => { mouseInCard = true; });
+  previewCard.addEventListener("mouseleave", () => { mouseInCard = false; });
+
   document.addEventListener("mousemove", (e) => {
     currentMouseX = e.clientX;
     currentMouseY = e.clientY;
+    if (showMouseMarker && mouseMarker) {
+      mouseMarker.style.display = "block";
+      mouseMarker.style.left = `${e.clientX}px`;
+      mouseMarker.style.top = `${e.clientY}px`;
+    }
+    // Toleranz: nur tracken solange Maus auf Item und nicht in Card —
+    // Übergang Item→Card friert Card ein statt sie zu verjagen, Spitze folgt erst wieder bei Item-Kontakt
+    if (currentItemRect && itemHover && !mouseInCard && !previewCard.classList.contains("kb-card-hidden")) {
+      positionCardAtCursor();
+      updateDebugOverlay();
+    }
   });
 
   function parseHtmlDescription(htmlContainer) {
@@ -395,7 +526,7 @@
     if (copyBtn) {
       copyBtn.addEventListener("click", async (e) => {
         e.stopPropagation();
-        if (!isPanningLocked) return;
+        if (!isPanningLocked || !isExtensionAlive()) return;
         try {
           await copyVisibleCropToClipboard();
           copyBtn.classList.add("kb-copy-success");
@@ -544,6 +675,13 @@
           `).join("")}
         </div>
       </div>
+      <div class="kb-debug-row">
+        <button class="kb-debug-toggle" id="kb-debug-toggle" aria-label="Zonen-Debug an/aus">Zonen</button>
+        <button class="kb-debug-toggle" id="kb-transp-toggle" aria-label="Card transparent an/aus">Transparent</button>
+        <button class="kb-debug-toggle" id="kb-mouse-toggle" aria-label="Maus-Marker an/aus">Maus</button>
+        <button class="kb-debug-toggle" id="kb-labels-toggle" aria-label="Item-Buchstaben an/aus">ABC</button>
+      </div>
+
     `;
 
     const descContainer = previewCard.querySelector(".kb-description");
@@ -579,20 +717,7 @@
       });
     }
 
-    const drawer = previewCard.querySelector("#kb-swatches-drawer");
-    const toggle = previewCard.querySelector("#kb-swatches-toggle");
-    if (drawer && toggle) {
-      toggle.addEventListener("click", (e) => {
-        e.stopPropagation();
-        drawer.classList.toggle("kb-open");
-      });
-      previewCard.querySelectorAll(".kb-swatch").forEach((btn) => {
-        btn.addEventListener("click", (e) => {
-          e.stopPropagation();
-          applySwatchTheme(btn.dataset.theme);
-        });
-      });
-    }
+
 
     const routeBtn = previewCard.querySelector(".kb-btn-secondary");
     if (routeBtn) {
@@ -607,6 +732,76 @@
         else url = `https://www.google.com/maps/search/?api=1&query=`;
         window.open(url, "_blank", "noopener");
       });
+    }
+
+    const debugToggle = previewCard.querySelector("#kb-debug-toggle");
+    if (debugToggle) {
+      debugToggle.classList.toggle("kb-active", showDebugZones);
+      debugToggle.addEventListener("click", (e) => {
+        e.stopPropagation();
+        showDebugZones = !showDebugZones;
+        debugToggle.classList.toggle("kb-active", showDebugZones);
+        updateDebugOverlay();
+      });
+    }
+
+    const transpToggle = previewCard.querySelector("#kb-transp-toggle");
+    if (transpToggle) {
+      transpToggle.classList.toggle("kb-active", previewCard.classList.contains("kb-transparent"));
+      transpToggle.addEventListener("click", (e) => {
+        e.stopPropagation();
+        const on = previewCard.classList.toggle("kb-transparent");
+        transpToggle.classList.toggle("kb-active", on);
+      });
+    }
+
+    const mouseToggle = previewCard.querySelector("#kb-mouse-toggle");
+    if (mouseToggle) {
+      mouseToggle.classList.toggle("kb-active", showMouseMarker);
+      mouseToggle.addEventListener("click", (e) => {
+        e.stopPropagation();
+        showMouseMarker = !showMouseMarker;
+        mouseToggle.classList.toggle("kb-active", showMouseMarker);
+        if (mouseMarker) mouseMarker.style.display = showMouseMarker ? "block" : "none";
+      });
+    }
+
+    const labelsToggle = previewCard.querySelector("#kb-labels-toggle");
+    if (labelsToggle) {
+      labelsToggle.classList.toggle("kb-active", showItemLabels);
+      labelsToggle.addEventListener("click", (e) => {
+        e.stopPropagation();
+        showItemLabels = !showItemLabels;
+        labelsToggle.classList.toggle("kb-active", showItemLabels);
+        updateItemLabels();
+      });
+    }
+
+    const drawer = previewCard.querySelector("#kb-swatches-drawer");
+    const drawerToggle = previewCard.querySelector("#kb-swatches-toggle");
+    if (drawer && drawerToggle) {
+      drawerToggle.addEventListener("click", (e) => {
+        e.stopPropagation();
+        drawer.classList.toggle("kb-open");
+      });
+      previewCard.querySelectorAll(".kb-swatch").forEach((btn) => {
+        btn.addEventListener("click", (e) => {
+          e.stopPropagation();
+          applySwatchTheme(btn.dataset.theme);
+          if (typeof chrome !== "undefined" && chrome.storage) {
+            chrome.storage.local.set({ kbSwatchTheme: btn.dataset.theme });
+          }
+        });
+      });
+      const applyDrawerVisibility = (enabled) => {
+        drawer.style.display = enabled === false ? "none" : "";
+      };
+      if (typeof chrome !== "undefined" && chrome.storage) {
+        chrome.storage.local.get(["kbThemeModuleEnabled", "kbSwatchTheme"], (r) => {
+          applyDrawerVisibility(r.kbThemeModuleEnabled);
+          if (r.kbThemeModuleEnabled !== false && r.kbSwatchTheme) applySwatchTheme(r.kbSwatchTheme);
+        });
+      }
     }
   }
 
@@ -637,8 +832,13 @@
       const zone = zoneMap[row][col];
       // Dreieck bleibt an Card (child), Card folgt Maus kontinuierlich
       if (zone === "center-center") {
-        left = currentMouseX + gap;
-        top = currentMouseY - cardHeight / 2;
+        if (stuckAbove) {
+          left = currentMouseX - cardWidth / 2;
+          top = currentMouseY - cardHeight - gap - 24;
+        } else {
+          left = currentMouseX + gap;
+          top = currentMouseY - cardHeight / 2;
+        }
         arrowClass = "kb-arrow kb-arrow-left"; arrowPos = { side: "left" };
       } else if (zone === "center-left") {
         left = currentMouseX - cardWidth - gap;
@@ -650,11 +850,18 @@
         arrowClass = "kb-arrow kb-arrow-left"; arrowPos = { side: "left" };
       } else if (zone === "top-center") {
         left = currentMouseX - cardWidth / 2;
-        top = currentMouseY - cardHeight - gap;
+        top = currentMouseY - cardHeight - gap - 24;
         arrowClass = "kb-arrow kb-arrow-bottom"; arrowPos = { side: "bottom" };
       } else if (zone === "bottom-center") {
         left = currentMouseX - cardWidth / 2;
         top = currentMouseY + gap;
+        // Unterkante: Item nah am Fensterrand → Card oberhalb des Cursors mit Whitespace nach oben
+        if (top + cardHeight > viewportHeight - padding) {
+          top = Math.max(40, currentMouseY - cardHeight - gap - 24);
+          stuckAbove = true;
+        } else {
+          stuckAbove = false;
+        }
         arrowClass = "kb-arrow kb-arrow-top"; arrowPos = { side: "top" };
       } else if (zone === "top-left") {
         left = currentMouseX - cardWidth - gap;
@@ -698,32 +905,49 @@
 
     const arrow = previewCard.querySelector("#kb-arrow");
     if (arrow) {
-      arrow.className = arrowClass;
+      // Seite aus echter Geometrie nach Clamp bestimmen, nicht aus Entry-Zone:
+      // Spitze zeigt stets auf den Mauszeiger.
+      const mx = currentMouseX, my = currentMouseY;
+      const cardH = previewCard.offsetHeight || cardHeight;
+      const R = left + cardWidth, B = top + cardH;
+      const leftOf = mx < left, rightOf = mx > R;
+      const above = my < top, below = my > B;
+      let s = null;
+      if (leftOf && !above && !below) {
+        s = { cls: "kb-arrow kb-arrow-left", top: `${Math.round(Math.max(16, Math.min(my - top, cardH - 16)))}px` };
+      } else if (rightOf && !above && !below) {
+        s = { cls: "kb-arrow kb-arrow-right", top: `${Math.round(Math.max(16, Math.min(my - top, cardH - 16)))}px` };
+      } else if (above && !leftOf && !rightOf) {
+        s = { cls: "kb-arrow kb-arrow-top", left: `${Math.round(Math.max(16, Math.min(mx - left, cardWidth - 16)))}px` };
+      } else if (below && !leftOf && !rightOf) {
+        s = { cls: "kb-arrow kb-arrow-bottom", left: `${Math.round(Math.max(16, Math.min(mx - left, cardWidth - 16)))}px` };
+      } else if (leftOf && above) {
+        s = { cls: "kb-arrow", style: { left: `${Math.round(Math.max(16, Math.min(mx - left + 24, cardWidth - 16)))}px`, top: "-6px", bottom: "auto", right: "auto", transform: "rotate(45deg)" } };
+      } else if (rightOf && above) {
+        s = { cls: "kb-arrow", style: { left: `${Math.round(Math.max(16, Math.min(mx - left - 24, cardWidth - 16)))}px`, top: "-6px", bottom: "auto", right: "auto", transform: "rotate(45deg)" } };
+      } else if (leftOf && below) {
+        s = { cls: "kb-arrow", style: { left: `${Math.round(Math.max(16, Math.min(mx - left + 24, cardWidth - 16)))}px`, bottom: "-6px", top: "auto", right: "auto", transform: "rotate(225deg)" } };
+      } else if (rightOf && below) {
+        s = { cls: "kb-arrow", style: { left: `${Math.round(Math.max(16, Math.min(mx - left - 24, cardWidth - 16)))}px`, bottom: "-6px", top: "auto", right: "auto", transform: "rotate(225deg)" } };
+      } else {
+        // Maus überlappt Card (nach Clamp): nächste Kante nehmen
+        const dL = Math.abs(mx - left), dR = Math.abs(mx - R);
+        const dT = Math.abs(my - top), dB = Math.abs(my - B);
+        const m = Math.min(dL, dR, dT, dB);
+        if (m === dL) s = { cls: "kb-arrow kb-arrow-left", top: `${Math.round(Math.max(16, Math.min(my - top, cardH - 16)))}px` };
+        else if (m === dR) s = { cls: "kb-arrow kb-arrow-right", top: `${Math.round(Math.max(16, Math.min(my - top, cardH - 16)))}px` };
+        else if (m === dT) s = { cls: "kb-arrow kb-arrow-top", left: `${Math.round(Math.max(16, Math.min(mx - left, cardWidth - 16)))}px` };
+        else s = { cls: "kb-arrow kb-arrow-bottom", left: `${Math.round(Math.max(16, Math.min(mx - left, cardWidth - 16)))}px` };
+      }
+      arrow.className = s.cls;
       arrow.style.top = "";
       arrow.style.bottom = "";
       arrow.style.left = "";
       arrow.style.right = "";
       arrow.style.transform = "";
-      if (arrowPos.side === "left" || arrowPos.side === "right") {
-        // center-left / center-right + gespiegelt: auf Höhe Titel-Zeile
-        const titleEl = previewCard.querySelector(".kb-title");
-        let arrowTop;
-        if (titleEl) {
-          const cardRect = previewCard.getBoundingClientRect();
-          const titleRect = titleEl.getBoundingClientRect();
-          arrowTop = titleRect.top + titleRect.height / 2 - cardRect.top;
-        } else {
-          arrowTop = currentMouseY - top;
-        }
-        arrowTop = Math.max(16, Math.min(arrowTop, previewCard.offsetHeight - 16));
-        arrow.style.top = `${Math.round(arrowTop)}px`;
-      } else if (arrowPos.side === "top" || arrowPos.side === "bottom") {
-        let arrowLeft = currentMouseX - left;
-        arrowLeft = Math.max(16, Math.min(arrowLeft, cardWidth - 16));
-        arrow.style.left = `${Math.round(arrowLeft)}px`;
-      } else if (arrowPos.side === "custom" && arrowPos.style) {
-        Object.assign(arrow.style, arrowPos.style);
-      }
+      if (s.top) arrow.style.top = s.top;
+      if (s.left) arrow.style.left = s.left;
+      if (s.style) Object.assign(arrow.style, s.style);
     }
   }
 
@@ -737,6 +961,8 @@
       item.addEventListener("mouseenter", (e) => {
         const linkEl = item.querySelector("a[href*='/s-anzeige/']");
         if (!linkEl) return;
+        itemHover = true;
+        stuckAbove = false;
 
         const url = linkEl.href;
 
@@ -750,11 +976,13 @@
         currentMouseY = e.clientY;
 
         hoverTimeout = setTimeout(async () => {
+          if (!isExtensionAlive()) return;
           previewCard.innerHTML = `<div class="kb-loading">Lade Vorschau...</div>`;
           previewCard.classList.remove("kb-card-hidden");
           positionCardAtCursor();
 
           const data = await fetchAdDetails(url);
+          if (!isExtensionAlive()) return;
           if (data) {
             renderCardContent(data, title, price, url);
             positionCardAtCursor();
@@ -762,22 +990,10 @@
         }, 300);
       });
 
-      item.addEventListener("mousemove", (e) => {
-        if (!previewCard.classList.contains("kb-card-hidden")) {
-          currentMouseX = e.clientX;
-          currentMouseY = e.clientY;
-          // update zone continuously
-          if (currentItemRect) {
-            const relX = (currentMouseX - currentItemRect.left) / currentItemRect.width;
-            const relY = (currentMouseY - currentItemRect.top) / currentItemRect.height;
-            // stay within item bounds for zone calc, but still update position
-          }
-          positionCardAtCursor();
-        }
-      });
-
       item.addEventListener("mouseleave", () => {
         clearTimeout(hoverTimeout);
+        itemHover = false;
+        stuckAbove = false;
       });
     });
   }
@@ -785,6 +1001,7 @@
   document.addEventListener("click", (e) => {
     if (!previewCard.contains(e.target) && !e.target.closest("li.relative.mb-xsmall")) {
       previewCard.classList.add("kb-card-hidden");
+      updateDebugOverlay();
     }
   });
 
@@ -792,6 +1009,7 @@
 
   const observer = new MutationObserver(() => {
     attachHoverListeners();
+    updateItemLabels();
   });
 
   observer.observe(document.body, { childList: true, subtree: true });
