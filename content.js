@@ -1118,8 +1118,7 @@
     const arrow = previewCard.querySelector("#kb-arrow");
     if (arrow) {
       // Seite aus echter Geometrie nach Clamp bestimmen, nicht aus Entry-Zone:
-      // Spitze zeigt stets auf den Mauszeiger (Dreieck auf der nächsten Kante).
-      // Protokoll-Spitze ist der Kanten-Anker (Dreieck-Mitte auf der Kante).
+      // Spitze zeigt stets auf den Mauszeiger.
       const mx = currentMouseX, my = currentMouseY;
       const cardH = previewCard.offsetHeight || cardHeight;
       const R = left + cardWidth, B = top + cardH;
@@ -1127,22 +1126,30 @@
       const above = my < top, below = my > B;
       let s = null;
       if (leftOf && !above && !below) {
-        s = { cls: "kb-arrow kb-arrow-left", top: `${Math.round(Math.max(14, Math.min(my - top, cardH - 14)))}px` };
+        s = { cls: "kb-arrow kb-arrow-left", top: `${Math.round(Math.max(16, Math.min(my - top, cardH - 16)))}px` };
       } else if (rightOf && !above && !below) {
-        s = { cls: "kb-arrow kb-arrow-right", top: `${Math.round(Math.max(14, Math.min(my - top, cardH - 14)))}px` };
-      } else if (above) {
-        s = { cls: "kb-arrow kb-arrow-top", left: `${Math.round(Math.max(14, Math.min(mx - left, cardWidth - 14)))}px` };
-      } else if (below) {
-        s = { cls: "kb-arrow kb-arrow-bottom", left: `${Math.round(Math.max(14, Math.min(mx - left, cardWidth - 14)))}px` };
+        s = { cls: "kb-arrow kb-arrow-right", top: `${Math.round(Math.max(16, Math.min(my - top, cardH - 16)))}px` };
+      } else if (above && !leftOf && !rightOf) {
+        s = { cls: "kb-arrow kb-arrow-top", left: `${Math.round(Math.max(16, Math.min(mx - left, cardWidth - 16)))}px` };
+      } else if (below && !leftOf && !rightOf) {
+        s = { cls: "kb-arrow kb-arrow-bottom", left: `${Math.round(Math.max(16, Math.min(mx - left, cardWidth - 16)))}px` };
+      } else if (leftOf && above) {
+        s = { cls: "kb-arrow", style: { left: `${Math.round(Math.max(16, Math.min(mx - left + 24, cardWidth - 16)))}px`, top: "-6px", bottom: "auto", right: "auto", transform: "rotate(45deg)" } };
+      } else if (rightOf && above) {
+        s = { cls: "kb-arrow", style: { left: `${Math.round(Math.max(16, Math.min(mx - left - 24, cardWidth - 16)))}px`, top: "-6px", bottom: "auto", right: "auto", transform: "rotate(45deg)" } };
+      } else if (leftOf && below) {
+        s = { cls: "kb-arrow", style: { left: `${Math.round(Math.max(16, Math.min(mx - left + 24, cardWidth - 16)))}px`, bottom: "-6px", top: "auto", right: "auto", transform: "rotate(225deg)" } };
+      } else if (rightOf && below) {
+        s = { cls: "kb-arrow", style: { left: `${Math.round(Math.max(16, Math.min(mx - left - 24, cardWidth - 16)))}px`, bottom: "-6px", top: "auto", right: "auto", transform: "rotate(225deg)" } };
       } else {
         // Maus überlappt Card (nach Clamp): nächste Kante nehmen
         const dL = Math.abs(mx - left), dR = Math.abs(mx - R);
         const dT = Math.abs(my - top), dB = Math.abs(my - B);
         const m = Math.min(dL, dR, dT, dB);
-        if (m === dL) s = { cls: "kb-arrow kb-arrow-left", top: `${Math.round(Math.max(14, Math.min(my - top, cardH - 14)))}px` };
-        else if (m === dR) s = { cls: "kb-arrow kb-arrow-right", top: `${Math.round(Math.max(14, Math.min(my - top, cardH - 14)))}px` };
-        else if (m === dT) s = { cls: "kb-arrow kb-arrow-top", left: `${Math.round(Math.max(14, Math.min(mx - left, cardWidth - 14)))}px` };
-        else s = { cls: "kb-arrow kb-arrow-bottom", left: `${Math.round(Math.max(14, Math.min(mx - left, cardWidth - 14)))}px` };
+        if (m === dL) s = { cls: "kb-arrow kb-arrow-left", top: `${Math.round(Math.max(16, Math.min(my - top, cardH - 16)))}px` };
+        else if (m === dR) s = { cls: "kb-arrow kb-arrow-right", top: `${Math.round(Math.max(16, Math.min(my - top, cardH - 16)))}px` };
+        else if (m === dT) s = { cls: "kb-arrow kb-arrow-top", left: `${Math.round(Math.max(16, Math.min(mx - left, cardWidth - 16)))}px` };
+        else s = { cls: "kb-arrow kb-arrow-bottom", left: `${Math.round(Math.max(16, Math.min(mx - left, cardWidth - 16)))}px` };
       }
       arrow.className = s.cls;
       arrow.style.top = "";

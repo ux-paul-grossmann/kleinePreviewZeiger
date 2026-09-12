@@ -93,101 +93,63 @@
   transition: opacity 0.15s ease-in-out, background-color 0.2s ease, border-color 0.2s ease, top 0.15s ease-out, left 0.15s ease-out;
 }
 
-/* Sprechblasen-Spitze: Standard-Dreieck per Rahmen-Trick, Spitze zeigt zum Mauszeiger */
 .kb-arrow {
   position: absolute;
-  width: 0;
-  height: 0;
-  border: 8px solid transparent;
+  width: 12px;
+  height: 12px;
+  background: var(--kb-bg);
+  border-left: 1px solid var(--kb-border);
+  border-top: 1px solid var(--kb-border);
   pointer-events: none;
   z-index: 100000;
 }
-/* Kontur: 1px größeres Dreieck dahinter in Rahmenfarbe */
-.kb-arrow::before {
-  content: "";
-  position: absolute;
-  left: -9px;
-  top: -9px;
-  border: 9px solid transparent;
-  z-index: -1;
-}
 
-/* Spitze an der linken Kante, zeigt nach links */
 .kb-arrow-left {
-  left: 0;
-  border-right-color: var(--kb-bg);
-}
-.kb-arrow-left::before {
-  border-right-color: var(--kb-border);
+  left: -6px;
+  transform: translateY(-50%) rotate(-45deg);
 }
 
-/* Spitze an der rechten Kante, zeigt nach rechts */
 .kb-arrow-right {
-  right: 0;
-  border-left-color: var(--kb-bg);
-}
-.kb-arrow-right::before {
-  border-left-color: var(--kb-border);
+  right: -6px;
+  transform: translateY(-50%) rotate(135deg);
 }
 
-/* Spitze an der Oberkante, zeigt nach oben */
 .kb-arrow-top {
-  top: 0;
-  border-bottom-color: var(--kb-bg);
-}
-.kb-arrow-top::before {
-  border-bottom-color: var(--kb-border);
+  top: -6px;
+  left: 50%;
+  transform: translateX(-50%) rotate(45deg);
 }
 
-/* Spitze an der Unterkante, zeigt nach unten */
 .kb-arrow-bottom {
-  bottom: 0;
-  border-top-color: var(--kb-bg);
-}
-.kb-arrow-bottom::before {
-  border-top-color: var(--kb-border);
+  bottom: -6px;
+  left: 50%;
+  transform: translateX(-50%) rotate(225deg);
 }
 
-/* Reserve: Dreieck oben nahe der linken Ecke */
 .kb-arrow-top-left {
-  top: 0;
-  left: 14px;
-  border-bottom-color: var(--kb-bg);
-}
-.kb-arrow-top-left::before {
-  border-bottom-color: var(--kb-border);
+  top: -6px;
+  left: 16px;
+  transform: rotate(45deg);
 }
 
-/* Reserve: Dreieck oben nahe der rechten Ecke */
 .kb-arrow-top-right {
-  top: 0;
-  right: 14px;
+  top: -6px;
+  right: 16px;
   left: auto;
-  border-bottom-color: var(--kb-bg);
-}
-.kb-arrow-top-right::before {
-  border-bottom-color: var(--kb-border);
+  transform: rotate(45deg);
 }
 
-/* Reserve: Dreieck unten nahe der linken Ecke */
 .kb-arrow-bottom-left {
-  bottom: 0;
-  left: 14px;
-  border-top-color: var(--kb-bg);
-}
-.kb-arrow-bottom-left::before {
-  border-top-color: var(--kb-border);
+  bottom: -6px;
+  left: 16px;
+  transform: rotate(225deg);
 }
 
-/* Reserve: Dreieck unten nahe der rechten Ecke */
 .kb-arrow-bottom-right {
-  bottom: 0;
-  right: 14px;
+  bottom: -6px;
+  right: 16px;
   left: auto;
-  border-top-color: var(--kb-bg);
-}
-.kb-arrow-bottom-right::before {
-  border-top-color: var(--kb-border);
+  transform: rotate(225deg);
 }
 
 .kb-card-hidden {
