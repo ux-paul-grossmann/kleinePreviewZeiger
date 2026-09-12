@@ -16,6 +16,9 @@
   let mouseMarker = null;
   let itemHover = false;
   let mouseInCard = false;
+  // Gemerkte Spalte/Reihe für Zonen-Hysterese (kein Flattern an Grenzen)
+  let lastCol = -1;
+  let lastRow = -1;
   let lastMove = { x: 0, y: 0, t: 0 };
   let showItemLabels = true;
   let showClampZone = true;
@@ -76,14 +79,24 @@
     ["bottom-left", "bottom-center", "bottom-right"],
   ];
 
+  // Zonenband mit Hysterese: Wechsel erst nach 5 Prozent Übertritt (kein Flattern)
+  function zoneBand(rel, last) {
+    const m = 0.05;
+    const lo = last === 0 ? 0.33 + m : (last === 2 ? 0.33 - m : 0.33);
+    const hi = last === 2 ? 0.66 - m : (last === 0 ? 0.66 + m : 0.66);
+    if (rel < lo) return 0;
+    if (rel > hi) return 2;
+    return 1;
+  }
+
   function currentZone() {
     if (!currentItemRect) return null;
     const r = currentItemRect;
     const relX = (currentMouseX - r.left) / r.width;
     const relY = (currentMouseY - r.top) / r.height;
-    const col = relX < 0.33 ? 0 : relX < 0.66 ? 1 : 2;
-    const row = relY < 0.33 ? 0 : relY < 0.66 ? 1 : 2;
-    return ZONE_MAP[row][col];
+    lastCol = zoneBand(relX, lastCol);
+    lastRow = zoneBand(relY, lastRow);
+    return ZONE_MAP[lastRow][lastCol];
   }
 
   function updateDebugOverlay() {
@@ -949,8 +962,10 @@
       // 3x3 zone based on mouse entry within item
       const relX = (currentMouseX - r.left) / r.width;
       const relY = (currentMouseY - r.top) / r.height;
-      const col = relX < 0.33 ? 0 : relX < 0.66 ? 1 : 2;
-      const row = relY < 0.33 ? 0 : relY < 0.66 ? 1 : 2;
+      lastCol = zoneBand(relX, lastCol);
+      lastRow = zoneBand(relY, lastRow);
+      const col = lastCol;
+      const row = lastRow;
       const zoneMap = [
         ["top-left", "top-center", "top-right"],
         ["center-left", "center-center", "center-right"],
@@ -967,7 +982,8 @@
       // Dreieck bleibt an Card (child), Card folgt Maus kontinuierlich
       if (zone === "center-center") {
         if (stuckAbove) {
-          left = currentMouseX - cardWidth / 2;
+          // Center-Spalte nie zentriert: seitlich versetzt, Korridor bleibt frei
+          left = sideLeft;
           top = currentMouseY - cardHeight - flip;
         } else {
           left = currentMouseX + flip;
@@ -983,11 +999,13 @@
         top = currentMouseY - cardHeight / 2;
         arrowClass = "kb-arrow kb-arrow-left"; arrowPos = { side: "left" };
       } else if (zone === "top-center") {
-        left = currentMouseX - cardWidth / 2;
+        // Center-Spalte nie zentriert: seitlich versetzt, Korridor bleibt frei
+        left = sideLeft;
         top = currentMouseY - cardHeight - flip;
         arrowClass = "kb-arrow kb-arrow-bottom"; arrowPos = { side: "bottom" };
       } else if (zone === "bottom-center") {
-        left = currentMouseX - cardWidth / 2;
+        // Center-Spalte nie zentriert: seitlich versetzt, Korridor bleibt frei
+        left = sideLeft;
         top = currentMouseY + flip;
         // Unterkante: Item nah am Fensterrand → Card oberhalb des Cursors
         // Kein 40er-Boden: Lookahead und Clamp danach regeln den Rest, sonst bricht die 32er-Lücke
@@ -1155,6 +1173,8 @@
         if (!linkEl) return;
         itemHover = true;
         stuckAbove = false;
+        lastCol = -1;
+        lastRow = -1;
 
         const url = linkEl.href;
 
@@ -1186,6 +1206,8 @@
         clearTimeout(hoverTimeout);
         itemHover = false;
         stuckAbove = false;
+        lastCol = -1;
+        lastRow = -1;
       });
     });
   }
