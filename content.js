@@ -785,6 +785,7 @@
         <button class="kb-debug-toggle" id="kb-clamp-toggle" aria-label="Clamp-Zone an/aus">Clamp</button>
         <button class="kb-debug-toggle" id="kb-items-toggle" aria-label="Treffer-Items hervorheben an/aus">Items</button>
         <button class="kb-debug-toggle" id="kb-log-toggle" aria-label="Tracking-Log an/aus">Log</button>
+        <button class="kb-debug-toggle" id="kb-all-toggle" aria-label="Alle Debug-Werkzeuge an/aus">Alle</button>
       </div>
 
     `;
@@ -913,6 +914,47 @@
         logToggle.classList.toggle("kb-active", showTrackLog);
         if (showTrackLog) console.log("[kb-track] PROTOKOLL AN");
         else { lastTrackSig = ""; console.log("[kb-track] PROTOKOLL AUS"); }
+      });
+    }
+
+    // Hauptschalter: alle Debug-Werkzeuge auf einmal schalten (ohne Transparent)
+    const allToggle = previewCard.querySelector("#kb-all-toggle");
+    const syncDebugButtons = () => {
+      const zustand = [
+        ["#kb-debug-toggle", showDebugZones],
+        ["#kb-mouse-toggle", showMouseMarker],
+        ["#kb-labels-toggle", showItemLabels],
+        ["#kb-clamp-toggle", showClampZone],
+        ["#kb-items-toggle", showItemHighlight],
+        ["#kb-log-toggle", showTrackLog],
+      ];
+      zustand.forEach(([selektor, an]) => {
+        const knopf = previewCard.querySelector(selektor);
+        if (knopf) knopf.classList.toggle("kb-active", an);
+      });
+      if (allToggle) {
+        const alleAn = showDebugZones && showMouseMarker && showItemLabels && showClampZone && showItemHighlight && showTrackLog;
+        allToggle.classList.toggle("kb-active", alleAn);
+      }
+    };
+    if (allToggle) {
+      syncDebugButtons();
+      allToggle.addEventListener("click", (e) => {
+        e.stopPropagation();
+        const ziel = !(showDebugZones && showMouseMarker && showItemLabels && showClampZone && showItemHighlight && showTrackLog);
+        showDebugZones = ziel;
+        showMouseMarker = ziel;
+        showItemLabels = ziel;
+        showClampZone = ziel;
+        showItemHighlight = ziel;
+        showTrackLog = ziel;
+        if (!ziel) lastTrackSig = "";
+        if (mouseMarker) mouseMarker.style.display = showMouseMarker ? "block" : "none";
+        updateDebugOverlay();
+        updateItemLabels();
+        updateClampOverlay();
+        updateItemHighlight();
+        syncDebugButtons();
       });
     }
 
