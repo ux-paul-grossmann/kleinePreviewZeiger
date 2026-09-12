@@ -1047,11 +1047,10 @@
         const below = currentMouseY + flip;
         const fitsAbove = above >= padding;
         const fitsBelow = below + cardHeight <= viewportHeight - padding;
+        // Notfall-Seite: nur vertikal zentrieren, waagrechte Wahl der Zone
+        // (Ecken, Engstellen, Center-Spalte) bleibt bestehen, Kante regelt Clamp
         const flipSide = () => {
           top = currentMouseY - cardHeight / 2;
-          left = (currentMouseX < viewportWidth / 2)
-            ? currentMouseX + flip
-            : currentMouseX - cardWidth - flip;
         };
         if (top < padding && fitsBelow) top = below;
         else if (top + cardHeight > viewportHeight - padding && fitsAbove) top = above;
