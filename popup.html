@@ -29,18 +29,23 @@
       }
     }
     html {
-      background: transparent;
+      background: transparent !important;
       border-radius: 12px;
       overflow: hidden;
     }
     body {
       width: 260px;
       margin: 0;
-      padding: 10px;
+      padding: 0;
       font-family: system-ui, -apple-system, sans-serif;
-      background: var(--popup-bg);
+      background: transparent !important;
       color: var(--text-main);
+      overflow: hidden;
+    }
+    .popup-wrapper {
+      background: var(--popup-bg);
       border-radius: 12px;
+      padding: 10px;
       overflow: hidden;
     }
     .header {
@@ -131,29 +136,30 @@
   </style>
 </head>
 <body>
-  <div class="header">
-    <span>kleinePreviewZeiger</span>
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="3"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
-  </div>
-
-  <div class="card">
-    <label for="theme">Erscheinungsbild</label>
-    <select id="theme">
-      <option value="system">System (Auto)</option>
-      <option value="light">Light</option>
-      <option value="dark">Dark</option>
-    </select>
-  </div>
-
-  <div class="card">
-    <label for="home">Wohnort (für Route)</label>
-    <div class="input-wrap">
-      <input id="home" type="text" placeholder="z. B. 50823 Köln">
-      <button id="saveHome" class="save-btn">Speichern</button>
+  <div class="popup-wrapper">
+    <div class="header">
+      <span>kleinePreviewZeiger</span>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="3"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
     </div>
-    <div class="hint">Wird als Start bei Route planen verwendet · Leer lassen wenn unbekannt</div>
-  </div>
 
+    <div class="card">
+      <label for="theme">Erscheinungsbild</label>
+      <select id="theme">
+        <option value="system">System (Auto)</option>
+        <option value="light">Light</option>
+        <option value="dark">Dark</option>
+      </select>
+    </div>
+
+    <div class="card">
+      <label for="home">Wohnort (für Route)</label>
+      <div class="input-wrap">
+        <input id="home" type="text" placeholder="z. B. 50823 Köln">
+        <button id="saveHome" class="save-btn">Speichern</button>
+      </div>
+      <div class="hint">Wird als Start bei Route planen verwendet</div>
+    </div>
+  </div>
   <script src="popup.js"></script>
 </body>
 </html>
