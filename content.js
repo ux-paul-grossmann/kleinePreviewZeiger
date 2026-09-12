@@ -8,19 +8,56 @@
   let currentZoomFactor = "2.5x";
   let currentHomeLocation = "";
 
-  const KB_SWATCHES = [
-    { id: "standard", name: "Standard", bg: "#fdfbff", border: "#e1e2ec", text: "#191c1e", textMuted: "#44474f", imgBg: "#e1e2ec", btnPrimary: "#4c662b", btnPrimaryText: "#ffffff", btnSecondary: "#0061a4", btnSecondaryText: "#ffffff" },
-    { id: "midnight", name: "Mitternacht", bg: "#0f172a", border: "#334155", text: "#f1f5f9", textMuted: "#94a3b8", imgBg: "#1e293b", btnPrimary: "#38bdf8", btnPrimaryText: "#0f172a", btnSecondary: "#818cf8", btnSecondaryText: "#ffffff" },
-    { id: "wald", name: "Wald", bg: "#f0fdf4", border: "#bbf7d0", text: "#14532d", textMuted: "#166534", imgBg: "#dcfce7", btnPrimary: "#15803d", btnPrimaryText: "#ffffff", btnSecondary: "#65a30d", btnSecondaryText: "#ffffff" },
-    { id: "ozean", name: "Ozean", bg: "#eff6ff", border: "#bfdbfe", text: "#1e3a8a", textMuted: "#1e40af", imgBg: "#dbeafe", btnPrimary: "#2563eb", btnPrimaryText: "#ffffff", btnSecondary: "#0ea5e9", btnSecondaryText: "#ffffff" },
-    { id: "sonne", name: "Sonne", bg: "#fffbeb", border: "#fde68a", text: "#92400e", textMuted: "#b45309", imgBg: "#fef3c7", btnPrimary: "#d97706", btnPrimaryText: "#ffffff", btnSecondary: "#ea580c", btnSecondaryText: "#ffffff" },
-    { id: "kirsche", name: "Kirsche", bg: "#fef2f2", border: "#fecaca", text: "#7f1d1d", textMuted: "#991b1b", imgBg: "#fee2e2", btnPrimary: "#dc2626", btnPrimaryText: "#ffffff", btnSecondary: "#be123c", btnSecondaryText: "#ffffff" },
-    { id: "nebel", name: "Nebel", bg: "#f8fafc", border: "#e2e8f0", text: "#334155", textMuted: "#64748b", imgBg: "#f1f5f9", btnPrimary: "#475569", btnPrimaryText: "#ffffff", btnSecondary: "#64748b", btnSecondaryText: "#ffffff" },
-    { id: "dunkelgruen", name: "Dunkelgrün", bg: "#022c22", border: "#064e3b", text: "#ecfdf5", textMuted: "#6ee7b7", imgBg: "#064e3b", btnPrimary: "#10b981", btnPrimaryText: "#022c22", btnSecondary: "#059669", btnSecondaryText: "#ffffff" },
-    { id: "koralle", name: "Koralle", bg: "#fff7ed", border: "#fed7aa", text: "#7c2d12", textMuted: "#9a3412", imgBg: "#ffedd5", btnPrimary: "#f97316", btnPrimaryText: "#ffffff", btnSecondary: "#fb923c", btnSecondaryText: "#ffffff" },
-    { id: "lavendel", name: "Lavendel", bg: "#faf5ff", border: "#e9d5ff", text: "#581c87", textMuted: "#6b21a8", imgBg: "#f3e8ff", btnPrimary: "#9333ea", btnPrimaryText: "#ffffff", btnSecondary: "#a855f7", btnSecondaryText: "#ffffff" },
-    { id: "sand", name: "Sand", bg: "#fefce8", border: "#fef08a", text: "#713f12", textMuted: "#854d0e", imgBg: "#fef9c3", btnPrimary: "#ca8a04", btnPrimaryText: "#ffffff", btnSecondary: "#eab308", btnSecondaryText: "#713f12" },
-    { id: "graphit", name: "Graphit", bg: "#18181b", border: "#27272a", text: "#f4f4f5", textMuted: "#a1a1aa", imgBg: "#27272a", btnPrimary: "#71717a", btnPrimaryText: "#ffffff", btnSecondary: "#52525b", btnSecondaryText: "#ffffff" },
+    const KB_SWATCHES = [
+    { id: "standard", name: "Standard", mode: "light", bg: "#fdfbff", border: "#e1e2ec", text: "#191c1e", textMuted: "#44474f", imgBg: "#e1e2ec", btnPrimary: "#4c662b", btnPrimaryText: "#ffffff", btnSecondary: "#0061a4", btnSecondaryText: "#ffffff" },
+    { id: "nebel", name: "Nebel", mode: "light", bg: "#f8fafc", border: "#e2e8f0", text: "#334155", textMuted: "#64748b", imgBg: "#f1f5f9", btnPrimary: "#475569", btnPrimaryText: "#ffffff", btnSecondary: "#64748b", btnSecondaryText: "#ffffff" },
+    { id: "sand", name: "Sand", mode: "light", bg: "#fefce8", border: "#fef08a", text: "#713f12", textMuted: "#854d0e", imgBg: "#fef9c3", btnPrimary: "#ca8a04", btnPrimaryText: "#ffffff", btnSecondary: "#eab308", btnSecondaryText: "#713f12" },
+    { id: "wald", name: "Wald", mode: "light", bg: "#f0fdf4", border: "#bbf7d0", text: "#14532d", textMuted: "#166534", imgBg: "#dcfce7", btnPrimary: "#15803d", btnPrimaryText: "#ffffff", btnSecondary: "#65a30d", btnSecondaryText: "#ffffff" },
+    { id: "ozean", name: "Ozean", mode: "light", bg: "#eff6ff", border: "#bfdbfe", text: "#1e3a8a", textMuted: "#1e40af", imgBg: "#dbeafe", btnPrimary: "#2563eb", btnPrimaryText: "#ffffff", btnSecondary: "#0ea5e9", btnSecondaryText: "#ffffff" },
+    { id: "koralle", name: "Koralle", mode: "light", bg: "#fff7ed", border: "#fed7aa", text: "#7c2d12", textMuted: "#9a3412", imgBg: "#ffedd5", btnPrimary: "#f97316", btnPrimaryText: "#ffffff", btnSecondary: "#fb923c", btnSecondaryText: "#ffffff" },
+    { id: "lavendel", name: "Lavendel", mode: "light", bg: "#faf5ff", border: "#e9d5ff", text: "#581c87", textMuted: "#6b21a8", imgBg: "#f3e8ff", btnPrimary: "#9333ea", btnPrimaryText: "#ffffff", btnSecondary: "#a855f7", btnSecondaryText: "#ffffff" },
+    { id: "sonne", name: "Sonne", mode: "light", bg: "#fffbeb", border: "#fde68a", text: "#92400e", textMuted: "#b45309", imgBg: "#fef3c7", btnPrimary: "#d97706", btnPrimaryText: "#ffffff", btnSecondary: "#ea580c", btnSecondaryText: "#ffffff" },
+    { id: "kirsche", name: "Kirsche", mode: "light", bg: "#fef2f2", border: "#fecaca", text: "#7f1d1d", textMuted: "#991b1b", imgBg: "#fee2e2", btnPrimary: "#dc2626", btnPrimaryText: "#ffffff", btnSecondary: "#be123c", btnSecondaryText: "#ffffff" },
+    { id: "bluete", name: "Blüte", mode: "light", bg: "#fdf2f8", border: "#fbcfe8", text: "#831843", textMuted: "#9d174d", imgBg: "#fce7f3", btnPrimary: "#db2777", btnPrimaryText: "#ffffff", btnSecondary: "#ec4899", btnSecondaryText: "#ffffff" },
+    { id: "aqua", name: "Aqua", mode: "light", bg: "#ecfeff", border: "#a5f3fc", text: "#155e75", textMuted: "#0e7490", imgBg: "#cffafe", btnPrimary: "#0891b2", btnPrimaryText: "#ffffff", btnSecondary: "#06b6d4", btnSecondaryText: "#ffffff" },
+    { id: "flamme", name: "Flamme", mode: "light", bg: "#fff1f2", border: "#fecdd3", text: "#881337", textMuted: "#9f1239", imgBg: "#ffe4e6", btnPrimary: "#e11d48", btnPrimaryText: "#ffffff", btnSecondary: "#f43f5e", btnSecondaryText: "#ffffff" },
+    { id: "sturm", name: "Sturm", mode: "light", bg: "#f4f4f5", border: "#d4d4d8", text: "#27272a", textMuted: "#52525b", imgBg: "#e4e4e7", btnPrimary: "#18181b", btnPrimaryText: "#ffffff", btnSecondary: "#3f3f46", btnSecondaryText: "#ffffff" },
+    { id: "honig", name: "Honig", mode: "light", bg: "#fefce8", border: "#fde68a", text: "#7c2d12", textMuted: "#92400e", imgBg: "#fef3c7", btnPrimary: "#f59e0b", btnPrimaryText: "#ffffff", btnSecondary: "#fbbf24", btnSecondaryText: "#7c2d12" },
+    { id: "eis", name: "Eis", mode: "light", bg: "#f0f9ff", border: "#bae6fd", text: "#0c4a6e", textMuted: "#075985", imgBg: "#e0f2fe", btnPrimary: "#0284c7", btnPrimaryText: "#ffffff", btnSecondary: "#0ea5e9", btnSecondaryText: "#ffffff" },
+    { id: "pfirsich", name: "Pfirsich", mode: "light", bg: "#fff7ed", border: "#ffedd5", text: "#431407", textMuted: "#9a3412", imgBg: "#ffedd5", btnPrimary: "#ea580c", btnPrimaryText: "#ffffff", btnSecondary: "#f97316", btnSecondaryText: "#ffffff" },
+    { id: "minze", name: "Minze", mode: "light", bg: "#ecfdf5", border: "#a7f3d0", text: "#022c22", textMuted: "#065f46", imgBg: "#d1fae5", btnPrimary: "#059669", btnPrimaryText: "#ffffff", btnSecondary: "#10b981", btnSecondaryText: "#ffffff" },
+    { id: "flieder", name: "Flieder", mode: "light", bg: "#f5f3ff", border: "#ddd6fe", text: "#4c1d95", textMuted: "#5b21b6", imgBg: "#ede9fe", btnPrimary: "#7c3aed", btnPrimaryText: "#ffffff", btnSecondary: "#8b5cf6", btnSecondaryText: "#ffffff" },
+    { id: "creme", name: "Creme", mode: "light", bg: "#fefce8", border: "#fde68a", text: "#422006", textMuted: "#78350f", imgBg: "#fef9c3", btnPrimary: "#a16207", btnPrimaryText: "#ffffff", btnSecondary: "#ca8a04", btnSecondaryText: "#ffffff" },
+    { id: "eisblau", name: "Eisblau", mode: "light", bg: "#f0f9ff", border: "#7dd3fc", text: "#0c4a6e", textMuted: "#0369a1", imgBg: "#e0f2fe", btnPrimary: "#0284c7", btnPrimaryText: "#ffffff", btnSecondary: "#38bdf8", btnSecondaryText: "#ffffff" },
+    { id: "pfirsichhell", name: "Pfirsich Hell", mode: "light", bg: "#fef7ed", border: "#fdba74", text: "#431407", textMuted: "#9a3412", imgBg: "#ffedd5", btnPrimary: "#f97316", btnPrimaryText: "#ffffff", btnSecondary: "#fb923c", btnSecondaryText: "#ffffff" },
+    { id: "minzhell", name: "Minz Hell", mode: "light", bg: "#f0fdf4", border: "#86efac", text: "#14532d", textMuted: "#166534", imgBg: "#dcfce7", btnPrimary: "#22c55e", btnPrimaryText: "#ffffff", btnSecondary: "#4ade80", btnSecondaryText: "#14532d" },
+    { id: "fliederhell", name: "Flieder Hell", mode: "light", bg: "#faf5ff", border: "#d8b4fe", text: "#6b21a8", textMuted: "#7e22ce", imgBg: "#f3e8ff", btnPrimary: "#a855f7", btnPrimaryText: "#ffffff", btnSecondary: "#c084fc", btnSecondaryText: "#ffffff" },
+    { id: "cremehell", name: "Creme Hell", mode: "light", bg: "#fffbeb", border: "#fde68a", text: "#78350f", textMuted: "#92400e", imgBg: "#fef3c7", btnPrimary: "#eab308", btnPrimaryText: "#78350f", btnSecondary: "#facc15", btnSecondaryText: "#78350f" },
+    { id: "midnight", name: "Mitternacht", mode: "dark", bg: "#0f172a", border: "#334155", text: "#f1f5f9", textMuted: "#94a3b8", imgBg: "#1e293b", btnPrimary: "#38bdf8", btnPrimaryText: "#0f172a", btnSecondary: "#818cf8", btnSecondaryText: "#ffffff" },
+    { id: "dunkelgruen", name: "Dunkelgrün", mode: "dark", bg: "#022c22", border: "#064e3b", text: "#ecfdf5", textMuted: "#6ee7b7", imgBg: "#064e3b", btnPrimary: "#10b981", btnPrimaryText: "#022c22", btnSecondary: "#059669", btnSecondaryText: "#ffffff" },
+    { id: "graphit", name: "Graphit", mode: "dark", bg: "#18181b", border: "#27272a", text: "#f4f4f5", textMuted: "#a1a1aa", imgBg: "#27272a", btnPrimary: "#71717a", btnPrimaryText: "#ffffff", btnSecondary: "#52525b", btnSecondaryText: "#ffffff" },
+    { id: "tundra", name: "Tundra", mode: "dark", bg: "#1e293b", border: "#334155", text: "#e2e8f0", textMuted: "#94a3b8", imgBg: "#0f172a", btnPrimary: "#0f766e", btnPrimaryText: "#ffffff", btnSecondary: "#14b8a6", btnSecondaryText: "#ffffff" },
+    { id: "wueste", name: "Wüste", mode: "dark", bg: "#1c1917", border: "#44403c", text: "#f5f5f4", textMuted: "#a8a29e", imgBg: "#292524", btnPrimary: "#a21caf", btnPrimaryText: "#ffffff", btnSecondary: "#c026d3", btnSecondaryText: "#ffffff" },
+    { id: "nacht", name: "Nacht", mode: "dark", bg: "#020617", border: "#1e293b", text: "#e2e8f0", textMuted: "#94a3b8", imgBg: "#0f172a", btnPrimary: "#6366f1", btnPrimaryText: "#ffffff", btnSecondary: "#8b5cf6", btnSecondaryText: "#ffffff" },
+    { id: "obsidian", name: "Obsidian", mode: "dark", bg: "#0c0a09", border: "#44403c", text: "#f5f5f4", textMuted: "#a8a29e", imgBg: "#1c1917", btnPrimary: "#57534e", btnPrimaryText: "#ffffff", btnSecondary: "#78716c", btnSecondaryText: "#ffffff" },
+    { id: "tiefsee", name: "Tiefsee", mode: "dark", bg: "#082f49", border: "#0c4a6e", text: "#e0f2fe", textMuted: "#7dd3fc", imgBg: "#0c4a6e", btnPrimary: "#0ea5e9", btnPrimaryText: "#ffffff", btnSecondary: "#38bdf8", btnSecondaryText: "#ffffff" },
+    { id: "waldnacht", name: "Waldnacht", mode: "dark", bg: "#052e16", border: "#14532d", text: "#dcfce7", textMuted: "#86efac", imgBg: "#14532d", btnPrimary: "#22c55e", btnPrimaryText: "#052e16", btnSecondary: "#16a34a", btnSecondaryText: "#ffffff" },
+    { id: "lavanacht", name: "Lavanacht", mode: "dark", bg: "#2e1065", border: "#4c1d95", text: "#f5f3ff", textMuted: "#ddd6fe", imgBg: "#4c1d95", btnPrimary: "#8b5cf6", btnPrimaryText: "#ffffff", btnSecondary: "#a78bfa", btnSecondaryText: "#ffffff" },
+    { id: "kirschdunkel", name: "Kirschdunkel", mode: "dark", bg: "#450a0a", border: "#7f1d1d", text: "#fee2e2", textMuted: "#fecaca", imgBg: "#7f1d1d", btnPrimary: "#f43f5e", btnPrimaryText: "#ffffff", btnSecondary: "#e11d48", btnSecondaryText: "#ffffff" },
+    { id: "bernstein", name: "Bernstein", mode: "dark", bg: "#451a03", border: "#7c2d12", text: "#fef3c7", textMuted: "#fde68a", imgBg: "#7c2d12", btnPrimary: "#f59e0b", btnPrimaryText: "#451a03", btnSecondary: "#fbbf24", btnSecondaryText: "#451a03" },
+    { id: "obsidian2", name: "Obsidian 2", mode: "dark", bg: "#09090b", border: "#27272a", text: "#fafafa", textMuted: "#a1a1aa", imgBg: "#18181b", btnPrimary: "#52525b", btnPrimaryText: "#ffffff", btnSecondary: "#71717a", btnSecondaryText: "#ffffff" },
+    { id: "tiefsee2", name: "Tiefsee 2", mode: "dark", bg: "#0c4a6e", border: "#075985", text: "#e0f2fe", textMuted: "#bae6fd", imgBg: "#075985", btnPrimary: "#0284c7", btnPrimaryText: "#ffffff", btnSecondary: "#0ea5e9", btnSecondaryText: "#ffffff" },
+    { id: "moos2", name: "Moos 2", mode: "dark", bg: "#052e16", border: "#166534", text: "#dcfce7", textMuted: "#86efac", imgBg: "#14532d", btnPrimary: "#16a34a", btnPrimaryText: "#ffffff", btnSecondary: "#22c55e", btnSecondaryText: "#052e16" },
+    { id: "kohle2", name: "Kohle 2", mode: "dark", bg: "#1c1917", border: "#44403c", text: "#f5f5f4", textMuted: "#a8a29e", imgBg: "#292524", btnPrimary: "#57534e", btnPrimaryText: "#ffffff", btnSecondary: "#78716c", btnSecondaryText: "#ffffff" },
+    { id: "schiefer", name: "Schiefer", mode: "dark", bg: "#27272a", border: "#3f3f46", text: "#f4f4f5", textMuted: "#a1a1aa", imgBg: "#3f3f46", btnPrimary: "#52525b", btnPrimaryText: "#ffffff", btnSecondary: "#71717a", btnSecondaryText: "#ffffff" },
+    { id: "tinte", name: "Tinte", mode: "dark", bg: "#1e1b4b", border: "#4338ca", text: "#e0e7ff", textMuted: "#a5b4fc", imgBg: "#312e81", btnPrimary: "#6366f1", btnPrimaryText: "#ffffff", btnSecondary: "#818cf8", btnSecondaryText: "#ffffff" },
+    { id: "moor", name: "Moor", mode: "dark", bg: "#1c1917", border: "#57534e", text: "#f5f5f4", textMuted: "#a8a29e", imgBg: "#44403c", btnPrimary: "#78716c", btnPrimaryText: "#ffffff", btnSecondary: "#a8a29e", btnSecondaryText: "#1c1917" },
+    { id: "abyss", name: "Abyss", mode: "dark", bg: "#020617", border: "#334155", text: "#f1f5f9", textMuted: "#94a3b8", imgBg: "#0f172a", btnPrimary: "#0ea5e9", btnPrimaryText: "#ffffff", btnSecondary: "#38bdf8", btnSecondaryText: "#ffffff" },
+    { id: "ember", name: "Glut", mode: "dark", bg: "#450a0a", border: "#991b1b", text: "#fee2e2", textMuted: "#fecaca", imgBg: "#7f1d1d", btnPrimary: "#ef4444", btnPrimaryText: "#ffffff", btnSecondary: "#f87171", btnSecondaryText: "#450a0a" },
+    { id: "nebel2", name: "Nebel 2", mode: "dark", bg: "#0f172a", border: "#475569", text: "#e2e8f0", textMuted: "#94a3b8", imgBg: "#1e293b", btnPrimary: "#64748b", btnPrimaryText: "#ffffff", btnSecondary: "#94a3b8", btnSecondaryText: "#0f172a" },
+    { id: "wald2", name: "Wald 2", mode: "dark", bg: "#052e16", border: "#15803d", text: "#bbf7d0", textMuted: "#86efac", imgBg: "#166534", btnPrimary: "#22c55e", btnPrimaryText: "#052e16", btnSecondary: "#4ade80", btnSecondaryText: "#052e16" },
+    { id: "ozean2", name: "Ozean 2", mode: "dark", bg: "#0c4a6e", border: "#0284c7", text: "#e0f2fe", textMuted: "#7dd3fc", imgBg: "#075985", btnPrimary: "#0ea5e9", btnPrimaryText: "#ffffff", btnSecondary: "#38bdf8", btnSecondaryText: "#0c4a6e" },
+
   ];
 
   function applySwatchTheme(id) {
@@ -492,12 +529,19 @@
       </div>
       <div class="kb-actions">
         <a href="${url}" target="_blank" rel="noopener noreferrer" class="kb-btn kb-btn-primary">Anzeige ansehen <svg class="kb-btn-icon" viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg></a>
-        <a href="${mapsUrl}" target="_blank" rel="noopener noreferrer" class="kb-btn kb-btn-secondary"><svg class="kb-btn-icon" viewBox="0 0 24 24" width="12" height="12" fill="currentColor"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5a2.5 2.5 0 1 1 0-5 2.5 2.5 0 0 1 0 5z"/></svg> Route planen</a>
+        <a href="${mapsUrl}" target="_blank" rel="noopener noreferrer" class="kb-btn kb-btn-secondary">Route planen</a>
       </div>
       <div class="kb-swatches-drawer" id="kb-swatches-drawer">
-        <button class="kb-swatches-toggle" id="kb-swatches-toggle" aria-label="Farben umschalten">Farben <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg></button>
+        <button class="kb-swatches-toggle" id="kb-swatches-toggle" aria-label="Farben umschalten"><span class="kb-toggle-dot"></span><span class="kb-toggle-dot"></span><span class="kb-toggle-dot"></span></button>
         <div class="kb-swatches-grid" id="kb-swatches-grid">
-          ${KB_SWATCHES.map((s) => `<button class="kb-swatch" data-theme="${s.id}" title="${s.name}" aria-label="${s.name}" style="background:${s.bg}; border-color:${s.border}; color:${s.text};">${s.name.slice(0,2)}</button>`).join("")}
+          ${["light","dark"].map((mode) => `
+            <div class="kb-swatch-group">
+              <div class="kb-swatch-label">${mode === "light" ? "Light" : "Dark"}</div>
+              <div class="kb-swatches-subgrid">
+                ${KB_SWATCHES.filter((s) => s.mode === mode).map((s) => `<button class="kb-swatch" data-theme="${s.id}" data-mode="${s.mode}" title="${s.name}" aria-label="${s.name}" style="background: linear-gradient(135deg, ${s.btnPrimary} 0%, ${s.btnSecondary} 100%); border-color:${s.border};"></button>`).join("")}
+              </div>
+            </div>
+          `).join("")}
         </div>
       </div>
     `;
@@ -547,6 +591,21 @@
           e.stopPropagation();
           applySwatchTheme(btn.dataset.theme);
         });
+      });
+    }
+
+    const routeBtn = previewCard.querySelector(".kb-btn-secondary");
+    if (routeBtn) {
+      routeBtn.addEventListener("click", (e) => {
+        e.preventDefault();
+        const dest = data.location && data.location !== "Standort unbekannt" ? data.location : "";
+        const origin = currentHomeLocation || "";
+        let url;
+        if (dest && origin) url = `https://www.google.com/maps/dir/?api=1&origin=${encodeURIComponent(origin)}&destination=${encodeURIComponent(dest)}`;
+        else if (dest) url = `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(dest)}`;
+        else if (origin) url = `https://www.google.com/maps/dir/?api=1&origin=${encodeURIComponent(origin)}`;
+        else url = `https://www.google.com/maps/search/?api=1&query=`;
+        window.open(url, "_blank", "noopener");
       });
     }
   }

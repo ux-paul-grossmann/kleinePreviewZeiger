@@ -20,21 +20,26 @@ document.addEventListener("DOMContentLoaded", () => {
   const save = () => {
     const val = homeInput.value.trim();
     chrome.storage.local.set({ kbHomeLocation: val }, () => {
+      // Verifikation: direkt wieder auslesen
+      chrome.storage.local.get(["kbHomeLocation"], (r) => {
+        console.log("kbHomeLocation gespeichert:", r.kbHomeLocation);
+      });
       const orig = saveBtn.textContent;
-      saveBtn.textContent = "✓";
-      setTimeout(() => saveBtn.textContent = orig, 1000);
+      saveBtn.textContent = "✓ Gespeichert";
+      saveBtn.style.background = "#22c55e";
+      saveBtn.style.color = "#ffffff";
+      setTimeout(() => {
+        saveBtn.textContent = orig;
+        saveBtn.style.background = "#38bdf8";
+        saveBtn.style.color = "#0f172a";
+      }, 1200);
     });
   };
   saveBtn.addEventListener("click", save);
   homeInput.addEventListener("keydown", (e) => {
-    if (e.key === "Enter") save();
-  });
-  homeInput.addEventListener("change", (e) => {
-    const val = e.target.value.trim();
-    chrome.storage.local.set({ kbHomeLocation: val });
-  });
-  homeInput.addEventListener("blur", (e) => {
-    const val = e.target.value.trim();
-    chrome.storage.local.set({ kbHomeLocation: val });
+    if (e.key === "Enter") {
+      e.preventDefault();
+      save();
+    }
   });
 });
