@@ -1,3 +1,4 @@
+/* Farbwelt hell: Material-3-Tokens als Variablen */
 :root {
   /* Material Design Light Theme */
   --kb-bg: #fdfbff;
@@ -75,6 +76,7 @@
   --kb-btn-secondary-hover: #83b194;
 }
 
+/* Vorschau-Card: schwebender Container, die Position setzt das Skript */
 #kb-preview-card {
   position: fixed;
   z-index: 99999;
@@ -659,11 +661,16 @@
   box-shadow: 0 0 0 1px #27272a, 0 0 0 3px rgba(39,39,42,0.15) !important;
 }
 
+/* Debug-Tastenreihe: bricht um, damit alle Schalter in die Card passen */
 .kb-debug-row {
   display: flex;
+  flex-wrap: wrap;
   gap: 6px;
   justify-content: center;
   margin: 8px auto 0;
+  padding: 0 8px;
+  max-width: 100%;
+  box-sizing: border-box;
 }
 
 .kb-debug-toggle {
@@ -684,10 +691,12 @@
   color: #ff0080;
 }
 
+/* Transparent-Modus der Card (Transparent-Toggle) */
 #kb-preview-card.kb-transparent {
   opacity: 0.25;
 }
 
+/* Maus-Markierungspunkt (Maus-Toggle) */
 #kb-mouse-marker {
   position: fixed;
   z-index: 100001;
@@ -701,6 +710,7 @@
   pointer-events: none;
 }
 
+/* Buchstaben-Plakette an Trefferlisten-Items (ABC-Toggle) */
 .kb-item-label {
   position: absolute;
   right: 8px;
@@ -719,6 +729,7 @@
   box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
 }
 
+/* Zonen-Overlay: 3x3-Raster über dem geho hoverten Treffer (Zonen-Toggle) */
 #kb-debug-overlay {
   position: fixed;
   z-index: 99998;
@@ -744,4 +755,20 @@
 
 .kb-debug-cell.kb-active {
   background: rgba(255, 0, 128, 0.3);
+}
+
+/* Clamp-Rahmen: 15px-Viewport-Grenze wie in positionCardAtCursor (Clamp-Toggle) */
+#kb-clamp-overlay {
+  position: fixed;
+  inset: 15px;
+  z-index: 99999;
+  pointer-events: none;
+  display: none;
+  border: 2px dashed rgba(245, 158, 11, 0.8);
+  border-radius: 8px;
+}
+
+/* Treffer-Hervorhebung: hellblau-transparent (Items-Toggle) */
+.kb-highlight-items li.relative.mb-xsmall {
+  background-color: rgba(56, 189, 248, 0.15) !important;
 }

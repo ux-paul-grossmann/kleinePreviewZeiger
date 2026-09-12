@@ -2,6 +2,7 @@
 <html lang="de">
 <head>
   <meta charset="UTF-8">
+  <!-- Popup-Stile: helle und dunkle Farbwelt plus Karten-Layout -->
   <style>
     * { box-sizing: border-box; }
     :root {
@@ -174,11 +175,13 @@
 </head>
 <body>
   <div class="popup-wrapper">
+    <!-- Kopfzeile mit Erweiterungsname -->
     <div class="header">
       <span>kleinePreviewZeiger</span>
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="3"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
     </div>
 
+    <!-- Karte: Erscheinungsbild wählen -->
     <div class="card">
       <label for="theme">Erscheinungsbild</label>
       <select id="theme">
@@ -188,6 +191,7 @@
       </select>
     </div>
 
+    <!-- Karte: Wohnort für Routenplanung speichern -->
     <div class="card">
       <label for="home">Wohnort (für Route)</label>
       <div class="input-wrap">
@@ -197,6 +201,7 @@
       <div class="hint">Wird als Start bei <b>Route planen</b> verwendet</div>
     </div>
 
+    <!-- Karte: Themen-Drawer in der Vorschau schalten -->
     <div class="card">
       <div class="card-header">
         <label for="themeToggle" style="margin:0;">Themen</label>
@@ -208,6 +213,7 @@
       <div class="hint" style="margin-top:0;">Themen-Drawer in Vorschau-Card an/aus</div>
     </div>
   </div>
+  <!-- Popup-Logik laden -->
   <script src="popup.js"></script>
 </body>
 </html>

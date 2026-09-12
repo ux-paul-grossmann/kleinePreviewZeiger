@@ -1,3 +1,5 @@
+// KleinePreviewZeiger: Hover-Vorschau für Kleinanzeigen-Trefferlisten
+// Einstieg unten bei attachHoverListeners, Positionierung in positionCardAtCursor
 (() => {
   const cache = new Map();
 
@@ -7,13 +9,24 @@
   let currentItemRect = null;
   let currentZoomFactor = "2.5x";
   let currentHomeLocation = "";
-  let showDebugZones = false;
+  let showDebugZones = true;
   let debugOverlay = null;
-  let showMouseMarker = false;
+  let clampOverlay = null;
+  let showMouseMarker = true;
   let mouseMarker = null;
   let itemHover = false;
   let mouseInCard = false;
-  let showItemLabels = false;
+  let lastMove = { x: 0, y: 0, t: 0 };
+  let showItemLabels = true;
+  let showClampZone = true;
+  let showItemHighlight = true;
+  let showTrackLog = true;
+  let lastTrackLog = 0;
+  let lastTrackSig = "";
+  let lastZoneLogged = null;
+  let lastItemTopLogged = 0;
+  let trackDir = 0;
+  let trackSpd = 0;
   let stuckAbove = false;
 
   function isExtensionAlive() {
@@ -35,6 +48,7 @@
     return s;
   }
 
+  // Debug-Anzeigen: Buchstaben-Badges, Clamp-Rahmen und Treffer-Hervorhebung schalten
   function updateItemLabels() {
     document.querySelectorAll("li.relative.mb-xsmall").forEach((item, i) => {
       let badge = item.querySelector(":scope > .kb-item-label");
@@ -88,6 +102,15 @@
     debugOverlay.querySelectorAll(".kb-debug-cell").forEach((c) => {
       c.classList.toggle("kb-active", c.dataset.zone === zone);
     });
+  }
+
+  function updateClampOverlay() {
+    if (!clampOverlay) return;
+    clampOverlay.style.display = showClampZone ? "block" : "none";
+  }
+
+  function updateItemHighlight() {
+    document.body.classList.toggle("kb-highlight-items", showItemHighlight);
   }
 
     const KB_SWATCHES = [
@@ -221,6 +244,7 @@
     });
   }
 
+  // Vorschau-Card einmalig erzeugen und an den Seitenkörper hängen
   function createPreviewCard() {
     let card = document.getElementById("kb-preview-card");
     if (!card) {
@@ -234,21 +258,87 @@
 
   const previewCard = createPreviewCard();
 
+  // Card wächst async nach (Bilder/Description) → nachpositionieren, damit 32px-Abstand bleibt
+  new ResizeObserver(() => {
+    if (shouldTrack(0)) positionCardAtCursor();
+  }).observe(previewCard);
+
   debugOverlay = document.createElement("div");
   debugOverlay.id = "kb-debug-overlay";
   debugOverlay.style.display = "none";
   debugOverlay.innerHTML = ZONE_MAP.flat().map((z) => `<div class="kb-debug-cell" data-zone="${z}">${z}</div>`).join("");
   document.body.appendChild(debugOverlay);
 
+  clampOverlay = document.createElement("div");
+  clampOverlay.id = "kb-clamp-overlay";
+  clampOverlay.style.display = "none";
+  document.body.appendChild(clampOverlay);
+
+  // DOM-Ringpuffer als Console-Spiegel (für MCP-Auslesung)
+  let trackBuf = document.getElementById("kb-track-log");
+  if (!trackBuf) {
+    trackBuf = document.createElement("div");
+    trackBuf.id = "kb-track-log";
+    trackBuf.style.display = "none";
+    document.body.appendChild(trackBuf);
+  }
+
   mouseMarker = document.createElement("div");
   mouseMarker.id = "kb-mouse-marker";
   mouseMarker.style.display = "none";
   document.body.appendChild(mouseMarker);
 
-  previewCard.addEventListener("mouseenter", () => { mouseInCard = true; });
+  previewCard.addEventListener("mouseenter", () => {
+    mouseInCard = true;
+    // Jeder Card-Entry = Issue-Indiz, keine Ausnahmen in dieser Testphase
+    const r = currentItemRect;
+    const inItem = !!r && currentMouseX >= r.left && currentMouseX <= r.right && currentMouseY >= r.top && currentMouseY <= r.bottom;
+    trackLog(`PROBLEM Karten-Eintritt Maus=(${Math.round(currentMouseX)},${Math.round(currentMouseY)}) Zone=${r ? currentZone() : "keine"} KartenOberkante=${previewCard.offsetTop} Kartenhoehe=${previewCard.offsetHeight} ImTreffer=${inItem ? "ja" : "nein"} TrefferAktiv=${itemHover ? "ja" : "nein"}`);
+  });
   previewCard.addEventListener("mouseleave", () => { mouseInCard = false; });
 
+  // Tracking-Bedingung, gemeinsam für Mousemove + ResizeObserver:
+  // Freeze nur außerhalb des Items (echte Card-Interaktion). Solange der Cursor
+  // über dem geho hoverten Item reist (auch geometrisch in der überlappenden Card),
+  // flieht die Card weiter vor dem Cursor; zügige Durchfahrt ebenso.
+  // Debug-Protokoll: gedrosselt in Console und DOM-Ringpuffer schreiben
+  function trackLog(msg, sig) {
+    if (!showTrackLog) return;
+    const now = performance.now();
+    const signature = sig || msg;
+    if (signature !== lastTrackSig || now - lastTrackLog > 500) {
+      lastTrackSig = signature;
+      lastTrackLog = now;
+      console.log(`[kb-track] ${msg}`);
+      const buf = document.getElementById("kb-track-log");
+      if (buf) {
+        const line = document.createElement("div");
+        line.textContent = `[kb-track] ${msg}`;
+        buf.appendChild(line);
+        while (buf.children.length > 400) buf.firstChild.remove();
+      }
+    }
+  }
+
+  function shouldTrack(speed) {
+    if (!currentItemRect || !itemHover || previewCard.classList.contains("kb-card-hidden")) return false;
+    if (!mouseInCard) return true;
+    const r = currentItemRect;
+    if (currentMouseX >= r.left && currentMouseX <= r.right && currentMouseY >= r.top && currentMouseY <= r.bottom) return true;
+    if (speed > 0.25) return true;
+    trackLog(`STARRE Maus in Karte ausserhalb Treffer Tempo=${speed.toFixed(2)}`, "freeze");
+    return false;
+  }
+
+  // Mausverfolgung: Card bei jedem Zug neu positionieren, solange Tracking erlaubt ist
   document.addEventListener("mousemove", (e) => {
+    const now = performance.now();
+    const dt = now - (lastMove.t || now);
+    const speed = dt > 0 ? Math.hypot(e.clientX - lastMove.x, e.clientY - lastMove.y) / dt : 0; // px pro ms
+    const dyMove = e.clientY - lastMove.y;
+    trackDir = dyMove === 0 ? 0 : (dyMove > 0 ? 1 : -1);
+    trackSpd = speed;
+    lastMove = { x: e.clientX, y: e.clientY, t: now };
     currentMouseX = e.clientX;
     currentMouseY = e.clientY;
     if (showMouseMarker && mouseMarker) {
@@ -256,9 +346,7 @@
       mouseMarker.style.left = `${e.clientX}px`;
       mouseMarker.style.top = `${e.clientY}px`;
     }
-    // Toleranz: nur tracken solange Maus auf Item und nicht in Card —
-    // Übergang Item→Card friert Card ein statt sie zu verjagen, Spitze folgt erst wieder bei Item-Kontakt
-    if (currentItemRect && itemHover && !mouseInCard && !previewCard.classList.contains("kb-card-hidden")) {
+    if (shouldTrack(speed)) {
       positionCardAtCursor();
       updateDebugOverlay();
     }
@@ -582,6 +670,7 @@
     };
   }
 
+  // Karteninhalt aufbauen und alle Schalter in der Card verdrahten
   function renderCardContent(data, title, price, url) {
     let currentImgIdx = 0;
     const hasImages = data.images && data.images.length > 0;
@@ -680,6 +769,9 @@
         <button class="kb-debug-toggle" id="kb-transp-toggle" aria-label="Card transparent an/aus">Transparent</button>
         <button class="kb-debug-toggle" id="kb-mouse-toggle" aria-label="Maus-Marker an/aus">Maus</button>
         <button class="kb-debug-toggle" id="kb-labels-toggle" aria-label="Item-Buchstaben an/aus">ABC</button>
+        <button class="kb-debug-toggle" id="kb-clamp-toggle" aria-label="Clamp-Zone an/aus">Clamp</button>
+        <button class="kb-debug-toggle" id="kb-items-toggle" aria-label="Treffer-Items hervorheben an/aus">Items</button>
+        <button class="kb-debug-toggle" id="kb-log-toggle" aria-label="Tracking-Log an/aus">Log</button>
       </div>
 
     `;
@@ -777,6 +869,40 @@
       });
     }
 
+    const clampToggle = previewCard.querySelector("#kb-clamp-toggle");
+    if (clampToggle) {
+      clampToggle.classList.toggle("kb-active", showClampZone);
+      clampToggle.addEventListener("click", (e) => {
+        e.stopPropagation();
+        showClampZone = !showClampZone;
+        clampToggle.classList.toggle("kb-active", showClampZone);
+        updateClampOverlay();
+      });
+    }
+
+    const itemsToggle = previewCard.querySelector("#kb-items-toggle");
+    if (itemsToggle) {
+      itemsToggle.classList.toggle("kb-active", showItemHighlight);
+      itemsToggle.addEventListener("click", (e) => {
+        e.stopPropagation();
+        showItemHighlight = !showItemHighlight;
+        itemsToggle.classList.toggle("kb-active", showItemHighlight);
+        updateItemHighlight();
+      });
+    }
+
+    const logToggle = previewCard.querySelector("#kb-log-toggle");
+    if (logToggle) {
+      logToggle.classList.toggle("kb-active", showTrackLog);
+      logToggle.addEventListener("click", (e) => {
+        e.stopPropagation();
+        showTrackLog = !showTrackLog;
+        logToggle.classList.toggle("kb-active", showTrackLog);
+        if (showTrackLog) console.log("[kb-track] PROTOKOLL AN");
+        else { lastTrackSig = ""; console.log("[kb-track] PROTOKOLL AUS"); }
+      });
+    }
+
     const drawer = previewCard.querySelector("#kb-swatches-drawer");
     const drawerToggle = previewCard.querySelector("#kb-swatches-toggle");
     if (drawer && drawerToggle) {
@@ -805,11 +931,12 @@
     }
   }
 
+  // Kern: Card-Position aus 3x3-Zone, Flip-Logik und Viewport-Clamp berechnen
   function positionCardAtCursor() {
     const cardWidth = 360;
     const cardHeight = previewCard.offsetHeight || 450;
     const padding = 15;
-    const gap = 12;
+    const flip = 32;
     const viewportWidth = window.innerWidth;
     const viewportHeight = window.innerHeight;
 
@@ -829,65 +956,130 @@
         ["center-left", "center-center", "center-right"],
         ["bottom-left", "bottom-center", "bottom-right"],
       ];
-      const zone = zoneMap[row][col];
+      let zone = zoneMap[row][col];
+      // Schmale (herausgefilterte) Items: Card immer seitlich, damit der vertikale Mausweg frei bleibt
+      if (r.height < 60) {
+        zone = currentMouseX < viewportWidth / 2 ? "center-right" : "center-left";
+        trackLog(`SCHMALER-TREFFER Hoehe=${Math.round(r.height)} Zone=${zone}`, `narrow|${zone}`);
+      }
+      // Center-Spalte nie zentriert: Card seitlich, vertikaler Mausweg bleibt frei
+      const sideLeft = currentMouseX < viewportWidth / 2 ? currentMouseX + flip : currentMouseX - cardWidth - flip;
       // Dreieck bleibt an Card (child), Card folgt Maus kontinuierlich
       if (zone === "center-center") {
         if (stuckAbove) {
           left = currentMouseX - cardWidth / 2;
-          top = currentMouseY - cardHeight - gap - 24;
+          top = currentMouseY - cardHeight - flip;
         } else {
-          left = currentMouseX + gap;
+          left = currentMouseX + flip;
           top = currentMouseY - cardHeight / 2;
         }
         arrowClass = "kb-arrow kb-arrow-left"; arrowPos = { side: "left" };
       } else if (zone === "center-left") {
-        left = currentMouseX - cardWidth - gap;
+        left = currentMouseX - cardWidth - flip;
         top = currentMouseY - cardHeight / 2;
         arrowClass = "kb-arrow kb-arrow-right"; arrowPos = { side: "right" };
       } else if (zone === "center-right") {
-        left = currentMouseX + gap;
+        left = currentMouseX + flip;
         top = currentMouseY - cardHeight / 2;
         arrowClass = "kb-arrow kb-arrow-left"; arrowPos = { side: "left" };
       } else if (zone === "top-center") {
         left = currentMouseX - cardWidth / 2;
-        top = currentMouseY - cardHeight - gap - 24;
+        top = currentMouseY - cardHeight - flip;
         arrowClass = "kb-arrow kb-arrow-bottom"; arrowPos = { side: "bottom" };
       } else if (zone === "bottom-center") {
         left = currentMouseX - cardWidth / 2;
-        top = currentMouseY + gap;
-        // Unterkante: Item nah am Fensterrand → Card oberhalb des Cursors mit Whitespace nach oben
+        top = currentMouseY + flip;
+        // Unterkante: Item nah am Fensterrand → Card oberhalb des Cursors
+        // Kein 40er-Boden: Lookahead und Clamp danach regeln den Rest, sonst bricht die 32er-Lücke
         if (top + cardHeight > viewportHeight - padding) {
-          top = Math.max(40, currentMouseY - cardHeight - gap - 24);
+          top = currentMouseY - cardHeight - flip;
           stuckAbove = true;
         } else {
           stuckAbove = false;
         }
         arrowClass = "kb-arrow kb-arrow-top"; arrowPos = { side: "top" };
       } else if (zone === "top-left") {
-        left = currentMouseX - cardWidth - gap;
-        top = currentMouseY - cardHeight - gap;
+        left = currentMouseX - cardWidth - flip;
+        top = currentMouseY - cardHeight - flip;
         arrowClass = "kb-arrow kb-arrow-bottom-right"; arrowPos = { side: "custom", style: { right: "16px", bottom: "-6px", top: "auto", left: "auto", transform: "rotate(135deg)" } };
       } else if (zone === "top-right") {
-        left = currentMouseX + gap;
-        top = currentMouseY - cardHeight - gap;
+        left = currentMouseX + flip;
+        top = currentMouseY - cardHeight - flip;
         arrowClass = "kb-arrow kb-arrow-bottom-left"; arrowPos = { side: "custom", style: { left: "16px", bottom: "-6px", top: "auto", right: "auto", transform: "rotate(225deg)" } };
       } else if (zone === "bottom-left") {
-        left = currentMouseX - cardWidth - gap;
-        top = currentMouseY + gap;
+        left = currentMouseX - cardWidth - flip;
+        top = currentMouseY + flip;
         arrowClass = "kb-arrow kb-arrow-top-right"; arrowPos = { side: "custom", style: { right: "16px", top: "-6px", bottom: "auto", left: "auto", transform: "rotate(45deg)" } };
       } else if (zone === "bottom-right") {
-        left = currentMouseX + gap;
-        top = currentMouseY + gap;
+        left = currentMouseX + flip;
+        top = currentMouseY + flip;
         arrowClass = "kb-arrow kb-arrow-top-left"; arrowPos = { side: "custom", style: { left: "16px", top: "-6px", bottom: "auto", right: "auto", transform: "rotate(-45deg)" } };
       } else {
-        left = r.right + gap;
+        left = r.right + flip;
         top = r.top + (r.height - cardHeight) / 2;
         arrowClass = "kb-arrow kb-arrow-left"; arrowPos = { side: "left" };
       }
 
+      // Flip mit Lookahead: zuerst die Gegenseite (lässt den Mausweg frei),
+      // nur wenn weder oben noch unten passt, seitlich ausweichen.
+      if (top < padding || top + cardHeight > viewportHeight - padding) {
+        const above = currentMouseY - cardHeight - flip;
+        const below = currentMouseY + flip;
+        const fitsAbove = above >= padding;
+        const fitsBelow = below + cardHeight <= viewportHeight - padding;
+        const flipSide = () => {
+          top = currentMouseY - cardHeight / 2;
+          left = (currentMouseX < viewportWidth / 2)
+            ? currentMouseX + flip
+            : currentMouseX - cardWidth - flip;
+        };
+        if (top < padding && fitsBelow) top = below;
+        else if (top + cardHeight > viewportHeight - padding && fitsAbove) top = above;
+        else if (fitsAbove) top = above;
+        else if (fitsBelow) top = below;
+        else { flipSide(); trackLog(`SEITENWECHSEL weder oben noch unten passt Zone=${zone}`, `sidenone|${zone}`); }
+      }
+      if (left < padding || left + cardWidth > viewportWidth - padding) {
+        const leftPos = currentMouseX - cardWidth - flip;
+        const rightPos = currentMouseX + flip;
+        const fitsLeft = leftPos >= padding;
+        const fitsRight = rightPos + cardWidth <= viewportWidth - padding;
+        if (left < padding && fitsRight) left = rightPos;
+        else if (left + cardWidth > viewportWidth - padding && fitsLeft) left = leftPos;
+        else if (fitsLeft) left = leftPos;
+        else if (fitsRight) left = rightPos;
+      }
       // clamp to viewport, Dreieck bleibt an Card
       left = Math.max(padding, Math.min(left, viewportWidth - cardWidth - padding));
       top = Math.max(padding, Math.min(top, viewportHeight - cardHeight - padding));
+      // Universelles Koordinaten-Log: Card-Box + Spitze vs. Cursor + Pfad
+      const itemKey = Math.round(r.top);
+      if (zone !== lastZoneLogged || itemKey !== lastItemTopLogged) {
+        trackLog(`WECHSEL von ${(lastZoneLogged || "keine")} nach ${zone} TrefferOberkante=${itemKey} MausHoehe=${Math.round(currentMouseY)}`, `trans|${zone}|${itemKey}`);
+        lastZoneLogged = zone;
+        lastItemTopLogged = itemKey;
+      }
+      let tipX = -1, tipY = -1;
+      if (showTrackLog) {
+        const arrowEl = previewCard.querySelector("#kb-arrow");
+        if (arrowEl) {
+          const ar = arrowEl.getBoundingClientRect();
+          tipX = Math.round(ar.left + ar.width / 2);
+          tipY = Math.round(ar.top + ar.height / 2);
+        }
+      }
+      const cardBottom = top + cardHeight;
+      // Lage der Karte zum Mauszeiger und Verankerung an der Viewport-Kante
+      const lage = cardBottom <= currentMouseY ? "oberhalb" : (top >= currentMouseY ? "unterhalb" : "seitlich");
+      const anschlag = top <= padding + 0.5 ? "oben" : (top >= viewportHeight - cardHeight - padding - 0.5 ? "unten" : "keiner");
+      // Korridor-Metrik: wie viel Pixel der Karte das Vertikalband (+-20 um die Maus) oben/unten verdecken
+      const korridorLinks = currentMouseX - 20;
+      const korridorRechts = currentMouseX + 20;
+      const waagrechteUeberlappung = Math.max(0, Math.min(left + cardWidth, korridorRechts) - Math.max(left, korridorLinks));
+      const korridorOben = waagrechteUeberlappung > 0 ? Math.round(Math.max(0, Math.min(cardBottom, currentMouseY) - Math.max(top, 0))) : 0;
+      const korridorUnten = waagrechteUeberlappung > 0 ? Math.round(Math.max(0, Math.min(cardBottom, viewportHeight) - Math.max(top, currentMouseY))) : 0;
+      const richtung = trackDir > 0 ? "runter" : (trackDir < 0 ? "hoch" : "steht");
+      trackLog(`Zone=${zone} Maus=(${Math.round(currentMouseX)},${Math.round(currentMouseY)}) Karte=(links ${Math.round(left)} oben ${Math.round(top)} breite ${Math.round(cardWidth)} hoehe ${Math.round(cardHeight)}) Spitze=(${tipX},${tipY}) Luecke=${Math.round(currentMouseY - cardBottom)} Richtung=${richtung} Tempo=${trackSpd.toFixed(2)} Lage=${lage} Anschlag=${anschlag} KorridorOben=${korridorOben} KorridorUnten=${korridorUnten} Treffer=(oben ${itemKey} hoehe ${Math.round(r.height)}) Festgehalten=${stuckAbove ? "an" : "aus"} InKarte=${mouseInCard ? "ja" : "nein"}`, `pos|${zone}`);
     } else {
       // fallback mouse-based (loading)
       left = currentMouseX + padding;
@@ -1005,10 +1197,16 @@
     }
   });
 
+  // Hover an alle Treffer binden, danach DOM-Änderungen weiter beobachten
   attachHoverListeners();
 
   const observer = new MutationObserver(() => {
-    attachHoverListeners();
+  attachHoverListeners();
+
+  // Debug-Toggles initial an (außer Transparent): einmalig anwenden
+  updateItemLabels();
+  updateClampOverlay();
+  updateItemHighlight();
     updateItemLabels();
   });
 
