@@ -29,6 +29,7 @@ document.addEventListener("DOMContentLoaded", () => {
     applyPopupTheme(thema);
     if (result.kbHomeLocation) homeInput.value = result.kbHomeLocation;
     if (debugToggle) debugToggle.checked = result.kbDebugUiEnabled !== false; // default true
+    syncAccentDots(result.kbAccent || "multicolor");
     spiegelLesen();
     updateDebugToolsList();
   });
@@ -85,6 +86,22 @@ document.addEventListener("DOMContentLoaded", () => {
   };
   saveBtn.addEventListener("click", save);
   homeInput.addEventListener("keydown", (e) => { if (e.key === "Enter") { e.preventDefault(); save(); } });
+
+  // Akzentfarbe: Punkte synchronisieren, Auswahl speichern (Standard mehrfarbig)
+  const accentDots = [...document.querySelectorAll(".accent-dot")];
+  const syncAccentDots = (wert) => {
+    accentDots.forEach((d) => {
+      const an = d.dataset.accent === wert;
+      d.classList.toggle("active", an);
+      d.setAttribute("aria-checked", an ? "true" : "false");
+    });
+  };
+  accentDots.forEach((d) => {
+    d.addEventListener("click", () => {
+      chrome.storage.local.set({ kbAccent: d.dataset.accent });
+      syncAccentDots(d.dataset.accent);
+    });
+  });
 
   // Debug-Oberfläche in der Vorschau an- und abschalten
   // Werkzeugliste nur zeigen solange der Hauptschalter an ist

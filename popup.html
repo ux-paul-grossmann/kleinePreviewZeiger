@@ -132,7 +132,25 @@
       border-color: var(--input-border);
       box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
     }
+    /* Akzentfarbe: Punkte wie macOS Darstellung */
+    .accent-label { margin-top: 10px; }
+    .accent-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 2px 4px 0;
+    }
+    .accent-dot {
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      border: none;
+      padding: 0;
       cursor: pointer;
+      outline: 2px solid transparent;
+      outline-offset: 2px;
+    }
+    .accent-dot.active { outline-color: var(--text-muted); }
     .input-wrap {
       position: relative;
       display: flex;
@@ -226,6 +244,19 @@
         <button class="theme-seg-btn" data-theme="dark" role="radio" aria-checked="false" aria-label="Dunkel" title="Dunkel">
           <span class="thumb"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg></span>
         </button>
+      </div>
+      <!-- Zeile: Akzentfarbe wie macOS Darstellung -->
+      <label class="accent-label">Akzentfarbe</label>
+      <div class="accent-row" role="radiogroup" aria-label="Akzentfarbe">
+        <button class="accent-dot" data-accent="multicolor" role="radio" aria-checked="true" aria-label="Mehrfarbig" title="Mehrfarbig" style="background: conic-gradient(#ff453a, #ff9f0a, #ffd60a, #30d158, #0a84ff, #bf5af2, #ff375f, #ff453a);"></button>
+        <button class="accent-dot" data-accent="blau" role="radio" aria-checked="false" aria-label="Blau" title="Blau" style="background:#0A84FF;"></button>
+        <button class="accent-dot" data-accent="violett" role="radio" aria-checked="false" aria-label="Violett" title="Violett" style="background:#BF5AF2;"></button>
+        <button class="accent-dot" data-accent="pink" role="radio" aria-checked="false" aria-label="Pink" title="Pink" style="background:#FF375F;"></button>
+        <button class="accent-dot" data-accent="rot" role="radio" aria-checked="false" aria-label="Rot" title="Rot" style="background:#FF453A;"></button>
+        <button class="accent-dot" data-accent="orange" role="radio" aria-checked="false" aria-label="Orange" title="Orange" style="background:#FF9F0A;"></button>
+        <button class="accent-dot" data-accent="gelb" role="radio" aria-checked="false" aria-label="Gelb" title="Gelb" style="background:#FFD60A;"></button>
+        <button class="accent-dot" data-accent="gruen" role="radio" aria-checked="false" aria-label="Grün" title="Grün" style="background:#30D158;"></button>
+        <button class="accent-dot" data-accent="grau" role="radio" aria-checked="false" aria-label="Grau" title="Grau" style="background:#98989F;"></button>
       </div>
     </div>
 
