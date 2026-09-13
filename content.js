@@ -27,9 +27,13 @@
   let startAktiv = true;
   // Main Module und Sub Module aus der Advanced View (Standard an)
   // Schlüssel nach Muster kbMod, Aus bedeutet Funktion überspringen
+  // Ausnahme: Voraus ist Standard aus (bisheriges Verhalten bleibt)
   let mod = {};
+  const MOD_STD_AUS = ["kbModPositionVoraus"];
   function modAn(schluessel) {
-    return mod[schluessel] !== false;
+    const wert = mod[schluessel];
+    if (wert === undefined) return MOD_STD_AUS.indexOf(schluessel) === -1;
+    return wert !== false;
   }
   // Letzte Karten Daten für Live Neurender bei Modul Wechsel
   let letzteKarte = null;
@@ -40,6 +44,12 @@
   let trackDir = 0;
   let trackSpd = 0;
   let stuckAbove = false;
+  // Hysterese Cherry Pick: gemerkte Spalte und Reihe gegen Zonen Flattern
+  let lastCol = -1;
+  let lastRow = -1;
+  // Voraus Richtung: geglätteter Einheitsvektor der Mausbewegung
+  let bewegX = 0;
+  let bewegY = 0;
 
   function isExtensionAlive() {
     try {
@@ -88,14 +98,30 @@
     ["bottom-left", "bottom-center", "bottom-right"],
   ];
 
+  // Zonenband mit Hysterese Cherry Pick aus Experiment: Wechsel erst nach
+  // 5 Prozent Übertritt über die Zonengrenze, kein Flattern bei Verweilen
+  function zoneBand(rel, last) {
+    const m = 0.05;
+    const lo = last === 0 ? 0.33 + m : (last === 2 ? 0.33 - m : 0.33);
+    const hi = last === 2 ? 0.66 - m : (last === 0 ? 0.66 + m : 0.66);
+    if (rel < lo) return 0;
+    if (rel > hi) return 2;
+    return 1;
+  }
+
   function currentZone() {
     if (!currentItemRect) return null;
     const r = currentItemRect;
     const relX = (currentMouseX - r.left) / r.width;
     const relY = (currentMouseY - r.top) / r.height;
-    const col = relX < 0.33 ? 0 : relX < 0.66 ? 1 : 2;
-    const row = relY < 0.33 ? 0 : relY < 0.66 ? 1 : 2;
-    return ZONE_MAP[row][col];
+    if (!modAn("kbModPositionHysterese")) {
+      const col = relX < 0.33 ? 0 : relX < 0.66 ? 1 : 2;
+      const row = relY < 0.33 ? 0 : relY < 0.66 ? 1 : 2;
+      return ZONE_MAP[row][col];
+    }
+    lastCol = zoneBand(relX, lastCol);
+    lastRow = zoneBand(relY, lastRow);
+    return ZONE_MAP[lastRow][lastCol];
   }
 
   function updateDebugOverlay() {
@@ -310,7 +336,7 @@
       }
     }
     // Advanced View Module: Stände einmalig laden
-    const MOD_SCHLUESSEL = ["kbModZoom", "kbModDetails", "kbModRoute", "kbModPositioning", "kbModPositionZonen", "kbModPositionAbstand", "kbModPositionFlip", "kbModPositionClamp", "kbModPositionStuck", "kbModArrow", "kbModArrowGeometrie"];
+    const MOD_SCHLUESSEL = ["kbModZoom", "kbModDetails", "kbModRoute", "kbModPositioning", "kbModPositionZonen", "kbModPositionAbstand", "kbModPositionFlip", "kbModPositionClamp", "kbModPositionStuck", "kbModArrow", "kbModArrowGeometrie", "kbModPositionFolgen", "kbModPositionVoraus", "kbModPositionEngstellen", "kbModPositionFreeze", "kbModPositionWachstum", "kbModPositionHysterese"];
     chrome.storage.local.get(MOD_SCHLUESSEL, (r) => {
       mod = r;
     });
@@ -351,8 +377,9 @@
   const previewCard = createPreviewCard();
 
   // Card wächst async nach (Bilder/Description) → nachpositionieren, damit 32px-Abstand bleibt
+  // Wachstum Sub aus: kein Nachführen bei Größenänderung
   new ResizeObserver(() => {
-    if (shouldTrack(0)) positionCardAtCursor();
+    if (modAn("kbModPositionWachstum") && shouldTrack(0)) positionCardAtCursor();
   }).observe(previewCard);
 
   debugOverlay = document.createElement("div");
@@ -414,6 +441,8 @@
 
   function shouldTrack(speed) {
     if (!currentItemRect || !itemHover || previewCard.classList.contains("kb-card-hidden")) return false;
+    // Einfrieren Sub aus: immer folgen, nie in der Preview-Card stehenbleiben
+    if (!modAn("kbModPositionFreeze")) return true;
     if (!mouseInCard) return true;
     const r = currentItemRect;
     if (currentMouseX >= r.left && currentMouseX <= r.right && currentMouseY >= r.top && currentMouseY <= r.bottom) return true;
@@ -428,8 +457,15 @@
     const dt = now - (lastMove.t || now);
     const speed = dt > 0 ? Math.hypot(e.clientX - lastMove.x, e.clientY - lastMove.y) / dt : 0; // px pro ms
     const dyMove = e.clientY - lastMove.y;
+    const dxMove = e.clientX - lastMove.x;
     trackDir = dyMove === 0 ? 0 : (dyMove > 0 ? 1 : -1);
     trackSpd = speed;
+    // Voraus Richtung glätten: Einheitsvektor nur bei echter Bewegung nachführen
+    const weg = Math.hypot(dxMove, dyMove);
+    if (weg > 0 && speed > 0.05) {
+      bewegX += 0.25 * (dxMove / weg - bewegX);
+      bewegY += 0.25 * (dyMove / weg - bewegY);
+    }
     lastMove = { x: e.clientX, y: e.clientY, t: now };
     currentMouseX = e.clientX;
     currentMouseY = e.clientY;
@@ -438,7 +474,8 @@
       mouseMarker.style.left = `${e.clientX}px`;
       mouseMarker.style.top = `${e.clientY}px`;
     }
-    if (shouldTrack(speed)) {
+    // Folgen Sub aus: Preview-Card steht fest ab Entry, kein Nachführen
+    if (modAn("kbModPositionFolgen") && shouldTrack(speed)) {
       positionCardAtCursor();
       updateDebugOverlay();
     }
@@ -1017,8 +1054,17 @@
       // 3x3 zone based on mouse entry within item
       const relX = (currentMouseX - r.left) / r.width;
       const relY = (currentMouseY - r.top) / r.height;
-      const col = relX < 0.33 ? 0 : relX < 0.66 ? 1 : 2;
-      const row = relY < 0.33 ? 0 : relY < 0.66 ? 1 : 2;
+      // Hysterese Sub aus: harte Zonengrenzen ohne Merken
+      let col, row;
+      if (modAn("kbModPositionHysterese")) {
+        lastCol = zoneBand(relX, lastCol);
+        lastRow = zoneBand(relY, lastRow);
+        col = lastCol;
+        row = lastRow;
+      } else {
+        col = relX < 0.33 ? 0 : relX < 0.66 ? 1 : 2;
+        row = relY < 0.33 ? 0 : relY < 0.66 ? 1 : 2;
+      }
       const zoneMap = [
         ["top-left", "top-center", "top-right"],
         ["center-left", "center-center", "center-right"],
@@ -1028,7 +1074,8 @@
       // Main oder Zonen Sub aus: feste Mitte rechts, kein Folgen
       if (!modAn("kbModPositioning") || !modAn("kbModPositionZonen")) zone = "center-center";
       // Schmale (herausgefilterte) Items: Card immer seitlich, damit der vertikale Mausweg frei bleibt
-      if (r.height < 60) {
+      // Engstellen Sub aus: Regel ignorieren, normale Zonen werten
+      if (modAn("kbModPositionEngstellen") && r.height < 60) {
         zone = currentMouseX < viewportWidth / 2 ? "center-right" : "center-left";
         trackLog(`SCHMALER-TREFFER Hoehe=${Math.round(r.height)} Zone=${zone}`, `narrow|${zone}`);
       }
@@ -1126,6 +1173,14 @@
       if (modAn("kbModPositionClamp")) {
         left = Math.max(padding, Math.min(left, viewportWidth - cardWidth - padding));
         top = Math.max(padding, Math.min(top, viewportHeight - cardHeight - padding));
+      }
+      // Voraus Sub an: Preview-Card 24 Pixel in Bewegungsrichtung voraus
+      if (modAn("kbModPositionVoraus")) {
+        const lang = Math.hypot(bewegX, bewegY);
+        if (lang > 0.3) {
+          left += (bewegX / lang) * 24;
+          top += (bewegY / lang) * 24;
+        }
       }
       // Universelles Koordinaten-Log: Card-Box + Spitze vs. Cursor + Pfad
       const itemKey = Math.round(r.top);
@@ -1232,6 +1287,11 @@
         if (!linkEl) return;
         itemHover = true;
         stuckAbove = false;
+        // Hysterese Merker und Voraus Richtung je Treffer frisch starten
+        lastCol = -1;
+        lastRow = -1;
+        bewegX = 0;
+        bewegY = 0;
         // Erste Berührung: ab hier laufen die Anzeigen (Start Häkchen aus = bis hier aus)
         if (!startAktiv) {
           startAktiv = true;
