@@ -421,9 +421,23 @@
         </label>
       </div>
       <div class="card-header" style="margin-top:8px;">
-        <label for="modDetails" style="margin:0; font-weight:400;">Beschreibung <span class="kb-info" data-tip="Text, Standort und Preis unter dem Bild. Aus blendet den Block für kompakte Preview-Cards">i</span></label>
+        <label for="modDetails" style="margin:0; font-weight:400;">Beschreibung <span class="kb-info" data-tip="Fließtext unter dem Bild. Aus blendet den Block für kompakte Preview-Cards">i</span></label>
         <label class="switch">
           <input type="checkbox" id="modDetails" data-kb-key="kbModDetails" data-kb-default="true">
+          <span class="slider"></span>
+        </label>
+      </div>
+      <div class="card-header" style="margin-top:8px;">
+        <label for="modStandort" style="margin:0; font-weight:400;">Standort <span class="kb-info" data-tip="Orts Zeile mit Symbol unter dem Titel. Aus blendet sie für kompakte Preview-Cards">i</span></label>
+        <label class="switch">
+          <input type="checkbox" id="modStandort" data-kb-key="kbModStandort" data-kb-default="true">
+          <span class="slider"></span>
+        </label>
+      </div>
+      <div class="card-header" style="margin-top:8px;">
+        <label for="modPreis" style="margin:0; font-weight:400;">Preis <span class="kb-info" data-tip="Preis neben dem Titel. Aus blendet ihn für kompakte Preview-Cards">i</span></label>
+        <label class="switch">
+          <input type="checkbox" id="modPreis" data-kb-key="kbModPreis" data-kb-default="true">
           <span class="slider"></span>
         </label>
       </div>
@@ -434,7 +448,7 @@
           <span class="slider"></span>
         </label>
       </div>
-      <div class="hint" style="margin-top:6px;">Beschreibung enthält Standort und Preis</div>
+      <div class="hint" style="margin-top:6px;">Text, Standort und Preis einzeln schaltbar</div>
     </div>
 
     <!-- Preview-Card: Positionierung mit Sub Modulen -->

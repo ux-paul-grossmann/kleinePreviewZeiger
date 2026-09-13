@@ -323,7 +323,7 @@
           if (k.indexOf("kbMod") === 0 || k.indexOf("kbTether") === 0) {
             mod[k] = changes[k].newValue;
             modWechsel = true;
-            if (k === "kbModZoom" || k === "kbModDetails" || k === "kbModRoute" || k === "kbModArrow" || k === "kbModArrowGeometrie") {
+            if (k === "kbModZoom" || k === "kbModDetails" || k === "kbModStandort" || k === "kbModPreis" || k === "kbModRoute" || k === "kbModArrow" || k === "kbModArrowGeometrie") {
               renderWechsel = true;
             }
           }
@@ -352,7 +352,7 @@
       }
     }
     // Advanced View Module: Stände einmalig laden
-    const MOD_SCHLUESSEL = ["kbModZoom", "kbModDetails", "kbModRoute", "kbModPositioning", "kbModPositionZonen", "kbModPositionAbstand", "kbModPositionFlip", "kbModPositionClamp", "kbModPositionStuck", "kbModTether", "kbTetherRichtung", "kbTetherDistanz", "kbModPositionVoraus", "kbModPositionRuder", "kbModPositionEngstellen", "kbModPositionFreeze", "kbModPositionWachstum", "kbModPositionHysterese", "kbModArrow", "kbModArrowGeometrie"];
+    const MOD_SCHLUESSEL = ["kbModZoom", "kbModDetails", "kbModStandort", "kbModPreis", "kbModRoute", "kbModPositioning", "kbModPositionZonen", "kbModPositionAbstand", "kbModPositionFlip", "kbModPositionClamp", "kbModPositionStuck", "kbModTether", "kbTetherRichtung", "kbTetherDistanz", "kbModPositionVoraus", "kbModPositionRuder", "kbModPositionEngstellen", "kbModPositionFreeze", "kbModPositionWachstum", "kbModPositionHysterese", "kbModArrow", "kbModArrowGeometrie"];
     chrome.storage.local.get(MOD_SCHLUESSEL, (r) => {
       mod = r;
     });
@@ -882,15 +882,15 @@
       </div>
       <div class="kb-header">
         <h4 class="kb-title">${title}</h4>
-        <span class="kb-price">${price}</span>
+        ${modAn("kbModPreis") ? `<span class="kb-price">${price}</span>` : ""}
       </div>
       ${modAn("kbModDetails") ? `<div class="kb-details">
-        <p class="kb-location">
+        ${modAn("kbModStandort") ? `<p class="kb-location">
           <svg class="kb-location-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="14" height="14" fill="var(--kb-text-muted)">
             <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5a2.5 2.5 0 1 1 0-5 2.5 2.5 0 0 1 0 5z"/>
           </svg>
           <span>${data.location}</span>
-        </p>
+        </p>` : ""}
         <div class="kb-description"></div>
       </div>` : ""}
       <div class="kb-actions">
