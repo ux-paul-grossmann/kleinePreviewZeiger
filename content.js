@@ -29,11 +29,16 @@
   // Schlüssel nach Muster kbMod, Aus bedeutet Funktion überspringen
   // Ausnahme: Voraus ist Standard aus (bisheriges Verhalten bleibt)
   let mod = {};
-  const MOD_STD_AUS = ["kbModPositionVoraus", "kbModPositionRuder", "kbModKompassN", "kbModKompassNO", "kbModKompassO", "kbModKompassSO", "kbModKompassS", "kbModKompassSW", "kbModKompassW", "kbModKompassNW"];
+  const MOD_STD_AUS = ["kbModPositionVoraus", "kbModPositionRuder"];
   function modAn(schluessel) {
     const wert = mod[schluessel];
     if (wert === undefined) return MOD_STD_AUS.indexOf(schluessel) === -1;
     return wert !== false;
+  }
+  // Tether Werte mit Standard: Richtung Auto, Distanz 32 Pixel
+  function modWert(schluessel, standard) {
+    const wert = mod[schluessel];
+    return wert === undefined ? standard : wert;
   }
   // Letzte Preview-Card Daten für Live Neurender bei Modul Wechsel
   let letztePreviewCard = null;
@@ -98,16 +103,16 @@
     ["bottom-left", "bottom-center", "bottom-right"],
   ];
 
-  // Kompass Sub Module: feste Richtungen als Einheitsvektoren
-  const KOMPASS = {
-    kbModKompassN: [0, -1],
-    kbModKompassNO: [0.7071, -0.7071],
-    kbModKompassO: [1, 0],
-    kbModKompassSO: [0.7071, 0.7071],
-    kbModKompassS: [0, 1],
-    kbModKompassSW: [-0.7071, 0.7071],
-    kbModKompassW: [-1, 0],
-    kbModKompassNW: [-0.7071, -0.7071],
+  // Tether Anker: feste Seiten als Zonen Namen
+  const TETHER_ANKER = {
+    N: "top-center",
+    NO: "top-right",
+    O: "center-right",
+    SO: "bottom-right",
+    S: "bottom-center",
+    SW: "bottom-left",
+    W: "center-left",
+    NW: "top-left",
   };
   // Zonenband mit Hysterese Cherry Pick aus Experiment: Wechsel erst nach
   // 5 Prozent Übertritt über die Zonengrenze, kein Flattern bei Verweilen
@@ -315,7 +320,7 @@
         let modWechsel = false;
         let renderWechsel = false;
         Object.keys(changes).forEach((k) => {
-          if (k.indexOf("kbMod") === 0) {
+          if (k.indexOf("kbMod") === 0 || k.indexOf("kbTether") === 0) {
             mod[k] = changes[k].newValue;
             modWechsel = true;
             if (k === "kbModZoom" || k === "kbModDetails" || k === "kbModRoute" || k === "kbModArrow" || k === "kbModArrowGeometrie") {
@@ -347,7 +352,7 @@
       }
     }
     // Advanced View Module: Stände einmalig laden
-    const MOD_SCHLUESSEL = ["kbModZoom", "kbModDetails", "kbModRoute", "kbModPositioning", "kbModPositionZonen", "kbModPositionAbstand", "kbModPositionFlip", "kbModPositionClamp", "kbModPositionStuck", "kbModPositionFolgen", "kbModPositionVoraus", "kbModPositionRuder", "kbModKompassN", "kbModKompassNO", "kbModKompassO", "kbModKompassSO", "kbModKompassS", "kbModKompassSW", "kbModKompassW", "kbModKompassNW", "kbModPositionEngstellen", "kbModPositionFreeze", "kbModPositionWachstum", "kbModPositionHysterese", "kbModArrow", "kbModArrowGeometrie"];
+    const MOD_SCHLUESSEL = ["kbModZoom", "kbModDetails", "kbModRoute", "kbModPositioning", "kbModPositionZonen", "kbModPositionAbstand", "kbModPositionFlip", "kbModPositionClamp", "kbModPositionStuck", "kbModTether", "kbTetherRichtung", "kbTetherDistanz", "kbModPositionVoraus", "kbModPositionRuder", "kbModPositionEngstellen", "kbModPositionFreeze", "kbModPositionWachstum", "kbModPositionHysterese", "kbModArrow", "kbModArrowGeometrie"];
     chrome.storage.local.get(MOD_SCHLUESSEL, (r) => {
       mod = r;
     });
@@ -485,8 +490,8 @@
       mouseMarker.style.left = `${e.clientX}px`;
       mouseMarker.style.top = `${e.clientY}px`;
     }
-    // Folgen Sub aus: Preview-Card steht fest ab Entry, kein Nachführen
-    if (modAn("kbModPositionFolgen") && shouldTrack(speed)) {
+    // Tether Sub aus: Preview-Card steht fest ab Entry, kein Nachführen
+    if (modAn("kbModTether") && shouldTrack(speed)) {
       positionCardAtCursor();
       updateDebugOverlay();
     }
@@ -1052,7 +1057,8 @@
     const cardHeight = previewCard.offsetHeight || 450;
     const padding = 15;
     // Abstand Sub aus: kein Extra Abstand zum Mauszeiger
-    const flip = modAn("kbModPositionAbstand") ? 32 : 0;
+    // Distanz Slider legt den Wert fest, Standard 32 Pixel
+    const flip = modAn("kbModPositionAbstand") ? modWert("kbTetherDistanz", 32) : 0;
     const viewportWidth = window.innerWidth;
     const viewportHeight = window.innerHeight;
 
@@ -1086,6 +1092,11 @@
       if (!modAn("kbModPositioning") || !modAn("kbModPositionZonen")) zone = "center-center";
       // Schmale (herausgefilterte) Items: Card immer seitlich, damit der vertikale Mausweg frei bleibt
       // Engstellen Sub aus: Regel ignorieren, normale Zonen werten
+      // Tether Anker gewinnt vor Zonen und Engstellen
+      const tetherAnker = modAn("kbModTether") ? modWert("kbTetherRichtung", "auto") : "auto";
+      if (tetherAnker !== "auto" && TETHER_ANKER[tetherAnker]) {
+        zone = TETHER_ANKER[tetherAnker];
+      }
       if (modAn("kbModPositionEngstellen") && r.height < 60) {
         zone = currentMouseX < viewportWidth / 2 ? "center-right" : "center-left";
         trackLog(`SCHMALER-TREFFER Hoehe=${Math.round(r.height)} Zone=${zone}`, `narrow|${zone}`);
@@ -1185,19 +1196,11 @@
         left = Math.max(padding, Math.min(left, viewportWidth - cardWidth - padding));
         top = Math.max(padding, Math.min(top, viewportHeight - cardHeight - padding));
       }
-      // Voraus, Ruder und Kompass Subs: Richtung als Vektorsumme
-      // Kompass gewinnt vor Voraus Auto, Ruder kehrt das Ergebnis um
+      // Voraus und Ruder Subs: Versatz entlang oder gegen die Bewegungsrichtung
+      // Ruder kehrt um wie Ruder gegen Boot, Voraus eilt voraus
       let lenkX = 0;
       let lenkY = 0;
-      let kompassAn = false;
-      Object.keys(KOMPASS).forEach((k) => {
-        if (modAn(k)) {
-          lenkX += KOMPASS[k][0];
-          lenkY += KOMPASS[k][1];
-          kompassAn = true;
-        }
-      });
-      if (!kompassAn && modAn("kbModPositionVoraus")) {
+      if (modAn("kbModPositionVoraus")) {
         lenkX = bewegX;
         lenkY = bewegY;
       }

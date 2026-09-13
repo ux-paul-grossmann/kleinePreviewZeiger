@@ -136,6 +136,47 @@
     .icon-btn:hover { background: var(--icon-hover); border-radius: 50%; }
     /* Gesperrte Toggles in eingeklappten Modul Zeilen */
     .switch input:disabled + .slider { opacity: 0.5; cursor: default; }
+    /* Tether Anker Grid: 3x3 Pfeile für feste Richtung */
+    .kb-anchor-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 30px);
+      gap: 4px;
+      justify-content: center;
+      padding: 4px 0 0;
+    }
+    .kb-anchor-btn {
+      width: 30px;
+      height: 30px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--input-bg);
+      border: 1px solid var(--input-border);
+      border-radius: 8px;
+      color: var(--text-muted);
+      font-size: 14px;
+      cursor: pointer;
+    }
+    .kb-anchor-btn.active {
+      background: #38bdf8;
+      border-color: #38bdf8;
+      color: #0f172a;
+    }
+    /* Tether Distanz: Slider mit Wert daneben */
+    .kb-dist-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .kb-dist-row label { flex-shrink: 0; }
+    .kb-dist-row input[type="range"] { flex: 1; accent-color: #38bdf8; }
+    .kb-dist-row span {
+      min-width: 24px;
+      text-align: right;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text-main);
+    }
     /* Info Punkt: blauer Kreis, eigene Bubble ohne Delay mit Padding */
     .kb-info {
       position: relative;
@@ -146,7 +187,7 @@
       height: 14px;
       margin-left: 6px;
       border-radius: 50%;
-      background: #0A84FF;
+      background: rgba(10, 132, 255, 0.3);
       color: #ffffff;
       font-size: 9px;
       font-weight: 700;
@@ -158,9 +199,10 @@
       content: attr(data-tip);
       position: absolute;
       top: 20px;
-      right: -6px;
+      left: -10px;
+      right: auto;
       width: max-content;
-      max-width: 200px;
+      max-width: 220px;
       white-space: normal;
       z-index: 9999;
       background: #1e293b;
@@ -372,21 +414,21 @@
         <label style="margin:0;">Vorschau</label>
       </div>
       <div class="card-header" style="margin-top:8px;">
-        <label for="modZoom" style="margin:0; font-weight:400;">Zoom <span class="kb-info" data-tip="Bild Zoom, Drehen und Verschieben in der Preview-Card">i</span></label>
+        <label for="modZoom" style="margin:0; font-weight:400;">Zoom <span class="kb-info" data-tip="Bild Zoom, Drehen und Verschieben. Für Details im großen Bild">i</span></label>
         <label class="switch">
           <input type="checkbox" id="modZoom" data-kb-key="kbModZoom" data-kb-default="true">
           <span class="slider"></span>
         </label>
       </div>
       <div class="card-header" style="margin-top:8px;">
-        <label for="modDetails" style="margin:0; font-weight:400;">Beschreibung <span class="kb-info" data-tip="Text, Standort und Preis unter dem Bild">i</span></label>
+        <label for="modDetails" style="margin:0; font-weight:400;">Beschreibung <span class="kb-info" data-tip="Text, Standort und Preis unter dem Bild. Aus blendet den Block für kompakte Preview-Cards">i</span></label>
         <label class="switch">
           <input type="checkbox" id="modDetails" data-kb-key="kbModDetails" data-kb-default="true">
           <span class="slider"></span>
         </label>
       </div>
       <div class="card-header" style="margin-top:8px;">
-        <label for="modRoute" style="margin:0; font-weight:400;">Route <span class="kb-info" data-tip="Knopf mit Google Maps Route ab Wohnort">i</span></label>
+        <label for="modRoute" style="margin:0; font-weight:400;">Route <span class="kb-info" data-tip="Knopf mit Google Maps Route ab Wohnort. Für Anfahrt direkt aus der Preview-Card">i</span></label>
         <label class="switch">
           <input type="checkbox" id="modRoute" data-kb-key="kbModRoute" data-kb-default="true">
           <span class="slider"></span>
@@ -405,140 +447,105 @@
         </label>
       </div>
       <div class="card-header" data-kb-sub="kbModPositioning" style="margin-top:8px;">
-        <label for="modPositionZonen" style="margin:0; font-weight:400;">Zonen <span class="kb-info" data-tip="Preview-Card richtet sich an 3x3 Zonen des Treffers aus">i</span></label>
+        <label for="modPositionZonen" style="margin:0; font-weight:400;">Zonen <span class="kb-info" data-tip="Preview-Card richtet sich an 3x3 Zonen des Treffers aus. Jede Zone legt eine Seite fest">i</span></label>
         <label class="switch">
           <input type="checkbox" id="modPositionZonen" data-kb-key="kbModPositionZonen" data-kb-default="true">
           <span class="slider"></span>
         </label>
       </div>
       <div class="card-header" data-kb-sub="kbModPositioning" style="margin-top:8px;">
-        <label for="modPositionAbstand" style="margin:0; font-weight:400;">Abstand <span class="kb-info" data-tip="32 Pixel Luft zwischen Maus und Preview-Card">i</span></label>
+        <label for="modPositionAbstand" style="margin:0; font-weight:400;">Abstand <span class="kb-info" data-tip="32 Pixel Luft zwischen Maus und Preview-Card. Aus legt die Preview-Card direkt an den Zeiger">i</span></label>
         <label class="switch">
           <input type="checkbox" id="modPositionAbstand" data-kb-key="kbModPositionAbstand" data-kb-default="true">
           <span class="slider"></span>
         </label>
       </div>
       <div class="card-header" data-kb-sub="kbModPositioning" style="margin-top:8px;">
-        <label for="modPositionFlip" style="margin:0; font-weight:400;">Flip <span class="kb-info" data-tip="Preview-Card klappt bei Kanten Kontakt auf die Gegenseite">i</span></label>
+        <label for="modPositionFlip" style="margin:0; font-weight:400;">Flip <span class="kb-info" data-tip="Preview-Card klappt bei Kanten Kontakt auf die Gegenseite. Hält den Mausweg frei">i</span></label>
         <label class="switch">
           <input type="checkbox" id="modPositionFlip" data-kb-key="kbModPositionFlip" data-kb-default="true">
           <span class="slider"></span>
         </label>
       </div>
       <div class="card-header" data-kb-sub="kbModPositioning" style="margin-top:8px;">
-        <label for="modPositionClamp" style="margin:0; font-weight:400;">Clamp <span class="kb-info" data-tip="Preview-Card bleibt im Fenster, kein Überstand">i</span></label>
+        <label for="modPositionClamp" style="margin:0; font-weight:400;">Clamp <span class="kb-info" data-tip="Preview-Card bleibt im Fenster, kein Überstand. Aus lässt sie über den Rand ragen">i</span></label>
         <label class="switch">
           <input type="checkbox" id="modPositionClamp" data-kb-key="kbModPositionClamp" data-kb-default="true">
           <span class="slider"></span>
         </label>
       </div>
       <div class="card-header" data-kb-sub="kbModPositioning" style="margin-top:8px;">
-        <label for="modPositionStuck" style="margin:0; font-weight:400;">Stuck <span class="kb-info" data-tip="Preview-Card bleibt oberhalb haften bei Platzmangel unten">i</span></label>
+        <label for="modPositionStuck" style="margin:0; font-weight:400;">Stuck <span class="kb-info" data-tip="Preview-Card bleibt oberhalb haften bei Platzmangel unten. Für Treffer am Fensterrand">i</span></label>
         <label class="switch">
           <input type="checkbox" id="modPositionStuck" data-kb-key="kbModPositionStuck" data-kb-default="true">
           <span class="slider"></span>
         </label>
       </div>
       <div class="card-header" data-kb-sub="kbModPositioning" style="margin-top:8px;">
-        <label for="modPositionFolgen" style="margin:0; font-weight:400;">Folgen <span class="kb-info" data-tip="Preview-Card läuft der Maus nach, sonst steht sie ab Entry">i</span></label>
+        <label for="modTether" style="margin:0; font-weight:400;">Tether <span class="kb-info" data-tip="Leine zwischen Maus und Preview-Card. An folgt sie, aus steht sie fest ab Entry">i</span></label>
         <label class="switch">
-          <input type="checkbox" id="modPositionFolgen" data-kb-key="kbModPositionFolgen" data-kb-default="true">
+          <input type="checkbox" id="modTether" data-kb-key="kbModTether" data-kb-default="true">
           <span class="slider"></span>
         </label>
       </div>
+      <div data-kb-sub2="kbModTether" style="margin-top:8px;">
+        <div class="kb-anchor-grid" role="radiogroup" aria-label="Anker Richtung">
+          <button class="kb-anchor-btn" data-dir="NW" aria-label="Nordwest" title="Nordwest">↖</button>
+          <button class="kb-anchor-btn" data-dir="N" aria-label="Nord" title="Nord">↑</button>
+          <button class="kb-anchor-btn" data-dir="NO" aria-label="Nordost" title="Nordost">↗</button>
+          <button class="kb-anchor-btn" data-dir="W" aria-label="West" title="West">←</button>
+          <button class="kb-anchor-btn" data-dir="auto" aria-label="Auto folgen" title="Auto folgen">•</button>
+          <button class="kb-anchor-btn" data-dir="O" aria-label="Ost" title="Ost">→</button>
+          <button class="kb-anchor-btn" data-dir="SW" aria-label="Südwest" title="Südwest">↙</button>
+          <button class="kb-anchor-btn" data-dir="S" aria-label="Süd" title="Süd">↓</button>
+          <button class="kb-anchor-btn" data-dir="SO" aria-label="Südost" title="Südost">↘</button>
+        </div>
+      </div>
+      <div data-kb-sub2="kbModTether" style="margin-top:8px;">
+        <div class="kb-dist-row">
+          <label for="tetherDistanz" style="margin:0; font-weight:400;">Distanz</label>
+          <input type="range" id="tetherDistanz" min="0" max="64" step="1" value="32">
+          <span id="tetherDistanzWert">32</span>
+        </div>
+        <div class="hint" style="margin-top:4px;">Pixel Leinen Länge, live gerendert</div>
+      </div>
       <div class="card-header" data-kb-sub="kbModPositioning" style="margin-top:8px;">
-        <label for="modPositionVoraus" style="margin:0; font-weight:400;">Voraus <span class="kb-info" data-tip="Preview-Card eilt 24 Pixel in Bewegungsrichtung voraus">i</span></label>
+        <label for="modPositionVoraus" style="margin:0; font-weight:400;">Voraus <span class="kb-info" data-tip="Preview-Card eilt 24 Pixel in Bewegungsrichtung voraus. Aus folgt sie hinterher wie bisher">i</span></label>
         <label class="switch">
           <input type="checkbox" id="modPositionVoraus" data-kb-key="kbModPositionVoraus" data-kb-default="false">
           <span class="slider"></span>
         </label>
       </div>
       <div class="card-header" data-kb-sub="kbModPositioning" style="margin-top:8px;">
-        <label for="modPositionRuder" style="margin:0; font-weight:400;">Ruder <span class="kb-info" data-tip="Ruder kehrt die Richtung um, Preview-Card gegen die Maus">i</span></label>
+        <label for="modPositionRuder" style="margin:0; font-weight:400;">Ruder <span class="kb-info" data-tip="Ruder kehrt die Richtung um. Preview-Card steuert gegen die Maus wie Ruder gegen Boot">i</span></label>
         <label class="switch">
           <input type="checkbox" id="modPositionRuder" data-kb-key="kbModPositionRuder" data-kb-default="false">
           <span class="slider"></span>
         </label>
       </div>
       <div class="card-header" data-kb-sub="kbModPositioning" style="margin-top:8px;">
-        <label for="modKompassN" style="margin:0; font-weight:400;">Norden <span class="kb-info" data-tip="Feste Richtung Norden, summiert sich mit anderen">i</span></label>
-        <label class="switch">
-          <input type="checkbox" id="modKompassN" data-kb-key="kbModKompassN" data-kb-default="false">
-          <span class="slider"></span>
-        </label>
-      </div>
-      <div class="card-header" data-kb-sub="kbModPositioning" style="margin-top:8px;">
-        <label for="modKompassNO" style="margin:0; font-weight:400;">Nordost <span class="kb-info" data-tip="Feste Richtung Nordost, summiert sich mit anderen">i</span></label>
-        <label class="switch">
-          <input type="checkbox" id="modKompassNO" data-kb-key="kbModKompassNO" data-kb-default="false">
-          <span class="slider"></span>
-        </label>
-      </div>
-      <div class="card-header" data-kb-sub="kbModPositioning" style="margin-top:8px;">
-        <label for="modKompassO" style="margin:0; font-weight:400;">Ost <span class="kb-info" data-tip="Feste Richtung Ost, summiert sich mit anderen">i</span></label>
-        <label class="switch">
-          <input type="checkbox" id="modKompassO" data-kb-key="kbModKompassO" data-kb-default="false">
-          <span class="slider"></span>
-        </label>
-      </div>
-      <div class="card-header" data-kb-sub="kbModPositioning" style="margin-top:8px;">
-        <label for="modKompassSO" style="margin:0; font-weight:400;">Südost <span class="kb-info" data-tip="Feste Richtung Südost, summiert sich mit anderen">i</span></label>
-        <label class="switch">
-          <input type="checkbox" id="modKompassSO" data-kb-key="kbModKompassSO" data-kb-default="false">
-          <span class="slider"></span>
-        </label>
-      </div>
-      <div class="card-header" data-kb-sub="kbModPositioning" style="margin-top:8px;">
-        <label for="modKompassS" style="margin:0; font-weight:400;">Süd <span class="kb-info" data-tip="Feste Richtung Süd, summiert sich mit anderen">i</span></label>
-        <label class="switch">
-          <input type="checkbox" id="modKompassS" data-kb-key="kbModKompassS" data-kb-default="false">
-          <span class="slider"></span>
-        </label>
-      </div>
-      <div class="card-header" data-kb-sub="kbModPositioning" style="margin-top:8px;">
-        <label for="modKompassSW" style="margin:0; font-weight:400;">Südwest <span class="kb-info" data-tip="Feste Richtung Südwest, summiert sich mit anderen">i</span></label>
-        <label class="switch">
-          <input type="checkbox" id="modKompassSW" data-kb-key="kbModKompassSW" data-kb-default="false">
-          <span class="slider"></span>
-        </label>
-      </div>
-      <div class="card-header" data-kb-sub="kbModPositioning" style="margin-top:8px;">
-        <label for="modKompassW" style="margin:0; font-weight:400;">West <span class="kb-info" data-tip="Feste Richtung West, summiert sich mit anderen">i</span></label>
-        <label class="switch">
-          <input type="checkbox" id="modKompassW" data-kb-key="kbModKompassW" data-kb-default="false">
-          <span class="slider"></span>
-        </label>
-      </div>
-      <div class="card-header" data-kb-sub="kbModPositioning" style="margin-top:8px;">
-        <label for="modKompassNW" style="margin:0; font-weight:400;">Nordwest <span class="kb-info" data-tip="Feste Richtung Nordwest, summiert sich mit anderen">i</span></label>
-        <label class="switch">
-          <input type="checkbox" id="modKompassNW" data-kb-key="kbModKompassNW" data-kb-default="false">
-          <span class="slider"></span>
-        </label>
-      </div>
-      <div class="card-header" data-kb-sub="kbModPositioning" style="margin-top:8px;">
-        <label for="modPositionEngstellen" style="margin:0; font-weight:400;">Engstellen <span class="kb-info" data-tip="Schmale Treffer legen die Preview-Card seitlich">i</span></label>
+        <label for="modPositionEngstellen" style="margin:0; font-weight:400;">Engstellen <span class="kb-info" data-tip="Schmale Treffer wie Filter Zeilen legen die Preview-Card seitlich. Hält den vertikalen Weg frei">i</span></label>
         <label class="switch">
           <input type="checkbox" id="modPositionEngstellen" data-kb-key="kbModPositionEngstellen" data-kb-default="true">
           <span class="slider"></span>
         </label>
       </div>
       <div class="card-header" data-kb-sub="kbModPositioning" style="margin-top:8px;">
-        <label for="modPositionFreeze" style="margin:0; font-weight:400;">Einfrieren <span class="kb-info" data-tip="Preview-Card friert beim Betreten ein für Klicks">i</span></label>
+        <label for="modPositionFreeze" style="margin:0; font-weight:400;">Einfrieren <span class="kb-info" data-tip="Preview-Card friert beim Betreten ein für Klicks. Aus flieht sie weiter vor dem Zeiger">i</span></label>
         <label class="switch">
           <input type="checkbox" id="modPositionFreeze" data-kb-key="kbModPositionFreeze" data-kb-default="true">
           <span class="slider"></span>
         </label>
       </div>
       <div class="card-header" data-kb-sub="kbModPositioning" style="margin-top:8px;">
-        <label for="modPositionWachstum" style="margin:0; font-weight:400;">Wachstum <span class="kb-info" data-tip="Preview-Card rückt bei Nachladen nach">i</span></label>
+        <label for="modPositionWachstum" style="margin:0; font-weight:400;">Wachstum <span class="kb-info" data-tip="Preview-Card rückt bei Nachladen von Bildern nach. Hält den Abstand konstant">i</span></label>
         <label class="switch">
           <input type="checkbox" id="modPositionWachstum" data-kb-key="kbModPositionWachstum" data-kb-default="true">
           <span class="slider"></span>
         </label>
       </div>
       <div class="card-header" data-kb-sub="kbModPositioning" style="margin-top:8px;">
-        <label for="modPositionHysterese" style="margin:0; font-weight:400;">Hysterese <span class="kb-info" data-tip="Zonenwechsel erst nach 5 Prozent Übertritt">i</span></label>
+        <label for="modPositionHysterese" style="margin:0; font-weight:400;">Hysterese <span class="kb-info" data-tip="Zonenwechsel erst nach 5 Prozent Übertritt. Verhindert Flattern an Grenzen">i</span></label>
         <label class="switch">
           <input type="checkbox" id="modPositionHysterese" data-kb-key="kbModPositionHysterese" data-kb-default="true">
           <span class="slider"></span>
@@ -557,7 +564,7 @@
         </label>
       </div>
       <div class="card-header" data-kb-sub="kbModArrow" style="margin-top:8px;">
-        <label for="modArrowGeometrie" style="margin:0; font-weight:400;">Geometrie <span class="kb-info" data-tip="Ecken Fälle an oder aus, sonst nur vier Seiten">i</span></label>
+        <label for="modArrowGeometrie" style="margin:0; font-weight:400;">Geometrie <span class="kb-info" data-tip="Ecken Fälle an oder aus. Aus nutzt nur vier Seiten, ruhiger bei Kanten">i</span></label>
         <label class="switch">
           <input type="checkbox" id="modArrowGeometrie" data-kb-key="kbModArrowGeometrie" data-kb-default="true">
           <span class="slider"></span>
@@ -579,56 +586,56 @@
       <!-- Unterpunkte: Mirror der Card-Schalter, nur bei Hauptschalter an -->
       <div id="debugToolsList">
         <div class="card-header" style="margin-top:8px;">
-          <label for="debugInitialToggle" style="margin:0; font-weight:400;">Beim Start aktiv <span class="kb-info" data-tip="Anzeigen laufen sofort oder erst ab erster Berührung">i</span></label>
+          <label for="debugInitialToggle" style="margin:0; font-weight:400;">Beim Start aktiv <span class="kb-info" data-tip="Anzeigen laufen sofort nach Laden oder erst ab erster Berührung eines Treffers">i</span></label>
           <label class="switch">
             <input type="checkbox" id="debugInitialToggle" data-kb-key="kbDebugInitial" data-kb-default="true">
             <span class="slider"></span>
           </label>
         </div>
         <div class="card-header" style="margin-top:8px;">
-          <label for="dbgZones" style="margin:0; font-weight:400;">Zonen <span class="kb-info" data-tip="3x3 Raster über dem Treffer">i</span></label>
+          <label for="dbgZones" style="margin:0; font-weight:400;">Zonen <span class="kb-info" data-tip="3x3 Raster über dem Treffer zur Lage Kontrolle">i</span></label>
           <label class="switch">
             <input type="checkbox" id="dbgZones" data-kb-key="kbDbgZones" data-kb-default="true">
             <span class="slider"></span>
           </label>
         </div>
         <div class="card-header" style="margin-top:8px;">
-          <label for="dbgTransparent" style="margin:0; font-weight:400;">Transparent <span class="kb-info" data-tip="Preview-Card 25 Prozent durchsichtig">i</span></label>
+          <label for="dbgTransparent" style="margin:0; font-weight:400;">Transparent <span class="kb-info" data-tip="Preview-Card 25 Prozent durchsichtig. Zum Durchschauen auf Treffer">i</span></label>
           <label class="switch">
             <input type="checkbox" id="dbgTransparent" data-kb-key="kbDbgTransparent" data-kb-default="false">
             <span class="slider"></span>
           </label>
         </div>
         <div class="card-header" style="margin-top:8px;">
-          <label for="dbgMouse" style="margin:0; font-weight:400;">Maus <span class="kb-info" data-tip="Pink Punkt auf dem Zeiger">i</span></label>
+          <label for="dbgMouse" style="margin:0; font-weight:400;">Maus <span class="kb-info" data-tip="Pink Punkt auf dem Zeiger zur Pfad Kontrolle">i</span></label>
           <label class="switch">
             <input type="checkbox" id="dbgMouse" data-kb-key="kbDbgMouse" data-kb-default="true">
             <span class="slider"></span>
           </label>
         </div>
         <div class="card-header" style="margin-top:8px;">
-          <label for="dbgLabels" style="margin:0; font-weight:400;">ABC <span class="kb-info" data-tip="Buchstaben an Treffern">i</span></label>
+          <label for="dbgLabels" style="margin:0; font-weight:400;">ABC <span class="kb-info" data-tip="Buchstaben an Treffern zur Referenz in Protokoll und Screenshots">i</span></label>
           <label class="switch">
             <input type="checkbox" id="dbgLabels" data-kb-key="kbDbgLabels" data-kb-default="true">
             <span class="slider"></span>
           </label>
         </div>
         <div class="card-header" style="margin-top:8px;">
-          <label for="dbgClamp" style="margin:0; font-weight:400;">Clamp <span class="kb-info" data-tip="Rahmen der 15 Pixel Kante">i</span></label>
+          <label for="dbgClamp" style="margin:0; font-weight:400;">Clamp <span class="kb-info" data-tip="Rahmen der 15 Pixel Kante. Zeigt die Flip Grenze">i</span></label>
           <label class="switch">
             <input type="checkbox" id="dbgClamp" data-kb-key="kbDbgClamp" data-kb-default="true">
             <span class="slider"></span>
           </label>
         </div>
         <div class="card-header" style="margin-top:8px;">
-          <label for="dbgItems" style="margin:0; font-weight:400;">Items <span class="kb-info" data-tip="Treffer hellblau hinterlegt">i</span></label>
+          <label for="dbgItems" style="margin:0; font-weight:400;">Items <span class="kb-info" data-tip="Treffer hellblau hinterlegt zur Treffer Erkennung">i</span></label>
           <label class="switch">
             <input type="checkbox" id="dbgItems" data-kb-key="kbDbgItems" data-kb-default="true">
             <span class="slider"></span>
           </label>
         </div>
         <div class="card-header" style="margin-top:8px;">
-          <label for="dbgLog" style="margin:0; font-weight:400;">Log <span class="kb-info" data-tip="Protokoll in Konsole und Puffer">i</span></label>
+          <label for="dbgLog" style="margin:0; font-weight:400;">Log <span class="kb-info" data-tip="Protokoll in Konsole und Puffer mit Zonen und Lücken Werten">i</span></label>
           <label class="switch">
             <input type="checkbox" id="dbgLog" data-kb-key="kbDbgLog" data-kb-default="true">
             <span class="slider"></span>

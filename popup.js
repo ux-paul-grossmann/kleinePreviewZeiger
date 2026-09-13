@@ -73,8 +73,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // Sub Module folgen ihrem Main Module: Zeile eingeklappt bei Main aus
   // Preview-Card Zeilen tragen data-kb-sub mit dem Schlüssel des Main Modules
+  // Tether Einstellungen tragen data-kb-sub2 mit dem Tether Schlüssel
   const updateModSubs = () => {
-    chrome.storage.local.get(["kbModPositioning", "kbModArrow"], (r) => {
+    chrome.storage.local.get(["kbModPositioning", "kbModArrow", "kbModTether"], (r) => {
       const an = (wert) => wert !== false; // Standard an
       const staende = {
         kbModPositioning: an(r.kbModPositioning),
@@ -87,8 +88,46 @@ document.addEventListener("DOMContentLoaded", () => {
         const eingabe = zeile.querySelector("input");
         if (eingabe) eingabe.disabled = !aktiv;
       });
+      const tetherAn = an(r.kbModTether);
+      document.querySelectorAll('[data-kb-sub2="kbModTether"]').forEach((zeile) => {
+        zeile.style.display = tetherAn ? "" : "none";
+      });
     });
   };
+
+  // Tether Anker: 3x3 Grid als Radio Gruppe, Richtung speichern
+  const anchorBtns = [...document.querySelectorAll(".kb-anchor-btn")];
+  const syncTetherAnker = (wert) => {
+    anchorBtns.forEach((b) => {
+      const an = b.dataset.dir === wert;
+      b.classList.toggle("active", an);
+      b.setAttribute("aria-checked", an ? "true" : "false");
+    });
+  };
+  anchorBtns.forEach((b) => {
+    b.addEventListener("click", () => {
+      chrome.storage.local.set({ kbTetherRichtung: b.dataset.dir });
+      syncTetherAnker(b.dataset.dir);
+    });
+  });
+
+  // Tether Distanz: Slider mit Wert daneben, live speichern
+  const distanzRegler = document.getElementById("tetherDistanz");
+  const distanzWert = document.getElementById("tetherDistanzWert");
+  if (distanzRegler) {
+    distanzRegler.addEventListener("input", (e) => {
+      const wert = Number(e.target.value);
+      if (distanzWert) distanzWert.textContent = String(wert);
+      chrome.storage.local.set({ kbTetherDistanz: wert });
+    });
+  }
+  // Tether Stände einmalig laden: Anker, Distanz, Untereinstellungen
+  chrome.storage.local.get(["kbTetherRichtung", "kbTetherDistanz"], (r) => {
+    syncTetherAnker(r.kbTetherRichtung || "auto");
+    if (distanzRegler) distanzRegler.value = r.kbTetherDistanz === undefined ? 32 : r.kbTetherDistanz;
+    if (distanzWert) distanzWert.textContent = String(r.kbTetherDistanz === undefined ? 32 : r.kbTetherDistanz);
+    updateModSubs();
+  });
 
   // Werkzeugliste nur zeigen solange der Hauptschalter an ist
   const updateDebugToolsList = () => {
