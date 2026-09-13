@@ -74,12 +74,11 @@ document.addEventListener("DOMContentLoaded", () => {
   // Sub Module folgen ihrem Main Module: Zeile dimmen und Toggle sperren
   // Karten Zeilen tragen data-kb-sub mit dem Schlüssel des Main Modules
   const updateModSubs = () => {
-    chrome.storage.local.get(["kbModPositioning", "kbModArrow", "kbModAppearance"], (r) => {
+    chrome.storage.local.get(["kbModPositioning", "kbModArrow"], (r) => {
       const an = (wert) => wert !== false; // Standard an
       const staende = {
         kbModPositioning: an(r.kbModPositioning),
         kbModArrow: an(r.kbModArrow),
-        kbModAppearance: an(r.kbModAppearance),
       };
       document.querySelectorAll("[data-kb-sub]").forEach((zeile) => {
         const haupt = staende[zeile.dataset.kbSub];
@@ -88,11 +87,6 @@ document.addEventListener("DOMContentLoaded", () => {
         const eingabe = zeile.querySelector("input");
         if (eingabe) eingabe.disabled = !aktiv;
       });
-      const erscheinungAn = staende.kbModAppearance;
-      const segZeile = document.getElementById("themeSegRow");
-      if (segZeile) segZeile.classList.toggle("kb-row-off", !erscheinungAn);
-      const akzentZeile = document.getElementById("accentRow");
-      if (akzentZeile) akzentZeile.classList.toggle("kb-row-off", !erscheinungAn);
     });
   };
 

@@ -183,8 +183,6 @@
 
   // Akzent auf den Hauptknopf der Vorschau-Card anwenden
   function applyAccent(id) {
-    // Appearance oder Akzent aus: Standard ohne Überschreibung
-    if (!modAn("kbModAppearance")) id = null;
     const a = KB_ACCENTS[id];
     if (!a) {
       previewCard.style.removeProperty("--kb-accent");
@@ -198,8 +196,6 @@
   }
 
   function applyTheme(theme) {
-    // Appearance aus: System statt fester Wahl
-    if (!modAn("kbModAppearance")) theme = "system";
     if (theme === "light" || theme === "dark") {
       document.documentElement.setAttribute("data-kb-theme", theme);
     } else {
@@ -300,7 +296,7 @@
       }
     }
     // Advanced View Module: Stände einmalig laden
-    const MOD_SCHLUESSEL = ["kbModZoom", "kbModDetails", "kbModRoute", "kbModPositioning", "kbModPositionZonen", "kbModPositionAbstand", "kbModPositionFlip", "kbModPositionClamp", "kbModPositionStuck", "kbModArrow", "kbModArrowGeometrie", "kbModAppearance"];
+    const MOD_SCHLUESSEL = ["kbModZoom", "kbModDetails", "kbModRoute", "kbModPositioning", "kbModPositionZonen", "kbModPositionAbstand", "kbModPositionFlip", "kbModPositionClamp", "kbModPositionStuck", "kbModArrow", "kbModArrowGeometrie"];
     chrome.storage.local.get(MOD_SCHLUESSEL, (r) => {
       mod = r;
     });
