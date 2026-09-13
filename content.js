@@ -21,10 +21,10 @@
   let showClampZone = true;
   let showItemHighlight = true;
   let showTrackLog = true;
-  // Debug-UI-Hauptschalter aus dem Popup (Standard an)
-  let debugUiEnabled = true;
-  // Startschalter: aus = nach Neuladen ruhig bis erste Berührung
-  let starteAktiv = true;
+  // Debug-UI Schalter aus dem Popup (Standard an)
+  let debugAktiv = true;
+  // Start Häkchen: aus bedeutet nach dem Laden alles aus bis zur ersten Berührung
+  let startAktiv = true;
   let lastTrackLog = 0;
   let lastTrackSig = "";
   let lastZoneLogged = null;
@@ -56,7 +56,7 @@
   function updateItemLabels() {
     document.querySelectorAll("li.relative.mb-xsmall").forEach((item, i) => {
       let badge = item.querySelector(":scope > .kb-item-label");
-      if (showItemLabels && debugUiEnabled !== false && starteAktiv) {
+      if (showItemLabels && debugAktiv !== false && startAktiv) {
         if (getComputedStyle(item).position === "static") item.style.position = "relative";
         const label = labelFor(i);
         if (!badge) {
@@ -92,7 +92,7 @@
 
   function updateDebugOverlay() {
     if (!debugOverlay) return;
-    if (debugUiEnabled === false || !starteAktiv || !showDebugZones || !currentItemRect || previewCard.classList.contains("kb-card-hidden")) {
+    if (debugAktiv === false || !startAktiv || !showDebugZones || !currentItemRect || previewCard.classList.contains("kb-card-hidden")) {
       debugOverlay.style.display = "none";
       return;
     }
@@ -110,19 +110,19 @@
 
   function updateClampOverlay() {
     if (!clampOverlay) return;
-    clampOverlay.style.display = (showClampZone && debugUiEnabled !== false && starteAktiv) ? "block" : "none";
+    clampOverlay.style.display = (showClampZone && debugAktiv !== false && startAktiv) ? "block" : "none";
   }
 
   function updateItemHighlight() {
-    document.body.classList.toggle("kb-highlight-items", showItemHighlight && debugUiEnabled !== false && starteAktiv);
+    document.body.classList.toggle("kb-highlight-items", showItemHighlight && debugAktiv !== false && startAktiv);
   }
 
   // Debug-UI aus dem Popup: Reihe ein-/ausblenden, bei Aus alle Anzeigen löschen
   function applyDebugUi() {
     const row = previewCard.querySelector(".kb-debug-row");
-    if (row) row.style.display = debugUiEnabled === false ? "none" : "";
-    // Master aus oder Startschalter aus und noch keine Berührung: alles löschen
-    if (debugUiEnabled === false || !starteAktiv) {
+    if (row) row.style.display = debugAktiv === false ? "none" : "";
+    // Schalter aus oder ohne Start Häkchen und noch keine Berührung: alles löschen
+    if (debugAktiv === false || !startAktiv) {
       if (debugOverlay) debugOverlay.style.display = "none";
       if (clampOverlay) clampOverlay.style.display = "none";
       if (mouseMarker) mouseMarker.style.display = "none";
@@ -221,13 +221,13 @@
       }
       // Popup Debug-Modul: Reihe und Anzeigen sofort umschalten
       if (area === "local" && changes.kbDebugUiEnabled) {
-        debugUiEnabled = changes.kbDebugUiEnabled.newValue !== false;
+        debugAktiv = changes.kbDebugUiEnabled.newValue !== false;
         applyDebugUi();
       }
       // Popup Startschalter: nur Startverhalten, keine Werkzeug-Zustände anfassen
       if (area === "local" && changes.kbDebugInitial) {
-        starteAktiv = changes.kbDebugInitial.newValue !== false;
-        if (!starteAktiv) lastTrackSig = "";
+        startAktiv = changes.kbDebugInitial.newValue !== false;
+        if (!startAktiv) lastTrackSig = "";
         applyDebugUi();
       }
       // Popup Spiegel-Schalter: Stand übernehmen, Anzeige und Tasten nachführen
@@ -242,7 +242,7 @@
       }
       if (area === "local" && changes.kbDbgMouse) {
         showMouseMarker = changes.kbDbgMouse.newValue !== false;
-        if (mouseMarker) mouseMarker.style.display = showMouseMarker && debugUiEnabled !== false ? "block" : "none";
+        if (mouseMarker) mouseMarker.style.display = showMouseMarker && debugAktiv !== false ? "block" : "none";
         syncCardDebugButtons();
       }
       if (area === "local" && changes.kbDbgLabels) {
@@ -271,9 +271,9 @@
       if (r.kbAccent) applyAccent(r.kbAccent);
     });
     // Popup Debug-Modul: initial ein-/ausblenden plus Spiegelstände übernehmen
-    // Startschalter aus = ruhig starten (Zustände bleiben unangetastet)
+    // Ohne Start Häkchen bleibt nach dem Laden alles aus (Zustände bleiben unangetastet)
     chrome.storage.local.get(["kbDebugUiEnabled", "kbDebugInitial", "kbDbgZones", "kbDbgTransparent", "kbDbgMouse", "kbDbgLabels", "kbDbgClamp", "kbDbgItems", "kbDbgLog"], (r) => {
-      debugUiEnabled = r.kbDebugUiEnabled !== false;
+      debugAktiv = r.kbDebugUiEnabled !== false;
       const liesAn = (wert, standard) => (typeof wert === "boolean" ? wert : standard);
       showDebugZones = liesAn(r.kbDbgZones, true);
       showMouseMarker = liesAn(r.kbDbgMouse, true);
@@ -282,7 +282,7 @@
       showItemHighlight = liesAn(r.kbDbgItems, true);
       showTrackLog = liesAn(r.kbDbgLog, true);
       if (r.kbDbgTransparent === true) previewCard.classList.add("kb-transparent");
-      starteAktiv = r.kbDebugInitial !== false;
+      startAktiv = r.kbDebugInitial !== false;
       applyDebugUi();
       syncCardDebugButtons();
     });
@@ -347,7 +347,7 @@
   // flieht die Card weiter vor dem Cursor; zügige Durchfahrt ebenso.
   // Debug-Protokoll: gedrosselt in Console und DOM-Ringpuffer schreiben
   function trackLog(msg, sig) {
-    if (!showTrackLog || debugUiEnabled === false || !starteAktiv) return;
+    if (!showTrackLog || debugAktiv === false || !startAktiv) return;
     const now = performance.now();
     const signature = sig || msg;
     if (signature !== lastTrackSig || now - lastTrackLog > 500) {
@@ -385,7 +385,7 @@
     lastMove = { x: e.clientX, y: e.clientY, t: now };
     currentMouseX = e.clientX;
     currentMouseY = e.clientY;
-    if (showMouseMarker && debugUiEnabled !== false && starteAktiv && mouseMarker) {
+    if (showMouseMarker && debugAktiv !== false && startAktiv && mouseMarker) {
       mouseMarker.style.display = "block";
       mouseMarker.style.left = `${e.clientX}px`;
       mouseMarker.style.top = `${e.clientY}px`;
@@ -943,7 +943,7 @@
 
     // Debug-Reihe je Popup-Schalter zeigen oder verstecken (frisches Card-HTML)
     const debugRow = previewCard.querySelector(".kb-debug-row");
-    if (debugRow) debugRow.style.display = debugUiEnabled === false ? "none" : "";
+    if (debugRow) debugRow.style.display = debugAktiv === false ? "none" : "";
   }
 
   // Kern: Card-Position aus 3x3-Zone, Flip-Logik und Viewport-Clamp berechnen
@@ -1170,9 +1170,9 @@
         if (!linkEl) return;
         itemHover = true;
         stuckAbove = false;
-        // Erste Berührung beendet die Start-Ruhe (Startschalter aus = bis hier ruhig)
-        if (!starteAktiv) {
-          starteAktiv = true;
+        // Erste Berührung: ab hier laufen die Anzeigen (Start Häkchen aus = bis hier aus)
+        if (!startAktiv) {
+          startAktiv = true;
           applyDebugUi();
         }
 
