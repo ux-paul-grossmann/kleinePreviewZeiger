@@ -71,7 +71,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   };
 
-  // Sub Module folgen ihrem Main Module: Zeile dimmen und Toggle sperren
+  // Sub Module folgen ihrem Main Module: Zeile eingeklappt bei Main aus
   // Karten Zeilen tragen data-kb-sub mit dem Schlüssel des Main Modules
   const updateModSubs = () => {
     chrome.storage.local.get(["kbModPositioning", "kbModArrow"], (r) => {
@@ -83,7 +83,7 @@ document.addEventListener("DOMContentLoaded", () => {
       document.querySelectorAll("[data-kb-sub]").forEach((zeile) => {
         const haupt = staende[zeile.dataset.kbSub];
         const aktiv = haupt !== false;
-        zeile.classList.toggle("kb-row-off", !aktiv);
+        zeile.style.display = aktiv ? "" : "none";
         const eingabe = zeile.querySelector("input");
         if (eingabe) eingabe.disabled = !aktiv;
       });
