@@ -21,6 +21,10 @@
   let showClampZone = true;
   let showItemHighlight = true;
   let showTrackLog = true;
+  // Debug-UI-Hauptschalter aus dem Popup (Standard an)
+  let debugUiEnabled = true;
+  // Startschalter: aus = nach Neuladen ruhig bis erste Berührung
+  let starteAktiv = true;
   let lastTrackLog = 0;
   let lastTrackSig = "";
   let lastZoneLogged = null;
@@ -52,7 +56,7 @@
   function updateItemLabels() {
     document.querySelectorAll("li.relative.mb-xsmall").forEach((item, i) => {
       let badge = item.querySelector(":scope > .kb-item-label");
-      if (showItemLabels) {
+      if (showItemLabels && debugUiEnabled !== false && starteAktiv) {
         if (getComputedStyle(item).position === "static") item.style.position = "relative";
         const label = labelFor(i);
         if (!badge) {
@@ -88,7 +92,7 @@
 
   function updateDebugOverlay() {
     if (!debugOverlay) return;
-    if (!showDebugZones || !currentItemRect || previewCard.classList.contains("kb-card-hidden")) {
+    if (debugUiEnabled === false || !starteAktiv || !showDebugZones || !currentItemRect || previewCard.classList.contains("kb-card-hidden")) {
       debugOverlay.style.display = "none";
       return;
     }
@@ -107,10 +111,12 @@
   function updateClampOverlay() {
     if (!clampOverlay) return;
     clampOverlay.style.display = showClampZone ? "block" : "none";
+    clampOverlay.style.display = (showClampZone && debugUiEnabled !== false && starteAktiv) ? "block" : "none";
   }
 
   function updateItemHighlight() {
     document.body.classList.toggle("kb-highlight-items", showItemHighlight);
+    document.body.classList.toggle("kb-highlight-items", showItemHighlight && debugUiEnabled !== false && starteAktiv);
   }
 
     const KB_SWATCHES = [
@@ -186,9 +192,53 @@
       arrow.style.borderLeftColor = s.border;
       arrow.style.borderTopColor = s.border;
     }
+  // Debug-UI aus dem Popup: Reihe ein-/ausblenden, bei Aus alle Anzeigen löschen
+  function applyDebugUi() {
+    const row = previewCard.querySelector(".kb-debug-row");
+    if (row) row.style.display = debugUiEnabled === false ? "none" : "";
+    // Master aus oder Startschalter aus und noch keine Berührung: alles löschen
+    if (debugUiEnabled === false || !starteAktiv) {
+      if (debugOverlay) debugOverlay.style.display = "none";
+      if (clampOverlay) clampOverlay.style.display = "none";
+      if (mouseMarker) mouseMarker.style.display = "none";
+      document.body.classList.remove("kb-highlight-items");
+      document.querySelectorAll(".kb-item-label").forEach((badge) => badge.remove());
+    } else {
+      updateClampOverlay();
+      updateItemHighlight();
+      updateItemLabels();
+      updateDebugOverlay();
+    }
+  }
     previewCard.querySelectorAll(".kb-swatch").forEach((el) => el.classList.toggle("kb-active", el.dataset.theme === id));
   }
 
+  // Einzelstand in den Speicher schreiben (Spiegel für Popup-Schalter)
+  function storeDebug(schluessel, wert) {
+    try {
+      if (typeof chrome !== "undefined" && chrome.storage && chrome.storage.local) {
+        chrome.storage.local.set({ [schluessel]: wert });
+      }
+    } catch (fehler) { /* Speicher nicht verfügbar: Stand bleibt sitzungsweit */ }
+  }
+
+  // Offene Card-Tasten mit Stand abgleichen (nach Spiegel-Schalter aus Popup)
+  function syncCardDebugButtons() {
+    const paare = [
+      ["#kb-debug-toggle", showDebugZones],
+      ["#kb-mouse-toggle", showMouseMarker],
+      ["#kb-labels-toggle", showItemLabels],
+      ["#kb-clamp-toggle", showClampZone],
+      ["#kb-items-toggle", showItemHighlight],
+      ["#kb-log-toggle", showTrackLog],
+    ];
+    paare.forEach(([selektor, aktiv]) => {
+      const knopf = previewCard.querySelector(selektor);
+      if (knopf) knopf.classList.toggle("kb-active", aktiv);
+    });
+    const blick = previewCard.querySelector("#kb-transp-toggle");
+    if (blick) blick.classList.toggle("kb-active", previewCard.classList.contains("kb-transparent"));
+  }
 
 
   function applyTheme(theme) {
@@ -217,30 +267,67 @@
       if (area === "local" && changes.kbHomeLocation) {
         currentHomeLocation = changes.kbHomeLocation.newValue || "";
       }
-      if (area === "local" && changes.kbSwatchTheme) {
-        chrome.storage.local.get(["kbThemeModuleEnabled"], (r2) => {
-          if (r2.kbThemeModuleEnabled !== false) applySwatchTheme(changes.kbSwatchTheme.newValue);
-        });
+      if (area === "local" && changes.kbDebugUiEnabled) {
+        debugUiEnabled = changes.kbDebugUiEnabled.newValue !== false;
+        applyDebugUi();
       }
-      if (area === "local" && changes.kbThemeModuleEnabled) {
-        const drawerEl = previewCard.querySelector("#kb-swatches-drawer");
-        if (changes.kbThemeModuleEnabled.newValue === false) {
-          applySwatchTheme("standard");
-          if (drawerEl) drawerEl.style.display = "none";
-        } else {
-          if (drawerEl) drawerEl.style.display = "";
-          chrome.storage.local.get(["kbSwatchTheme"], (r2) => {
-            if (r2.kbSwatchTheme) applySwatchTheme(r2.kbSwatchTheme);
-          });
-        }
+      // Popup Startschalter: nur Startverhalten, keine Werkzeug-Zustände anfassen
+      if (area === "local" && changes.kbDebugInitial) {
+        starteAktiv = changes.kbDebugInitial.newValue !== false;
+        if (!starteAktiv) lastTrackSig = "";
+        applyDebugUi();
+      }
+      // Popup Spiegel-Schalter: Stand übernehmen, Anzeige und Tasten nachführen
+      if (area === "local" && changes.kbDbgZones) {
+        showDebugZones = changes.kbDbgZones.newValue !== false;
+        updateDebugOverlay();
+        syncCardDebugButtons();
+      }
+      if (area === "local" && changes.kbDbgTransparent) {
+        previewCard.classList.toggle("kb-transparent", changes.kbDbgTransparent.newValue === true);
+        syncCardDebugButtons();
+      }
+      if (area === "local" && changes.kbDbgMouse) {
+        showMouseMarker = changes.kbDbgMouse.newValue !== false;
+        if (mouseMarker) mouseMarker.style.display = showMouseMarker && debugUiEnabled !== false ? "block" : "none";
+        syncCardDebugButtons();
+      }
+      if (area === "local" && changes.kbDbgLabels) {
+        showItemLabels = changes.kbDbgLabels.newValue !== false;
+        updateItemLabels();
+        syncCardDebugButtons();
+      }
+      if (area === "local" && changes.kbDbgClamp) {
+        showClampZone = changes.kbDbgClamp.newValue !== false;
+        updateClampOverlay();
+        syncCardDebugButtons();
+      }
+      if (area === "local" && changes.kbDbgItems) {
+        showItemHighlight = changes.kbDbgItems.newValue !== false;
+        updateItemHighlight();
+        syncCardDebugButtons();
+      }
+      if (area === "local" && changes.kbDbgLog) {
+        showTrackLog = changes.kbDbgLog.newValue !== false;
+        if (!showTrackLog) lastTrackSig = "";
+        syncCardDebugButtons();
       }
     });
-    // Popup Theme-Modul: initial swatch anwenden
-    chrome.storage.local.get(["kbSwatchTheme", "kbThemeModuleEnabled"], (r) => {
-      if (r.kbThemeModuleEnabled !== false && r.kbSwatchTheme) {
-        // delay until previewCard exists
-        setTimeout(() => applySwatchTheme(r.kbSwatchTheme), 500);
-      }
+    // Popup Debug-Modul: initial ein-/ausblenden plus Spiegelstände übernehmen
+    // Startschalter aus = ruhig starten (Zustände bleiben unangetastet)
+    chrome.storage.local.get(["kbDebugUiEnabled", "kbDebugInitial", "kbDbgZones", "kbDbgTransparent", "kbDbgMouse", "kbDbgLabels", "kbDbgClamp", "kbDbgItems", "kbDbgLog"], (r) => {
+      debugUiEnabled = r.kbDebugUiEnabled !== false;
+      const liesAn = (wert, standard) => (typeof wert === "boolean" ? wert : standard);
+      showDebugZones = liesAn(r.kbDbgZones, true);
+      showMouseMarker = liesAn(r.kbDbgMouse, true);
+      showItemLabels = liesAn(r.kbDbgLabels, true);
+      showClampZone = liesAn(r.kbDbgClamp, true);
+      showItemHighlight = liesAn(r.kbDbgItems, true);
+      showTrackLog = liesAn(r.kbDbgLog, true);
+      if (r.kbDbgTransparent === true) previewCard.classList.add("kb-transparent");
+      starteAktiv = r.kbDebugInitial !== false;
+      applyDebugUi();
+      syncCardDebugButtons();
     });
   }
 
@@ -303,7 +390,7 @@
   // flieht die Card weiter vor dem Cursor; zügige Durchfahrt ebenso.
   // Debug-Protokoll: gedrosselt in Console und DOM-Ringpuffer schreiben
   function trackLog(msg, sig) {
-    if (!showTrackLog) return;
+    if (!showTrackLog || debugUiEnabled === false || !starteAktiv) return;
     const now = performance.now();
     const signature = sig || msg;
     if (signature !== lastTrackSig || now - lastTrackLog > 500) {
@@ -341,7 +428,7 @@
     lastMove = { x: e.clientX, y: e.clientY, t: now };
     currentMouseX = e.clientX;
     currentMouseY = e.clientY;
-    if (showMouseMarker && mouseMarker) {
+    if (showMouseMarker && debugUiEnabled !== false && starteAktiv && mouseMarker) {
       mouseMarker.style.display = "block";
       mouseMarker.style.left = `${e.clientX}px`;
       mouseMarker.style.top = `${e.clientY}px`;
@@ -832,6 +919,7 @@
       debugToggle.addEventListener("click", (e) => {
         e.stopPropagation();
         showDebugZones = !showDebugZones;
+        storeDebug("kbDbgZones", showDebugZones);
         debugToggle.classList.toggle("kb-active", showDebugZones);
         updateDebugOverlay();
       });
@@ -843,6 +931,7 @@
       transpToggle.addEventListener("click", (e) => {
         e.stopPropagation();
         const on = previewCard.classList.toggle("kb-transparent");
+        storeDebug("kbDbgTransparent", on);
         transpToggle.classList.toggle("kb-active", on);
       });
     }
@@ -853,6 +942,7 @@
       mouseToggle.addEventListener("click", (e) => {
         e.stopPropagation();
         showMouseMarker = !showMouseMarker;
+        storeDebug("kbDbgMouse", showMouseMarker);
         mouseToggle.classList.toggle("kb-active", showMouseMarker);
         if (mouseMarker) mouseMarker.style.display = showMouseMarker ? "block" : "none";
       });
@@ -864,6 +954,7 @@
       labelsToggle.addEventListener("click", (e) => {
         e.stopPropagation();
         showItemLabels = !showItemLabels;
+        storeDebug("kbDbgLabels", showItemLabels);
         labelsToggle.classList.toggle("kb-active", showItemLabels);
         updateItemLabels();
       });
@@ -875,6 +966,7 @@
       clampToggle.addEventListener("click", (e) => {
         e.stopPropagation();
         showClampZone = !showClampZone;
+        storeDebug("kbDbgClamp", showClampZone);
         clampToggle.classList.toggle("kb-active", showClampZone);
         updateClampOverlay();
       });
@@ -886,6 +978,7 @@
       itemsToggle.addEventListener("click", (e) => {
         e.stopPropagation();
         showItemHighlight = !showItemHighlight;
+        storeDebug("kbDbgItems", showItemHighlight);
         itemsToggle.classList.toggle("kb-active", showItemHighlight);
         updateItemHighlight();
       });
@@ -897,6 +990,7 @@
       logToggle.addEventListener("click", (e) => {
         e.stopPropagation();
         showTrackLog = !showTrackLog;
+        storeDebug("kbDbgLog", showTrackLog);
         logToggle.classList.toggle("kb-active", showTrackLog);
         if (showTrackLog) console.log("[kb-track] PROTOKOLL AN");
         else { lastTrackSig = ""; console.log("[kb-track] PROTOKOLL AUS"); }
@@ -929,6 +1023,9 @@
         });
       }
     }
+    // Debug-Reihe je Popup-Schalter zeigen oder verstecken (frisches Card-HTML)
+    const debugRow = previewCard.querySelector(".kb-debug-row");
+    if (debugRow) debugRow.style.display = debugUiEnabled === false ? "none" : "";
   }
 
   // Kern: Card-Position aus 3x3-Zone, Flip-Logik und Viewport-Clamp berechnen
@@ -1155,6 +1252,11 @@
         if (!linkEl) return;
         itemHover = true;
         stuckAbove = false;
+        // Erste Berührung beendet die Start-Ruhe (Startschalter aus = bis hier ruhig)
+        if (!starteAktiv) {
+          starteAktiv = true;
+          applyDebugUi();
+        }
 
         const url = linkEl.href;
 

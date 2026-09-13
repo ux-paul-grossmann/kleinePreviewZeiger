@@ -201,16 +201,75 @@
       <div class="hint">Wird als Start bei <b>Route planen</b> verwendet</div>
     </div>
 
-    <!-- Karte: Themen-Drawer in der Vorschau schalten -->
+    <!-- Karte: Debug-Oberfläche in der Vorschau schalten -->
     <div class="card">
       <div class="card-header">
-        <label for="themeToggle" style="margin:0;">Themen</label>
+        <label for="debugToggle" style="margin:0;">Debug-UI</label>
         <label class="switch">
-          <input type="checkbox" id="themeToggle">
+          <input type="checkbox" id="debugToggle">
           <span class="slider"></span>
         </label>
       </div>
-      <div class="hint" style="margin-top:0;">Themen-Drawer in Vorschau-Card an/aus</div>
+      <div class="hint" style="margin-top:0;">Debug-Schalter in Vorschau-Card an/aus</div>
+      <!-- Unterpunkte: Spiegel der Card-Schalter, nur bei Hauptschalter an -->
+      <div id="debugToolsList">
+        <div class="card-header" style="margin-top:8px;">
+          <label for="debugInitialToggle" style="margin:0; font-weight:400;">Beim Start aktiv</label>
+          <label class="switch">
+            <input type="checkbox" id="debugInitialToggle" data-kb-key="kbDebugInitial" data-kb-default="true">
+            <span class="slider"></span>
+          </label>
+        </div>
+        <div class="card-header" style="margin-top:8px;">
+          <label for="dbgZones" style="margin:0; font-weight:400;">Zonen</label>
+          <label class="switch">
+            <input type="checkbox" id="dbgZones" data-kb-key="kbDbgZones" data-kb-default="true">
+            <span class="slider"></span>
+          </label>
+        </div>
+        <div class="card-header" style="margin-top:8px;">
+          <label for="dbgTransparent" style="margin:0; font-weight:400;">Transparent</label>
+          <label class="switch">
+            <input type="checkbox" id="dbgTransparent" data-kb-key="kbDbgTransparent" data-kb-default="false">
+            <span class="slider"></span>
+          </label>
+        </div>
+        <div class="card-header" style="margin-top:8px;">
+          <label for="dbgMouse" style="margin:0; font-weight:400;">Maus</label>
+          <label class="switch">
+            <input type="checkbox" id="dbgMouse" data-kb-key="kbDbgMouse" data-kb-default="true">
+            <span class="slider"></span>
+          </label>
+        </div>
+        <div class="card-header" style="margin-top:8px;">
+          <label for="dbgLabels" style="margin:0; font-weight:400;">ABC</label>
+          <label class="switch">
+            <input type="checkbox" id="dbgLabels" data-kb-key="kbDbgLabels" data-kb-default="true">
+            <span class="slider"></span>
+          </label>
+        </div>
+        <div class="card-header" style="margin-top:8px;">
+          <label for="dbgClamp" style="margin:0; font-weight:400;">Clamp</label>
+          <label class="switch">
+            <input type="checkbox" id="dbgClamp" data-kb-key="kbDbgClamp" data-kb-default="true">
+            <span class="slider"></span>
+          </label>
+        </div>
+        <div class="card-header" style="margin-top:8px;">
+          <label for="dbgItems" style="margin:0; font-weight:400;">Items</label>
+          <label class="switch">
+            <input type="checkbox" id="dbgItems" data-kb-key="kbDbgItems" data-kb-default="true">
+            <span class="slider"></span>
+          </label>
+        </div>
+        <div class="card-header" style="margin-top:8px;">
+          <label for="dbgLog" style="margin:0; font-weight:400;">Log</label>
+          <label class="switch">
+            <input type="checkbox" id="dbgLog" data-kb-key="kbDbgLog" data-kb-default="true">
+            <span class="slider"></span>
+          </label>
+        </div>
+      </div>
     </div>
   </div>
   <!-- Popup-Logik laden -->
