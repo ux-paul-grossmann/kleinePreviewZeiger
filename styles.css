@@ -90,7 +90,7 @@
   color: var(--kb-text-main);
   pointer-events: auto;
   overflow: visible;
-  transition: opacity 0.15s ease-in-out, background-color 0.2s ease, border-color 0.2s ease, top 0.15s ease-out, left 0.15s ease-out;
+  transition: opacity 0.15s ease-in-out, background-color 0.2s ease, border-color 0.2s ease, top 0.25s ease-out, left 0.25s ease-out;
 }
 
 .kb-arrow {
