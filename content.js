@@ -29,7 +29,7 @@
   // Schlüssel nach Muster kbMod, Aus bedeutet Funktion überspringen
   // Ausnahme: Voraus ist Standard aus (bisheriges Verhalten bleibt)
   let mod = {};
-  const MOD_STD_AUS = ["kbModPositionVoraus"];
+  const MOD_STD_AUS = ["kbModPositionVoraus", "kbModPositionRuder"];
   function modAn(schluessel) {
     const wert = mod[schluessel];
     if (wert === undefined) return MOD_STD_AUS.indexOf(schluessel) === -1;
@@ -336,7 +336,7 @@
       }
     }
     // Advanced View Module: Stände einmalig laden
-    const MOD_SCHLUESSEL = ["kbModZoom", "kbModDetails", "kbModRoute", "kbModPositioning", "kbModPositionZonen", "kbModPositionAbstand", "kbModPositionFlip", "kbModPositionClamp", "kbModPositionStuck", "kbModArrow", "kbModArrowGeometrie", "kbModPositionFolgen", "kbModPositionVoraus", "kbModPositionEngstellen", "kbModPositionFreeze", "kbModPositionWachstum", "kbModPositionHysterese"];
+    const MOD_SCHLUESSEL = ["kbModZoom", "kbModDetails", "kbModRoute", "kbModPositioning", "kbModPositionZonen", "kbModPositionAbstand", "kbModPositionFlip", "kbModPositionClamp", "kbModPositionStuck", "kbModArrow", "kbModArrowGeometrie", "kbModPositionFolgen", "kbModPositionVoraus", "kbModPositionRuder", "kbModPositionEngstellen", "kbModPositionFreeze", "kbModPositionWachstum", "kbModPositionHysterese"];
     chrome.storage.local.get(MOD_SCHLUESSEL, (r) => {
       mod = r;
     });
@@ -1174,12 +1174,16 @@
         left = Math.max(padding, Math.min(left, viewportWidth - cardWidth - padding));
         top = Math.max(padding, Math.min(top, viewportHeight - cardHeight - padding));
       }
-      // Voraus Sub an: Preview-Card 24 Pixel in Bewegungsrichtung voraus
-      if (modAn("kbModPositionVoraus")) {
+      // Voraus und Ruder Subs: Versatz entlang oder gegen die Bewegungsrichtung
+      // Ruder kehrt um wie Ruder gegen Boot, Voraus eilt voraus
+      let lenkRichtung = 0;
+      if (modAn("kbModPositionRuder")) lenkRichtung = -24;
+      else if (modAn("kbModPositionVoraus")) lenkRichtung = 24;
+      if (lenkRichtung !== 0) {
         const lang = Math.hypot(bewegX, bewegY);
         if (lang > 0.3) {
-          left += (bewegX / lang) * 24;
-          top += (bewegY / lang) * 24;
+          left += (bewegX / lang) * lenkRichtung;
+          top += (bewegY / lang) * lenkRichtung;
         }
       }
       // Universelles Koordinaten-Log: Card-Box + Spitze vs. Cursor + Pfad
