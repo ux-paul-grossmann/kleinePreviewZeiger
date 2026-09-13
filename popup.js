@@ -113,7 +113,7 @@ document.addEventListener("DOMContentLoaded", () => {
       saveBtn.style.background = "#22c55e";
       setTimeout(() => {
         saveBtn.textContent = orig;
-        saveBtn.style.background = "#38bdf8";
+        saveBtn.style.background = "";
       }, 1200);
     });
   };

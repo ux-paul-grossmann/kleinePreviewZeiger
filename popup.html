@@ -16,6 +16,9 @@
       --input-text: #1e293b;
       --hint: #64748b;
       --body-bg: lightgrey;
+      --save-bg: #38bdf8;
+      --save-text: #0f172a;
+      --save-hover: #0ea5e9;
     }
     /* Dunkelwelt: Betriebssystem dunkel ohne Festlegung, oder fest dunkel */
     @media (prefers-color-scheme: dark) {
@@ -30,6 +33,9 @@
         --input-text: #f1f5f9;
         --hint: #64748b;
         --body-bg: #171E29;
+        --save-bg: #0284c7;
+        --save-text: #ffffff;
+        --save-hover: #0ea5e9;
       }
     }
     /* Dunkelwelt bei fester Wahl (auch bei hellem Betriebssystem) */
@@ -44,6 +50,9 @@
       --input-text: #f1f5f9;
       --hint: #64748b;
       --body-bg: #171E29;
+      --save-bg: #0284c7;
+      --save-text: #ffffff;
+      --save-hover: #0ea5e9;
     }
     html {
       background: transparent !important;
@@ -114,6 +123,7 @@
       align-items: center;
     }
     .icon-btn svg { width: 16px; height: 16px; }
+    .icon-btn:hover { background: lightgrey; border-radius: 50%; }
     /* Modul Zeilen: ausgedimmter Zustand bei inaktivem Main Module */
     .kb-row-off { opacity: 0.45; }
     .kb-row-off button { pointer-events: none; }
@@ -197,8 +207,8 @@
       right: 4px;
       top: 50%;
       transform: translateY(-50%);
-      background: #38bdf8;
-      color: #0f172a;
+      background: var(--save-bg);
+      color: var(--save-text);
       border: none;
       font-size: 11px;
       font-weight: 600;
@@ -207,7 +217,7 @@
       cursor: pointer;
       transition: background 0.15s ease;
     }
-    .save-btn:hover { background: #0ea5e9; }
+    .save-btn:hover { background: var(--save-hover); }
     .save-btn:active { transform: translateY(-50%) scale(0.96); }
     .hint {
       font-size: 10px;
