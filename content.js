@@ -29,7 +29,7 @@
   // Schlüssel nach Muster kbMod, Aus bedeutet Funktion überspringen
   // Ausnahme: Voraus ist Standard aus (bisheriges Verhalten bleibt)
   let mod = {};
-  const MOD_STD_AUS = ["kbModPositionVoraus", "kbModPositionRuder"];
+  const MOD_STD_AUS = ["kbModPositionVoraus", "kbModPositionRuder", "kbModKompassN", "kbModKompassNO", "kbModKompassO", "kbModKompassSO", "kbModKompassS", "kbModKompassSW", "kbModKompassW", "kbModKompassNW"];
   function modAn(schluessel) {
     const wert = mod[schluessel];
     if (wert === undefined) return MOD_STD_AUS.indexOf(schluessel) === -1;
@@ -98,6 +98,17 @@
     ["bottom-left", "bottom-center", "bottom-right"],
   ];
 
+  // Kompass Sub Module: feste Richtungen als Einheitsvektoren
+  const KOMPASS = {
+    kbModKompassN: [0, -1],
+    kbModKompassNO: [0.7071, -0.7071],
+    kbModKompassO: [1, 0],
+    kbModKompassSO: [0.7071, 0.7071],
+    kbModKompassS: [0, 1],
+    kbModKompassSW: [-0.7071, 0.7071],
+    kbModKompassW: [-1, 0],
+    kbModKompassNW: [-0.7071, -0.7071],
+  };
   // Zonenband mit Hysterese Cherry Pick aus Experiment: Wechsel erst nach
   // 5 Prozent Übertritt über die Zonengrenze, kein Flattern bei Verweilen
   function zoneBand(rel, last) {
@@ -336,7 +347,7 @@
       }
     }
     // Advanced View Module: Stände einmalig laden
-    const MOD_SCHLUESSEL = ["kbModZoom", "kbModDetails", "kbModRoute", "kbModPositioning", "kbModPositionZonen", "kbModPositionAbstand", "kbModPositionFlip", "kbModPositionClamp", "kbModPositionStuck", "kbModArrow", "kbModArrowGeometrie", "kbModPositionFolgen", "kbModPositionVoraus", "kbModPositionRuder", "kbModPositionEngstellen", "kbModPositionFreeze", "kbModPositionWachstum", "kbModPositionHysterese"];
+    const MOD_SCHLUESSEL = ["kbModZoom", "kbModDetails", "kbModRoute", "kbModPositioning", "kbModPositionZonen", "kbModPositionAbstand", "kbModPositionFlip", "kbModPositionClamp", "kbModPositionStuck", "kbModPositionFolgen", "kbModPositionVoraus", "kbModPositionRuder", "kbModKompassN", "kbModKompassNO", "kbModKompassO", "kbModKompassSO", "kbModKompassS", "kbModKompassSW", "kbModKompassW", "kbModKompassNW", "kbModPositionEngstellen", "kbModPositionFreeze", "kbModPositionWachstum", "kbModPositionHysterese", "kbModArrow", "kbModArrowGeometrie"];
     chrome.storage.local.get(MOD_SCHLUESSEL, (r) => {
       mod = r;
     });
@@ -1174,17 +1185,30 @@
         left = Math.max(padding, Math.min(left, viewportWidth - cardWidth - padding));
         top = Math.max(padding, Math.min(top, viewportHeight - cardHeight - padding));
       }
-      // Voraus und Ruder Subs: Versatz entlang oder gegen die Bewegungsrichtung
-      // Ruder kehrt um wie Ruder gegen Boot, Voraus eilt voraus
-      let lenkRichtung = 0;
-      if (modAn("kbModPositionRuder")) lenkRichtung = -24;
-      else if (modAn("kbModPositionVoraus")) lenkRichtung = 24;
-      if (lenkRichtung !== 0) {
-        const lang = Math.hypot(bewegX, bewegY);
-        if (lang > 0.3) {
-          left += (bewegX / lang) * lenkRichtung;
-          top += (bewegY / lang) * lenkRichtung;
+      // Voraus, Ruder und Kompass Subs: Richtung als Vektorsumme
+      // Kompass gewinnt vor Voraus Auto, Ruder kehrt das Ergebnis um
+      let lenkX = 0;
+      let lenkY = 0;
+      let kompassAn = false;
+      Object.keys(KOMPASS).forEach((k) => {
+        if (modAn(k)) {
+          lenkX += KOMPASS[k][0];
+          lenkY += KOMPASS[k][1];
+          kompassAn = true;
         }
+      });
+      if (!kompassAn && modAn("kbModPositionVoraus")) {
+        lenkX = bewegX;
+        lenkY = bewegY;
+      }
+      if (modAn("kbModPositionRuder")) {
+        lenkX = -lenkX;
+        lenkY = -lenkY;
+      }
+      const lenkLang = Math.hypot(lenkX, lenkY);
+      if (lenkLang > 0.3) {
+        left += (lenkX / lenkLang) * 24;
+        top += (lenkY / lenkLang) * 24;
       }
       // Universelles Koordinaten-Log: Card-Box + Spitze vs. Cursor + Pfad
       const itemKey = Math.round(r.top);
