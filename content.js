@@ -25,6 +25,12 @@
   let debugAktiv = true;
   // Start Häkchen: aus bedeutet nach dem Laden alles aus bis zur ersten Berührung
   let startAktiv = true;
+  // Main Module und Sub Module aus der Advanced View (Standard an)
+  // Schlüssel nach Muster kbMod, Aus bedeutet Funktion überspringen
+  let mod = {};
+  function modAn(schluessel) {
+    return mod[schluessel] !== false;
+  }
   let lastTrackLog = 0;
   let lastTrackSig = "";
   let lastZoneLogged = null;
@@ -136,7 +142,7 @@
     }
   }
 
-  // Einzelstand in den Speicher schreiben (Spiegel für Popup-Schalter)
+  // Einzelstand in den Speicher schreiben (Mirror für Popup-Schalter)
   function storeDebug(schluessel, wert) {
     try {
       if (typeof chrome !== "undefined" && chrome.storage && chrome.storage.local) {
@@ -145,7 +151,7 @@
     } catch (fehler) { /* Speicher nicht verfügbar: Stand bleibt sitzungsweit */ }
   }
 
-  // Offene Card-Tasten mit Stand abgleichen (nach Spiegel-Schalter aus Popup)
+  // Offene Card-Tasten mit Stand abgleichen (nach Mirror-Schalter aus Popup)
   function syncCardDebugButtons() {
     const paare = [
       ["#kb-debug-toggle", showDebugZones],
@@ -177,6 +183,8 @@
 
   // Akzent auf den Hauptknopf der Vorschau-Card anwenden
   function applyAccent(id) {
+    // Appearance oder Akzent aus: Standard ohne Überschreibung
+    if (!modAn("kbModAppearance")) id = null;
     const a = KB_ACCENTS[id];
     if (!a) {
       previewCard.style.removeProperty("--kb-accent");
@@ -190,6 +198,8 @@
   }
 
   function applyTheme(theme) {
+    // Appearance aus: System statt fester Wahl
+    if (!modAn("kbModAppearance")) theme = "system";
     if (theme === "light" || theme === "dark") {
       document.documentElement.setAttribute("data-kb-theme", theme);
     } else {
@@ -230,7 +240,7 @@
         if (!startAktiv) lastTrackSig = "";
         applyDebugUi();
       }
-      // Popup Spiegel-Schalter: Stand übernehmen, Anzeige und Tasten nachführen
+      // Popup Mirror-Schalter: Stand übernehmen, Anzeige und Tasten nachführen
       if (area === "local" && changes.kbDbgZones) {
         showDebugZones = changes.kbDbgZones.newValue !== false;
         updateDebugOverlay();
@@ -265,12 +275,40 @@
         if (!showTrackLog) lastTrackSig = "";
         syncCardDebugButtons();
       }
+      // Advanced View Module: Stand merken, Pfeil und Darstellung live nachführen
+      if (area === "local") {
+        let modWechsel = false;
+        Object.keys(changes).forEach((k) => {
+          if (k.indexOf("kbMod") === 0) {
+            mod[k] = changes[k].newValue;
+            modWechsel = true;
+          }
+        });
+        if (modWechsel) applyModLive();
+      }
+    });
+    // Darstellung nach Modul Wechsel neu anwenden (Thema und Akzent frisch lesen)
+    function applyModLive() {
+      const pfeil = previewCard.querySelector("#kb-arrow");
+      if (pfeil) pfeil.style.display = modAn("kbModArrow") ? "" : "none";
+      if (typeof chrome !== "undefined" && chrome.storage) {
+        chrome.storage.local.get(["kbTheme", "kbAccent"], (r) => {
+          applyTheme(r.kbTheme || "system");
+          if (r.kbAccent) applyAccent(r.kbAccent);
+          else applyAccent(null);
+        });
+      }
+    }
+    // Advanced View Module: Stände einmalig laden
+    const MOD_SCHLUESSEL = ["kbModZoom", "kbModDetails", "kbModRoute", "kbModPositioning", "kbModPositionZonen", "kbModPositionAbstand", "kbModPositionFlip", "kbModPositionClamp", "kbModPositionStuck", "kbModArrow", "kbModArrowGeometrie", "kbModAppearance"];
+    chrome.storage.local.get(MOD_SCHLUESSEL, (r) => {
+      mod = r;
     });
     // Popup Akzent: initial auf den Hauptknopf anwenden
     chrome.storage.local.get(["kbAccent"], (r) => {
       if (r.kbAccent) applyAccent(r.kbAccent);
     });
-    // Popup Debug-Modul: initial ein-/ausblenden plus Spiegelstände übernehmen
+    // Popup Debug-Modul: initial ein-/ausblenden plus Mirrorstände übernehmen
     // Ohne Start Häkchen bleibt nach dem Laden alles aus (Zustände bleiben unangetastet)
     chrome.storage.local.get(["kbDebugUiEnabled", "kbDebugInitial", "kbDbgZones", "kbDbgTransparent", "kbDbgMouse", "kbDbgLabels", "kbDbgClamp", "kbDbgItems", "kbDbgLog"], (r) => {
       debugAktiv = r.kbDebugUiEnabled !== false;
@@ -318,7 +356,7 @@
   clampOverlay.style.display = "none";
   document.body.appendChild(clampOverlay);
 
-  // DOM-Ringpuffer als Console-Spiegel (für MCP-Auslesung)
+  // DOM-Ringpuffer als Console-Mirror (für MCP-Auslesung)
   let trackBuf = document.getElementById("kb-track-log");
   if (!trackBuf) {
     trackBuf = document.createElement("div");
@@ -742,7 +780,7 @@
             : `<div class="kb-no-img">Kein Bild vorhanden</div>`
         }
         ${
-          hasImages
+          hasImages && modAn("kbModZoom")
             ? `<button class="kb-rotate-btn" aria-label="Bild drehen">
                  <svg viewBox="0 0 24 24">
                    <path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"/>
@@ -751,7 +789,7 @@
             : ""
         }
         ${
-          hasImages
+          hasImages && modAn("kbModZoom")
             ? `<div class="kb-zoom-dropdown">
                  <button class="kb-zoom-trigger" aria-label="Zoomfaktor wählen">${currentZoomFactor}</button>
                  <div class="kb-zoom-menu">
@@ -782,7 +820,7 @@
         <h4 class="kb-title">${title}</h4>
         <span class="kb-price">${price}</span>
       </div>
-      <div class="kb-details">
+      ${modAn("kbModDetails") ? `<div class="kb-details">
         <p class="kb-location">
           <svg class="kb-location-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="14" height="14" fill="var(--kb-text-muted)">
             <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5a2.5 2.5 0 1 1 0-5 2.5 2.5 0 0 1 0 5z"/>
@@ -790,10 +828,10 @@
           <span>${data.location}</span>
         </p>
         <div class="kb-description"></div>
-      </div>
+      </div>` : ""}
       <div class="kb-actions">
         <a href="${url}" target="_blank" rel="noopener noreferrer" class="kb-btn kb-btn-primary">Anzeige ansehen <svg class="kb-btn-icon" viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg></a>
-        <a href="${mapsUrl}" target="_blank" rel="noopener noreferrer" class="kb-btn kb-btn-secondary">Route planen</a>
+        ${modAn("kbModRoute") ? `<a href="${mapsUrl}" target="_blank" rel="noopener noreferrer" class="kb-btn kb-btn-secondary">Route planen</a>` : ""}
       </div>
       <div class="kb-debug-row">
         <button class="kb-debug-toggle" id="kb-debug-toggle" aria-label="Zonen-Debug an/aus">Zonen</button>
@@ -811,12 +849,15 @@
     if (descContainer) {
       descContainer.textContent = data.description;
     }
+    // Pfeil Gate: Aus blendet das Dreieck aus, folgend und gefroren
+    const arrowNeu = previewCard.querySelector("#kb-arrow");
+    if (arrowNeu) arrowNeu.style.display = modAn("kbModArrow") ? "" : "none";
 
     const imgContainer = previewCard.querySelector("#kb-img-container");
     const imgEl = previewCard.querySelector("#kb-img-element");
 
     let zoomControls = null;
-    if (hasImages && imgEl) {
+    if (hasImages && imgEl && modAn("kbModZoom")) {
       zoomControls = setupZoomPan(imgContainer, imgEl);
     }
 
@@ -951,7 +992,8 @@
     const cardWidth = 360;
     const cardHeight = previewCard.offsetHeight || 450;
     const padding = 15;
-    const flip = 32;
+    // Abstand Sub aus: kein Extra Abstand zum Mauszeiger
+    const flip = modAn("kbModPositionAbstand") ? 32 : 0;
     const viewportWidth = window.innerWidth;
     const viewportHeight = window.innerHeight;
 
@@ -972,6 +1014,8 @@
         ["bottom-left", "bottom-center", "bottom-right"],
       ];
       let zone = zoneMap[row][col];
+      // Main oder Zonen Sub aus: feste Mitte rechts, kein Folgen
+      if (!modAn("kbModPositioning") || !modAn("kbModPositionZonen")) zone = "center-center";
       // Schmale (herausgefilterte) Items: Card immer seitlich, damit der vertikale Mausweg frei bleibt
       if (r.height < 60) {
         zone = currentMouseX < viewportWidth / 2 ? "center-right" : "center-left";
@@ -981,7 +1025,8 @@
       const sideLeft = currentMouseX < viewportWidth / 2 ? currentMouseX + flip : currentMouseX - cardWidth - flip;
       // Dreieck bleibt an Card (child), Card folgt Maus kontinuierlich
       if (zone === "center-center") {
-        if (stuckAbove) {
+        // Stuck Sub aus: nie oberhalb festhalten
+        if (stuckAbove && modAn("kbModPositionStuck") && modAn("kbModPositioning")) {
           left = currentMouseX - cardWidth / 2;
           top = currentMouseY - cardHeight - flip;
         } else {
@@ -1037,7 +1082,8 @@
 
       // Flip mit Lookahead: zuerst die Gegenseite (lässt den Mausweg frei),
       // nur wenn weder oben noch unten passt, seitlich ausweichen.
-      if (top < padding || top + cardHeight > viewportHeight - padding) {
+      // Flip Sub oder Main aus: kein Flip, nur Clamp danach
+      if (modAn("kbModPositionFlip") && modAn("kbModPositioning") && (top < padding || top + cardHeight > viewportHeight - padding)) {
         const above = currentMouseY - cardHeight - flip;
         const below = currentMouseY + flip;
         const fitsAbove = above >= padding;
@@ -1054,7 +1100,7 @@
         else if (fitsBelow) top = below;
         else { flipSide(); trackLog(`SEITENWECHSEL weder oben noch unten passt Zone=${zone}`, `sidenone|${zone}`); }
       }
-      if (left < padding || left + cardWidth > viewportWidth - padding) {
+      if (modAn("kbModPositionFlip") && modAn("kbModPositioning") && (left < padding || left + cardWidth > viewportWidth - padding)) {
         const leftPos = currentMouseX - cardWidth - flip;
         const rightPos = currentMouseX + flip;
         const fitsLeft = leftPos >= padding;
@@ -1065,8 +1111,11 @@
         else if (fitsRight) left = rightPos;
       }
       // clamp to viewport, Dreieck bleibt an Card
-      left = Math.max(padding, Math.min(left, viewportWidth - cardWidth - padding));
-      top = Math.max(padding, Math.min(top, viewportHeight - cardHeight - padding));
+      // Clamp Sub aus: keine Kanten Begrenzung
+      if (modAn("kbModPositionClamp")) {
+        left = Math.max(padding, Math.min(left, viewportWidth - cardWidth - padding));
+        top = Math.max(padding, Math.min(top, viewportHeight - cardHeight - padding));
+      }
       // Universelles Koordinaten-Log: Card-Box + Spitze vs. Cursor + Pfad
       const itemKey = Math.round(r.top);
       if (zone !== lastZoneLogged || itemKey !== lastItemTopLogged) {
@@ -1111,9 +1160,11 @@
     previewCard.style.left = `${Math.round(left)}px`;
 
     const arrow = previewCard.querySelector("#kb-arrow");
-    if (arrow) {
+    if (arrow && modAn("kbModArrow")) {
       // Seite aus echter Geometrie nach Clamp bestimmen, nicht aus Entry-Zone:
       // Spitze zeigt stets auf den Mauszeiger.
+      // Geometrie Sub aus: nur vier Seiten, keine Ecken Fälle
+      const fein = modAn("kbModArrowGeometrie");
       const mx = currentMouseX, my = currentMouseY;
       const cardH = previewCard.offsetHeight || cardHeight;
       const R = left + cardWidth, B = top + cardH;
@@ -1128,13 +1179,13 @@
         s = { cls: "kb-arrow kb-arrow-top", left: `${Math.round(Math.max(16, Math.min(mx - left, cardWidth - 16)))}px` };
       } else if (below && !leftOf && !rightOf) {
         s = { cls: "kb-arrow kb-arrow-bottom", left: `${Math.round(Math.max(16, Math.min(mx - left, cardWidth - 16)))}px` };
-      } else if (leftOf && above) {
+      } else if (leftOf && above && fein) {
         s = { cls: "kb-arrow", style: { left: `${Math.round(Math.max(16, Math.min(mx - left + 24, cardWidth - 16)))}px`, top: "-6px", bottom: "auto", right: "auto", transform: "rotate(45deg)" } };
-      } else if (rightOf && above) {
+      } else if (rightOf && above && fein) {
         s = { cls: "kb-arrow", style: { left: `${Math.round(Math.max(16, Math.min(mx - left - 24, cardWidth - 16)))}px`, top: "-6px", bottom: "auto", right: "auto", transform: "rotate(45deg)" } };
-      } else if (leftOf && below) {
+      } else if (leftOf && below && fein) {
         s = { cls: "kb-arrow", style: { left: `${Math.round(Math.max(16, Math.min(mx - left + 24, cardWidth - 16)))}px`, bottom: "-6px", top: "auto", right: "auto", transform: "rotate(225deg)" } };
-      } else if (rightOf && below) {
+      } else if (rightOf && below && fein) {
         s = { cls: "kb-arrow", style: { left: `${Math.round(Math.max(16, Math.min(mx - left - 24, cardWidth - 16)))}px`, bottom: "-6px", top: "auto", right: "auto", transform: "rotate(225deg)" } };
       } else {
         // Maus überlappt Card (nach Clamp): nächste Kante nehmen
