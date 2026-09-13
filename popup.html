@@ -15,6 +15,7 @@
       --input-border: #cbd5e1;
       --input-text: #1e293b;
       --hint: #64748b;
+      --body-bg: lightgrey;
     }
     /* Dunkelwelt: Betriebssystem dunkel ohne Festlegung, oder fest dunkel */
     @media (prefers-color-scheme: dark) {
@@ -28,6 +29,7 @@
         --input-border: #334155;
         --input-text: #f1f5f9;
         --hint: #64748b;
+        --body-bg: #171E29;
       }
     }
     /* Dunkelwelt bei fester Wahl (auch bei hellem Betriebssystem) */
@@ -41,6 +43,7 @@
       --input-border: #334155;
       --input-text: #f1f5f9;
       --hint: #64748b;
+      --body-bg: #171E29;
     }
     html {
       background: transparent !important;
@@ -52,7 +55,7 @@
       margin: 0;
       padding: 0;
       font-family: system-ui, -apple-system, sans-serif;
-      background: transparent !important;
+      background: var(--body-bg) !important;
       color: var(--text-main);
       overflow: hidden;
     }
