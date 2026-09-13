@@ -20,6 +20,7 @@
       --save-text: #0f172a;
       --save-hover: #0ea5e9;
       --icon-hover: rgba(211, 211, 211, 0.5);
+      --scroll-thumb: rgba(100, 116, 139, 0.5);
     }
     /* Dunkelwelt: Betriebssystem dunkel ohne Festlegung, oder fest dunkel */
     @media (prefers-color-scheme: dark) {
@@ -38,6 +39,7 @@
         --save-text: #ffffff;
         --save-hover: #0ea5e9;
         --icon-hover: rgba(148, 163, 184, 0.35);
+        --scroll-thumb: #2e4a6b;
       }
     }
     /* Dunkelwelt bei fester Wahl (auch bei hellem Betriebssystem) */
@@ -56,12 +58,17 @@
       --save-text: #ffffff;
       --save-hover: #0ea5e9;
       --icon-hover: rgba(148, 163, 184, 0.35);
+      --scroll-thumb: #2e4a6b;
     }
     html {
       background: transparent !important;
       border-radius: 12px;
       overflow: hidden;
     }
+    /* Minimale Scrollbar je Farbwelt */
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: var(--scroll-thumb); border-radius: 3px; }
     body {
       width: 260px;
       margin: 0;
