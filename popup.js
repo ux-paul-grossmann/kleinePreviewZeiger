@@ -21,6 +21,19 @@ document.addEventListener("DOMContentLoaded", () => {
   const saveBtn = document.getElementById("saveHome");
   const debugToggle = document.getElementById("debugToggle");
   const debugToolsList = document.getElementById("debugToolsList");
+  const advToggle = document.getElementById("advToggle");
+  const cogIcon = document.getElementById("cogIcon");
+  const backIcon = document.getElementById("backIcon");
+
+  // Erweiterte Ansicht öffnen und schließen
+  if (advToggle) {
+    advToggle.addEventListener("click", () => {
+      const an = document.body.classList.toggle("kb-advanced");
+      if (cogIcon) cogIcon.style.display = an ? "none" : "";
+      if (backIcon) backIcon.style.display = an ? "" : "none";
+      advToggle.setAttribute("aria-label", an ? "Zurück zur Hauptansicht" : "Erweiterte Einstellungen öffnen");
+    });
+  }
 
   // Gespeicherte Werte aus dem lokalen Speicher lesen und anzeigen
   chrome.storage.local.get(["kbTheme", "kbHomeLocation", "kbDebugUiEnabled", "kbAccent"], (result) => {
@@ -30,15 +43,15 @@ document.addEventListener("DOMContentLoaded", () => {
     if (result.kbHomeLocation) homeInput.value = result.kbHomeLocation;
     if (debugToggle) debugToggle.checked = result.kbDebugUiEnabled !== false; // default true
     syncAccentDots(result.kbAccent || "multicolor");
-    spiegelLesen();
+    mirrorLesen();
     updateDebugToolsList();
+    updateModSubs();
   });
 
-  // Spiegel-Schalter generisch: data-kb-key ist der Speicherschlüssel
+  // Mirror-Schalter generisch über das ganze Popup: data-kb-key ist der Speicherschlüssel
   // data-kb-default false bedeutet Standard aus (sonst Standard an)
-  const spiegelLesen = () => {
-    if (!debugToolsList) return;
-    const schalter = [...debugToolsList.querySelectorAll("input[data-kb-key]")];
+  const mirrorLesen = () => {
+    const schalter = [...document.querySelectorAll("input[data-kb-key]")];
     const schluessel = schalter.map((s) => s.dataset.kbKey);
     chrome.storage.local.get(schluessel, (result) => {
       schalter.forEach((s) => {
@@ -52,8 +65,34 @@ document.addEventListener("DOMContentLoaded", () => {
         s.dataset.kbVerbunden = "ja";
         s.addEventListener("change", (e) => {
           chrome.storage.local.set({ [s.dataset.kbKey]: e.target.checked });
+          if (s.dataset.kbKey.indexOf("kbMod") === 0) updateModSubs();
         });
       }
+    });
+  };
+
+  // Sub Module folgen ihrem Main Module: Zeile dimmen und Toggle sperren
+  // Karten Zeilen tragen data-kb-sub mit dem Schlüssel des Main Modules
+  const updateModSubs = () => {
+    chrome.storage.local.get(["kbModPositioning", "kbModArrow", "kbModAppearance"], (r) => {
+      const an = (wert) => wert !== false; // Standard an
+      const staende = {
+        kbModPositioning: an(r.kbModPositioning),
+        kbModArrow: an(r.kbModArrow),
+        kbModAppearance: an(r.kbModAppearance),
+      };
+      document.querySelectorAll("[data-kb-sub]").forEach((zeile) => {
+        const haupt = staende[zeile.dataset.kbSub];
+        const aktiv = haupt !== false;
+        zeile.classList.toggle("kb-row-off", !aktiv);
+        const eingabe = zeile.querySelector("input");
+        if (eingabe) eingabe.disabled = !aktiv;
+      });
+      const erscheinungAn = staende.kbModAppearance;
+      const segZeile = document.getElementById("themeSegRow");
+      if (segZeile) segZeile.classList.toggle("kb-row-off", !erscheinungAn);
+      const akzentZeile = document.getElementById("accentRow");
+      if (akzentZeile) akzentZeile.classList.toggle("kb-row-off", !erscheinungAn);
     });
   };
 
