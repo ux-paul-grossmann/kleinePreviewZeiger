@@ -19,6 +19,7 @@
       --save-bg: #38bdf8;
       --save-text: #0f172a;
       --save-hover: #0ea5e9;
+      --icon-hover: rgba(211, 211, 211, 0.5);
     }
     /* Dunkelwelt: Betriebssystem dunkel ohne Festlegung, oder fest dunkel */
     @media (prefers-color-scheme: dark) {
@@ -36,6 +37,7 @@
         --save-bg: #0284c7;
         --save-text: #ffffff;
         --save-hover: #0ea5e9;
+        --icon-hover: rgba(148, 163, 184, 0.35);
       }
     }
     /* Dunkelwelt bei fester Wahl (auch bei hellem Betriebssystem) */
@@ -53,6 +55,7 @@
       --save-bg: #0284c7;
       --save-text: #ffffff;
       --save-hover: #0ea5e9;
+      --icon-hover: rgba(148, 163, 184, 0.35);
     }
     html {
       background: transparent !important;
@@ -116,14 +119,14 @@
     .icon-btn {
       background: none;
       border: none;
-      padding: 2px;
+      padding: 3px;
       cursor: pointer;
       color: var(--text-muted);
       display: flex;
       align-items: center;
     }
     .icon-btn svg { width: 16px; height: 16px; }
-    .icon-btn:hover { background: lightgrey; border-radius: 50%; }
+    .icon-btn:hover { background: var(--icon-hover); border-radius: 50%; }
     /* Modul Zeilen: ausgedimmter Zustand bei inaktivem Main Module */
     .kb-row-off { opacity: 0.45; }
     .kb-row-off button { pointer-events: none; }
