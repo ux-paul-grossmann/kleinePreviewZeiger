@@ -35,8 +35,8 @@
     if (wert === undefined) return MOD_STD_AUS.indexOf(schluessel) === -1;
     return wert !== false;
   }
-  // Letzte Karten Daten für Live Neurender bei Modul Wechsel
-  let letzteKarte = null;
+  // Letzte Preview-Card Daten für Live Neurender bei Modul Wechsel
+  let letztePreviewCard = null;
   let lastTrackLog = 0;
   let lastTrackSig = "";
   let lastZoneLogged = null;
@@ -310,7 +310,7 @@
         if (!showTrackLog) lastTrackSig = "";
         syncCardDebugButtons();
       }
-      // Advanced View Module: Stand merken, offene Karte live neu aufbauen
+      // Advanced View Module: Stand merken, offene Preview-Card live neu aufbauen
       if (area === "local") {
         let modWechsel = false;
         let renderWechsel = false;
@@ -325,9 +325,9 @@
         });
         if (modWechsel) {
           applyModLive();
-          if (!previewCard.classList.contains("kb-card-hidden") && letzteKarte) {
+          if (!previewCard.classList.contains("kb-card-hidden") && letztePreviewCard) {
             if (renderWechsel) {
-              renderCardContent(letzteKarte.data, letzteKarte.title, letzteKarte.price, letzteKarte.url);
+              renderCardContent(letztePreviewCard.data, letztePreviewCard.title, letztePreviewCard.price, letztePreviewCard.url);
             }
             positionCardAtCursor();
           }
@@ -423,7 +423,7 @@
     // Jeder Card-Entry = Issue-Indiz, keine Ausnahmen in dieser Testphase
     const r = currentItemRect;
     const inItem = !!r && currentMouseX >= r.left && currentMouseX <= r.right && currentMouseY >= r.top && currentMouseY <= r.bottom;
-    trackLog(`PROBLEM Karten-Eintritt Maus=(${Math.round(currentMouseX)},${Math.round(currentMouseY)}) Zone=${r ? currentZone() : "keine"} KartenOberkante=${previewCard.offsetTop} Kartenhoehe=${previewCard.offsetHeight} ImTreffer=${inItem ? "ja" : "nein"} TrefferAktiv=${itemHover ? "ja" : "nein"}`);
+    trackLog(`PROBLEM Preview-Card-Eintritt Maus=(${Math.round(currentMouseX)},${Math.round(currentMouseY)}) Zone=${r ? currentZone() : "keine"} PreviewCardOberkante=${previewCard.offsetTop} PreviewCardHoehe=${previewCard.offsetHeight} ImTreffer=${inItem ? "ja" : "nein"} TrefferAktiv=${itemHover ? "ja" : "nein"}`);
   });
   previewCard.addEventListener("mouseleave", () => { mouseInCard = false; });
 
@@ -458,7 +458,7 @@
     const r = currentItemRect;
     if (currentMouseX >= r.left && currentMouseX <= r.right && currentMouseY >= r.top && currentMouseY <= r.bottom) return true;
     if (speed > 0.25) return true;
-    trackLog(`STARRE Maus in Karte ausserhalb Treffer Tempo=${speed.toFixed(2)}`, "freeze");
+    trackLog(`STARRE Maus in Preview-Card ausserhalb Treffer Tempo=${speed.toFixed(2)}`, "freeze");
     return false;
   }
 
@@ -810,9 +810,9 @@
     };
   }
 
-  // Karteninhalt aufbauen und alle Schalter in der Card verdrahten
+  // Preview-Card Inhalt aufbauen und alle Schalter in der Preview-Card verdrahten
   function renderCardContent(data, title, price, url) {
-    letzteKarte = { data, title, price, url };
+    letztePreviewCard = { data, title, price, url };
     let currentImgIdx = 0;
     const hasImages = data.images && data.images.length > 0;
     const dest = data.location && data.location !== "Standort unbekannt" ? data.location : "";
@@ -1227,17 +1227,17 @@
         }
       }
       const cardBottom = top + cardHeight;
-      // Lage der Karte zum Mauszeiger und Verankerung an der Viewport-Kante
+      // Lage der Preview-Card zum Mauszeiger und Verankerung an der Viewport-Kante
       const lage = cardBottom <= currentMouseY ? "oberhalb" : (top >= currentMouseY ? "unterhalb" : "seitlich");
       const anschlag = top <= padding + 0.5 ? "oben" : (top >= viewportHeight - cardHeight - padding - 0.5 ? "unten" : "keiner");
-      // Korridor-Metrik: wie viel Pixel der Karte das Vertikalband (+-20 um die Maus) oben/unten verdecken
+      // Korridor-Metrik: wie viel Pixel der Preview-Card das Vertikalband (+-20 um die Maus) oben/unten verdecken
       const korridorLinks = currentMouseX - 20;
       const korridorRechts = currentMouseX + 20;
       const waagrechteUeberlappung = Math.max(0, Math.min(left + cardWidth, korridorRechts) - Math.max(left, korridorLinks));
       const korridorOben = waagrechteUeberlappung > 0 ? Math.round(Math.max(0, Math.min(cardBottom, currentMouseY) - Math.max(top, 0))) : 0;
       const korridorUnten = waagrechteUeberlappung > 0 ? Math.round(Math.max(0, Math.min(cardBottom, viewportHeight) - Math.max(top, currentMouseY))) : 0;
       const richtung = trackDir > 0 ? "runter" : (trackDir < 0 ? "hoch" : "steht");
-      trackLog(`Zone=${zone} Maus=(${Math.round(currentMouseX)},${Math.round(currentMouseY)}) Karte=(links ${Math.round(left)} oben ${Math.round(top)} breite ${Math.round(cardWidth)} hoehe ${Math.round(cardHeight)}) Spitze=(${tipX},${tipY}) Luecke=${Math.round(currentMouseY - cardBottom)} Richtung=${richtung} Tempo=${trackSpd.toFixed(2)} Lage=${lage} Anschlag=${anschlag} KorridorOben=${korridorOben} KorridorUnten=${korridorUnten} Treffer=(oben ${itemKey} hoehe ${Math.round(r.height)}) Festgehalten=${stuckAbove ? "an" : "aus"} InKarte=${mouseInCard ? "ja" : "nein"}`, `pos|${zone}`);
+      trackLog(`Zone=${zone} Maus=(${Math.round(currentMouseX)},${Math.round(currentMouseY)}) PreviewCard=(links ${Math.round(left)} oben ${Math.round(top)} breite ${Math.round(cardWidth)} hoehe ${Math.round(cardHeight)}) Spitze=(${tipX},${tipY}) Luecke=${Math.round(currentMouseY - cardBottom)} Richtung=${richtung} Tempo=${trackSpd.toFixed(2)} Lage=${lage} Anschlag=${anschlag} KorridorOben=${korridorOben} KorridorUnten=${korridorUnten} Treffer=(oben ${itemKey} hoehe ${Math.round(r.height)}) Festgehalten=${stuckAbove ? "an" : "aus"} InKarte=${mouseInCard ? "ja" : "nein"}`, `pos|${zone}`);
     } else {
       // fallback mouse-based (loading)
       left = currentMouseX + padding;

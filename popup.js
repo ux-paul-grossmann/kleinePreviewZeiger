@@ -72,7 +72,7 @@ document.addEventListener("DOMContentLoaded", () => {
   };
 
   // Sub Module folgen ihrem Main Module: Zeile eingeklappt bei Main aus
-  // Karten Zeilen tragen data-kb-sub mit dem Schlüssel des Main Modules
+  // Preview-Card Zeilen tragen data-kb-sub mit dem Schlüssel des Main Modules
   const updateModSubs = () => {
     chrome.storage.local.get(["kbModPositioning", "kbModArrow"], (r) => {
       const an = (wert) => wert !== false; // Standard an
