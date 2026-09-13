@@ -31,6 +31,8 @@
   function modAn(schluessel) {
     return mod[schluessel] !== false;
   }
+  // Letzte Karten Daten für Live Neurender bei Modul Wechsel
+  let letzteKarte = null;
   let lastTrackLog = 0;
   let lastTrackSig = "";
   let lastZoneLogged = null;
@@ -271,16 +273,28 @@
         if (!showTrackLog) lastTrackSig = "";
         syncCardDebugButtons();
       }
-      // Advanced View Module: Stand merken, Pfeil und Darstellung live nachführen
+      // Advanced View Module: Stand merken, offene Karte live neu aufbauen
       if (area === "local") {
         let modWechsel = false;
+        let renderWechsel = false;
         Object.keys(changes).forEach((k) => {
           if (k.indexOf("kbMod") === 0) {
             mod[k] = changes[k].newValue;
             modWechsel = true;
+            if (k === "kbModZoom" || k === "kbModDetails" || k === "kbModRoute" || k === "kbModArrow" || k === "kbModArrowGeometrie") {
+              renderWechsel = true;
+            }
           }
         });
-        if (modWechsel) applyModLive();
+        if (modWechsel) {
+          applyModLive();
+          if (!previewCard.classList.contains("kb-card-hidden") && letzteKarte) {
+            if (renderWechsel) {
+              renderCardContent(letzteKarte.data, letzteKarte.title, letzteKarte.price, letzteKarte.url);
+            }
+            positionCardAtCursor();
+          }
+        }
       }
     });
     // Darstellung nach Modul Wechsel neu anwenden (Thema und Akzent frisch lesen)
@@ -750,6 +764,7 @@
 
   // Karteninhalt aufbauen und alle Schalter in der Card verdrahten
   function renderCardContent(data, title, price, url) {
+    letzteKarte = { data, title, price, url };
     let currentImgIdx = 0;
     const hasImages = data.images && data.images.length > 0;
     const dest = data.location && data.location !== "Standort unbekannt" ? data.location : "";
