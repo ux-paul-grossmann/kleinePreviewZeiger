@@ -931,22 +931,40 @@
 
     if (hasImages && data.images.length > 1) {
       const counterEl = previewCard.querySelector(".kb-img-counter");
-
-      previewCard.querySelector(".kb-prev").addEventListener("click", (e) => {
-        e.stopPropagation();
-        currentImgIdx = (currentImgIdx - 1 + data.images.length) % data.images.length;
+      // Bild wechseln mit Umbruch, Zoom zurücksetzen
+      const zeigeBild = (richtung) => {
+        currentImgIdx = (currentImgIdx + richtung + data.images.length) % data.images.length;
         imgEl.src = data.images[currentImgIdx];
         counterEl.textContent = `${currentImgIdx + 1} / ${data.images.length}`;
         if (zoomControls) { zoomControls.resetRotation(); zoomControls.resetLock(); }
+      };
+
+      previewCard.querySelector(".kb-prev").addEventListener("click", (e) => {
+        e.stopPropagation();
+        zeigeBild(-1);
       });
 
       previewCard.querySelector(".kb-next").addEventListener("click", (e) => {
         e.stopPropagation();
-        currentImgIdx = (currentImgIdx + 1) % data.images.length;
-        imgEl.src = data.images[currentImgIdx];
-        counterEl.textContent = `${currentImgIdx + 1} / ${data.images.length}`;
-        if (zoomControls) { zoomControls.resetRotation(); zoomControls.resetLock(); }
+        zeigeBild(1);
       });
+
+      // Swipe per Trackpad und Magic Mouse: waagrechte Bewegung schaltet
+      // Bilder um, angesammelte Pixel lösen je Schwelle einen Wechsel aus
+      let swipeRest = 0;
+      let swipePause = 0;
+      imgContainer.addEventListener("wheel", (e) => {
+        if (Math.abs(e.deltaX) <= Math.abs(e.deltaY)) return;
+        e.preventDefault();
+        const jetzt = Date.now();
+        if (jetzt - swipePause < 350) return;
+        swipeRest += e.deltaX;
+        if (Math.abs(swipeRest) >= 40) {
+          zeigeBild(swipeRest > 0 ? 1 : -1);
+          swipeRest = 0;
+          swipePause = jetzt;
+        }
+      }, { passive: false });
     }
 
 
