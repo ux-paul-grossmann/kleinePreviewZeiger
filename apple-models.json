@@ -1,42 +1,5931 @@
 {
-  "_hinweis": "Kuratierte Apple Modelle für kleinePreviewZeiger. Namen klein geschrieben für Matching. RAM ist Basis Bestückung. A Nummern nur bei hoher Sicherheit.",
-  "_quellen": ["https://github.com/kyle-seongwoo-jun/apple-device-identifiers (MIT)", "https://github.com/TelemetryDeck/AppleModelNames"],
+  "_hinweis": "Kuratiert + auto-generiert aus littlebyteorg/appledb und pbakondy/ios-device-list. Quellen in _src pro Eintrag.",
+  "_quellen": [
+    "https://github.com/littlebyteorg/appledb (MIT)",
+    "https://github.com/pbakondy/ios-device-list (MIT)"
+  ],
+  "_erzeugt": "2026-09-14T03:16:14.607Z",
   "modelle": [
-    { "id": "air-m1-2020", "namen": ["macbook air m1", "macbook air 2020", "macbook air a2337", "air m1"], "a": ["A2337"], "emc": [], "jahr": "2020", "chip": "M1", "ram": "8 GB" },
-    { "id": "air-m2-2022", "namen": ["macbook air m2", "macbook air 2022", "macbook air a2681", "air m2"], "a": ["A2681"], "emc": [], "jahr": "2022", "chip": "M2", "ram": "8 GB" },
-    { "id": "air-m3-2024", "namen": ["macbook air m3", "macbook air 2024", "air m3"], "a": ["A3113", "A3114"], "emc": [], "jahr": "2024", "chip": "M3", "ram": "8 GB" },
-    { "id": "pro13-m1-2020", "namen": ["macbook pro m1", "macbook pro 13 m1", "macbook pro 2020", "pro m1"], "a": ["A2338"], "emc": [], "jahr": "2020", "chip": "M1", "ram": "8 GB" },
-    { "id": "pro13-m2-2022", "namen": ["macbook pro m2", "macbook pro 13 2022"], "a": ["A2338"], "emc": [], "jahr": "2022", "chip": "M2", "ram": "8 GB" },
-    { "id": "pro14-m1-2021", "namen": ["macbook pro 14", "macbook pro 14 m1", "macbook pro 2021", "pro 14"], "a": ["A2442"], "emc": [], "jahr": "2021", "chip": "M1 Pro", "ram": "16 GB" },
-    { "id": "pro16-m1-2021", "namen": ["macbook pro 16", "macbook pro 16 m1", "pro 16"], "a": ["A2485"], "emc": [], "jahr": "2021", "chip": "M1 Pro", "ram": "16 GB" },
-    { "id": "pro14-m3-2023", "namen": ["macbook pro 14 m3", "macbook pro 2023"], "a": ["A2992"], "emc": [], "jahr": "2023", "chip": "M3", "ram": "8 GB" },
-    { "id": "pro16-m3-2023", "namen": ["macbook pro 16 m3"], "a": ["A2991"], "emc": [], "jahr": "2023", "chip": "M3 Pro", "ram": "18 GB" },
-    { "id": "imac24-m1-2021", "namen": ["imac 24", "imac m1", "imac 2021", "imac 24 zoll"], "a": ["A2438", "A2439"], "emc": [], "jahr": "2021", "chip": "M1", "ram": "8 GB" },
-    { "id": "imac27-2020", "namen": ["imac 27", "imac 2020", "imac 27 zoll", "imac 5k"], "a": ["A2115"], "emc": [], "jahr": "2020", "chip": "Intel i5", "ram": "8 GB" },
-    { "id": "mini-m1-2020", "namen": ["mac mini m1", "mac mini 2020", "mini m1"], "a": ["A2348"], "emc": [], "jahr": "2020", "chip": "M1", "ram": "8 GB" },
-    { "id": "studio-m1-2022", "namen": ["mac studio", "mac studio m1", "mac studio 2022"], "a": ["A2615"], "emc": [], "jahr": "2022", "chip": "M1 Max", "ram": "32 GB" },
-    { "id": "iphone12-2020", "namen": ["iphone 12"], "a": [], "emc": [], "jahr": "2020", "chip": "A14", "ram": "4 GB" },
-    { "id": "iphone13-2021", "namen": ["iphone 13"], "a": [], "emc": [], "jahr": "2021", "chip": "A15", "ram": "4 GB" },
-    { "id": "iphone14pro-2022", "namen": ["iphone 14 pro"], "a": ["A2650"], "emc": [], "jahr": "2022", "chip": "A16", "ram": "6 GB" },
-    { "id": "iphone14promax-2022", "namen": ["iphone 14 pro max"], "a": ["A2651"], "emc": [], "jahr": "2022", "chip": "A16", "ram": "6 GB" },
-    { "id": "iphone15pro-2023", "namen": ["iphone 15 pro"], "a": ["A2848"], "emc": [], "jahr": "2023", "chip": "A17 Pro", "ram": "8 GB" },
-    { "id": "iphone15promax-2023", "namen": ["iphone 15 pro max"], "a": ["A2849"], "emc": [], "jahr": "2023", "chip": "A17 Pro", "ram": "8 GB" },
-    { "id": "iphone16pro-2024", "namen": ["iphone 16 pro"], "a": ["A3083"], "emc": [], "jahr": "2024", "chip": "A18 Pro", "ram": "8 GB" },
-    { "id": "ipadpro11-2022", "namen": ["ipad pro 11", "ipad pro 11 zoll", "ipad pro 2022"], "a": [], "emc": [], "jahr": "2022", "chip": "M2", "ram": "8 GB" },
-    { "id": "ipadair5-2022", "namen": ["ipad air 5", "ipad air 2022", "ipad air m1"], "a": [], "emc": [], "jahr": "2022", "chip": "M1", "ram": "8 GB" },
-    { "id": "ipad10-2022", "namen": ["ipad 10", "ipad 2022", "ipad 10. generation"], "a": [], "emc": [], "jahr": "2022", "chip": "A14", "ram": "4 GB" },
-    { "id": "watch-s8-2022", "namen": ["apple watch series 8", "apple watch 8", "watch 8"], "a": [], "emc": [], "jahr": "2022", "chip": "S8", "ram": "" },
-    { "id": "watch-s9-2023", "namen": ["apple watch series 9", "apple watch 9", "watch 9"], "a": [], "emc": [], "jahr": "2023", "chip": "S9", "ram": "" },
-    { "id": "watch-ultra2-2023", "namen": ["apple watch ultra 2", "watch ultra 2", "ultra 2"], "a": [], "emc": [], "jahr": "2023", "chip": "S9", "ram": "" },
-    { "id": "pro16-i9-2019", "namen": ["macbook pro 16 2019", "macbook pro 16 i9", "pro 16 i9"], "a": ["A2141"], "emc": [], "jahr": "2019", "chip": "i9 Intel", "ram": "16 GB" },
-    { "id": "pro13-intel-2020", "namen": ["macbook pro 13 2020", "macbook pro 13 intel"], "a": ["A2289"], "emc": [], "jahr": "2020", "chip": "Intel i5", "ram": "8 GB" },
-    { "id": "air-intel-2020", "namen": ["macbook air 2020 intel", "macbook air a2179"], "a": ["A2179"], "emc": [], "jahr": "2020", "chip": "Intel i3", "ram": "8 GB" },
-    { "id": "air-13-2011", "namen": ["macbook air 2011", "macbook air 13 2011", "macbook air a1369"], "a": ["A1369"], "emc": [], "jahr": "2011", "chip": "Intel i5", "ram": "4 GB" },
-    { "id": "air-13-2012-2017", "namen": ["macbook air 2012", "macbook air 2013", "macbook air 2014", "macbook air 2015", "macbook air 2017", "macbook air a1466"], "a": ["A1466"], "emc": [], "jahr": "2012–2017", "chip": "Intel i5", "ram": "8 GB" },
-    { "id": "air-2009", "namen": ["macbook air 2009", "macbook air mitte 2009", "macbook air mid 2009", "macbook air a1304"], "a": ["A1304"], "emc": ["2334"], "jahr": "2009", "chip": "Core 2 Duo", "ram": "2 GB" },
-    { "id": "air-13-2018", "namen": ["macbook air 2018", "macbook air retina 2018", "macbook air a1932"], "a": ["A1932"], "emc": [], "jahr": "2018", "chip": "Intel i5", "ram": "8 GB" },
-    { "id": "pro13-2008-2012", "namen": ["macbook a1278", "macbook 13 a1278", "macbook pro 13 2010", "macbook pro 13 2011", "macbook pro 13 2012"], "a": ["A1278"], "emc": [], "jahr": "2008–2012", "chip": "Core 2 Duo", "ram": "4 GB" },
-    { "id": "pro13-2019", "namen": ["macbook pro 13 2019", "macbook pro 2019"], "a": ["A2159"], "emc": [], "jahr": "2019", "chip": "Intel i5", "ram": "8 GB" },
-    { "id": "pro15-2019", "namen": ["macbook pro 15 2019", "macbook pro 15 i7", "macbook pro 15 i9"], "a": ["A1990"], "emc": [], "jahr": "2019", "chip": "Intel i7", "ram": "16 GB" }
+    {
+      "id": "air-13-2011",
+      "namen": [
+        "macbook air 2011",
+        "macbook air 13 2011",
+        "macbook air a1369"
+      ],
+      "a": [
+        "A1369"
+      ],
+      "emc": [],
+      "jahr": "2011",
+      "chip": "Intel i5",
+      "ram": "4 GB"
+    },
+    {
+      "id": "air-13-2012-2017",
+      "namen": [
+        "macbook air 2012",
+        "macbook air 2013",
+        "macbook air 2014",
+        "macbook air 2015",
+        "macbook air 2017",
+        "macbook air a1466"
+      ],
+      "a": [
+        "A1466"
+      ],
+      "emc": [],
+      "jahr": "2012–2017",
+      "chip": "Intel i5",
+      "ram": "8 GB"
+    },
+    {
+      "id": "air-13-2018",
+      "namen": [
+        "macbook air 2018",
+        "macbook air retina 2018",
+        "macbook air a1932"
+      ],
+      "a": [
+        "A1932"
+      ],
+      "emc": [],
+      "jahr": "2018",
+      "chip": "Intel i5",
+      "ram": "8 GB"
+    },
+    {
+      "id": "air-2009",
+      "namen": [
+        "macbook air 2009",
+        "macbook air mitte 2009",
+        "macbook air mid 2009",
+        "macbook air a1304"
+      ],
+      "a": [
+        "A1304"
+      ],
+      "emc": [
+        "2334"
+      ],
+      "jahr": "2009",
+      "chip": "Core 2 Duo",
+      "ram": "2 GB"
+    },
+    {
+      "id": "air-intel-2020",
+      "namen": [
+        "macbook air 2020 intel",
+        "macbook air a2179"
+      ],
+      "a": [
+        "A2179"
+      ],
+      "emc": [],
+      "jahr": "2020",
+      "chip": "Intel i3",
+      "ram": "8 GB"
+    },
+    {
+      "id": "air-m1-2020",
+      "namen": [
+        "macbook air m1",
+        "macbook air 2020",
+        "macbook air a2337",
+        "air m1"
+      ],
+      "a": [
+        "A2337"
+      ],
+      "emc": [],
+      "jahr": "2020",
+      "chip": "M1",
+      "ram": "8 GB"
+    },
+    {
+      "id": "air-m2-2022",
+      "namen": [
+        "macbook air m2",
+        "macbook air 2022",
+        "macbook air a2681",
+        "air m2"
+      ],
+      "a": [
+        "A2681"
+      ],
+      "emc": [],
+      "jahr": "2022",
+      "chip": "M2",
+      "ram": "8 GB"
+    },
+    {
+      "id": "air-m3-2024",
+      "namen": [
+        "macbook air m3",
+        "macbook air 2024",
+        "air m3"
+      ],
+      "a": [
+        "A3113",
+        "A3114"
+      ],
+      "emc": [],
+      "jahr": "2024",
+      "chip": "M3",
+      "ram": "8 GB"
+    },
+    {
+      "id": "apple-tv-1st-generation-appletv1-1",
+      "namen": [
+        "apple tv (1st generation)",
+        "appletv1,1"
+      ],
+      "a": [
+        "A1218"
+      ],
+      "emc": [],
+      "jahr": "",
+      "chip": "",
+      "ram": ""
+    },
+    {
+      "id": "apple-tv-2nd-generation-appletv2-1",
+      "namen": [
+        "apple tv (2nd generation)",
+        "appletv2,1"
+      ],
+      "a": [
+        "A1378"
+      ],
+      "emc": [],
+      "jahr": "",
+      "chip": "",
+      "ram": ""
+    },
+    {
+      "id": "apple-tv-3rd-generation-appletv3-1",
+      "namen": [
+        "apple tv (3rd generation)",
+        "appletv3,1"
+      ],
+      "a": [
+        "A1427"
+      ],
+      "emc": [],
+      "jahr": "",
+      "chip": "",
+      "ram": ""
+    },
+    {
+      "id": "apple-tv-3rd-generation-appletv3-2",
+      "namen": [
+        "apple tv (3rd generation)",
+        "appletv3,2"
+      ],
+      "a": [
+        "A1469"
+      ],
+      "emc": [],
+      "jahr": "",
+      "chip": "",
+      "ram": ""
+    },
+    {
+      "id": "apple-tv-4k-2nd-generation-appletv11-1",
+      "namen": [
+        "apple tv 4k (2nd generation)",
+        "appletv11,1"
+      ],
+      "a": [
+        "A2169"
+      ],
+      "emc": [],
+      "jahr": "",
+      "chip": "",
+      "ram": ""
+    },
+    {
+      "id": "apple-tv-4k-appletv6-2",
+      "namen": [
+        "apple tv 4k",
+        "appletv6,2"
+      ],
+      "a": [
+        "A1842"
+      ],
+      "emc": [],
+      "jahr": "",
+      "chip": "",
+      "ram": ""
+    },
+    {
+      "id": "apple-tv-4th-generation-appletv5-3",
+      "namen": [
+        "apple tv (4th generation)",
+        "appletv5,3"
+      ],
+      "a": [
+        "A1625"
+      ],
+      "emc": [],
+      "jahr": "",
+      "chip": "",
+      "ram": ""
+    },
+    {
+      "id": "apple-watch-1st-generation-38mm-watch1-1",
+      "namen": [
+        "apple watch (1st generation) (38mm)",
+        "apple watch",
+        "watch1,1"
+      ],
+      "a": [
+        "A1553"
+      ],
+      "emc": [],
+      "jahr": "2015",
+      "chip": "S1",
+      "ram": ""
+    },
+    {
+      "id": "apple-watch-1st-generation-42mm-store-display-model-watch1-2",
+      "namen": [
+        "apple watch (1st generation) (42mm) (store display model)",
+        "apple watch",
+        "watch1,2"
+      ],
+      "a": [
+        "A1638"
+      ],
+      "emc": [],
+      "jahr": "2015",
+      "chip": "S1",
+      "ram": ""
+    },
+    {
+      "id": "apple-watch-1st-generation-42mm-watch1-2",
+      "namen": [
+        "apple watch (1st generation) (42mm)",
+        "apple watch",
+        "watch1,2"
+      ],
+      "a": [
+        "A1554"
+      ],
+      "emc": [],
+      "jahr": "2015",
+      "chip": "S1",
+      "ram": ""
+    },
+    {
+      "id": "apple-watch-se-1st-generation-gps-40mm-watch5-9",
+      "namen": [
+        "apple watch se (1st generation, gps, 40mm)",
+        "apple watch se",
+        "watch5,9"
+      ],
+      "a": [
+        "A2351"
+      ],
+      "emc": [],
+      "jahr": "2020",
+      "chip": "S5",
+      "ram": ""
+    },
+    {
+      "id": "apple-watch-se-1st-generation-gps-44mm-watch5-10",
+      "namen": [
+        "apple watch se (1st generation, gps, 44mm)",
+        "apple watch se",
+        "watch5,10"
+      ],
+      "a": [
+        "A2352"
+      ],
+      "emc": [],
+      "jahr": "2020",
+      "chip": "S5",
+      "ram": ""
+    },
+    {
+      "id": "apple-watch-se-1st-generation-gps-cellular-44mm-watch5-11",
+      "namen": [
+        "apple watch se (1st generation, gps + cellular, 44mm)",
+        "apple watch se",
+        "watch5,11"
+      ],
+      "a": [
+        "A2353",
+        "A2355"
+      ],
+      "emc": [],
+      "jahr": "2020",
+      "chip": "S5",
+      "ram": ""
+    },
+    {
+      "id": "apple-watch-se-1st-generation-gps-cellular-44mm-watch5-12",
+      "namen": [
+        "apple watch se (1st generation, gps + cellular, 44mm)",
+        "apple watch se",
+        "watch5,12"
+      ],
+      "a": [
+        "A2354",
+        "A2356"
+      ],
+      "emc": [],
+      "jahr": "2020",
+      "chip": "S5",
+      "ram": ""
+    },
+    {
+      "id": "apple-watch-se-2nd-generation-gps-40mm-watch6-10",
+      "namen": [
+        "apple watch se (2nd generation, gps, 40mm)",
+        "apple watch se",
+        "watch6,10"
+      ],
+      "a": [
+        "A2722"
+      ],
+      "emc": [],
+      "jahr": "2022",
+      "chip": "S8",
+      "ram": ""
+    },
+    {
+      "id": "apple-watch-se-2nd-generation-gps-44mm-watch6-11",
+      "namen": [
+        "apple watch se (2nd generation, gps, 44mm)",
+        "apple watch se",
+        "watch6,11"
+      ],
+      "a": [
+        "A2723"
+      ],
+      "emc": [],
+      "jahr": "2022",
+      "chip": "S8",
+      "ram": ""
+    },
+    {
+      "id": "apple-watch-se-2nd-generation-gps-cellular-40mm-watch6-12",
+      "namen": [
+        "apple watch se (2nd generation, gps + cellular, 40mm)",
+        "apple watch se",
+        "watch6,12"
+      ],
+      "a": [
+        "A2725",
+        "A2726",
+        "A2855"
+      ],
+      "emc": [],
+      "jahr": "2022",
+      "chip": "S8",
+      "ram": ""
+    },
+    {
+      "id": "apple-watch-se-2nd-generation-gps-cellular-44mm-watch6-13",
+      "namen": [
+        "apple watch se (2nd generation, gps + cellular, 44mm)",
+        "apple watch se",
+        "watch6,13"
+      ],
+      "a": [
+        "A2724",
+        "A2727",
+        "A2856"
+      ],
+      "emc": [],
+      "jahr": "2022",
+      "chip": "S8",
+      "ram": ""
+    },
+    {
+      "id": "apple-watch-se-3-gps-40mm-watch7-13",
+      "namen": [
+        "apple watch se 3 (gps, 40mm)",
+        "apple watch se 3",
+        "watch7,13"
+      ],
+      "a": [
+        "A3324",
+        "A3391"
+      ],
+      "emc": [],
+      "jahr": "2025",
+      "chip": "S10",
+      "ram": ""
+    },
+    {
+      "id": "apple-watch-se-3-gps-44mm-watch7-14",
+      "namen": [
+        "apple watch se 3 (gps, 44mm)",
+        "apple watch se 3",
+        "watch7,14"
+      ],
+      "a": [
+        "A3325",
+        "A3392"
+      ],
+      "emc": [],
+      "jahr": "2025",
+      "chip": "S10",
+      "ram": ""
+    },
+    {
+      "id": "apple-watch-se-3-gps-cellular-40mm-watch7-15",
+      "namen": [
+        "apple watch se 3 (gps + cellular, 40mm)",
+        "apple watch se 3",
+        "watch7,15"
+      ],
+      "a": [
+        "A3326",
+        "A3327"
+      ],
+      "emc": [],
+      "jahr": "2025",
+      "chip": "S10",
+      "ram": ""
+    },
+    {
+      "id": "apple-watch-se-3-gps-cellular-44mm-watch7-16",
+      "namen": [
+        "apple watch se 3 (gps + cellular, 44mm)",
+        "apple watch se 3",
+        "watch7,16"
+      ],
+      "a": [
+        "A3328",
+        "A3329"
+      ],
+      "emc": [],
+      "jahr": "2025",
+      "chip": "S10",
+      "ram": ""
+    },
+    {
+      "id": "apple-watch-series-1-38mm-watch2-6",
+      "namen": [
+        "apple watch series 1 (38mm)",
+        "apple watch series 1",
+        "watch2,6"
+      ],
+      "a": [
+        "A1802"
+      ],
+      "emc": [],
+      "jahr": "2016",
+      "chip": "S1P",
+      "ram": ""
+    },
+    {
+      "id": "apple-watch-series-1-42mm-watch2-7",
+      "namen": [
+        "apple watch series 1 (42mm)",
+        "apple watch series 1",
+        "watch2,7"
+      ],
+      "a": [
+        "A1803"
+      ],
+      "emc": [],
+      "jahr": "2016",
+      "chip": "S1P",
+      "ram": ""
+    },
+    {
+      "id": "apple-watch-series-10-gps-42mm-watch7-8",
+      "namen": [
+        "apple watch series 10 (gps, 42mm)",
+        "apple watch series 10",
+        "watch7,8"
+      ],
+      "a": [
+        "A2997",
+        "A2998"
+      ],
+      "emc": [],
+      "jahr": "2024",
+      "chip": "S10",
+      "ram": ""
+    },
+    {
+      "id": "apple-watch-series-10-gps-46mm-watch7-9",
+      "namen": [
+        "apple watch series 10 (gps, 46mm)",
+        "apple watch series 10",
+        "watch7,9"
+      ],
+      "a": [
+        "A2999",
+        "A3000"
+      ],
+      "emc": [],
+      "jahr": "2024",
+      "chip": "S10",
+      "ram": ""
+    },
+    {
+      "id": "apple-watch-series-10-gps-cellular-42mm-watch7-10",
+      "namen": [
+        "apple watch series 10 (gps + cellular, 42mm)",
+        "apple watch series 10",
+        "watch7,10"
+      ],
+      "a": [
+        "A3001",
+        "A3002"
+      ],
+      "emc": [],
+      "jahr": "2024",
+      "chip": "S10",
+      "ram": ""
+    },
+    {
+      "id": "apple-watch-series-10-gps-cellular-46mm-watch7-11",
+      "namen": [
+        "apple watch series 10 (gps + cellular, 46mm)",
+        "apple watch series 10",
+        "watch7,11"
+      ],
+      "a": [
+        "A3003",
+        "A3206"
+      ],
+      "emc": [],
+      "jahr": "2024",
+      "chip": "S10",
+      "ram": ""
+    },
+    {
+      "id": "apple-watch-series-11-gps-42mm-watch7-17",
+      "namen": [
+        "apple watch series 11 (gps, 42mm)",
+        "apple watch series 11",
+        "watch7,17"
+      ],
+      "a": [
+        "A3331",
+        "A3450"
+      ],
+      "emc": [],
+      "jahr": "2025",
+      "chip": "S10",
+      "ram": ""
+    },
+    {
+      "id": "apple-watch-series-11-gps-46mm-watch7-18",
+      "namen": [
+        "apple watch series 11 (gps, 46mm)",
+        "apple watch series 11",
+        "watch7,18"
+      ],
+      "a": [
+        "A3333",
+        "A3451"
+      ],
+      "emc": [],
+      "jahr": "2025",
+      "chip": "S10",
+      "ram": ""
+    },
+    {
+      "id": "apple-watch-series-11-gps-cellular-42mm-watch7-19",
+      "namen": [
+        "apple watch series 11 (gps + cellular, 42mm)",
+        "apple watch series 11",
+        "watch7,19"
+      ],
+      "a": [
+        "A3335",
+        "A3452"
+      ],
+      "emc": [],
+      "jahr": "2025",
+      "chip": "S10",
+      "ram": ""
+    },
+    {
+      "id": "apple-watch-series-11-gps-cellular-46mm-watch7-20",
+      "namen": [
+        "apple watch series 11 (gps + cellular, 46mm)",
+        "apple watch series 11",
+        "watch7,20"
+      ],
+      "a": [
+        "A3337",
+        "A3453"
+      ],
+      "emc": [],
+      "jahr": "2025",
+      "chip": "S10",
+      "ram": ""
+    },
+    {
+      "id": "apple-watch-series-12-gps-42mm-watch8-2",
+      "namen": [
+        "apple watch series 12 (gps, 42mm)",
+        "apple watch series 12",
+        "watch8,2"
+      ],
+      "a": [
+        "A3581",
+        "A3583"
+      ],
+      "emc": [],
+      "jahr": "2026",
+      "chip": "S11",
+      "ram": ""
+    },
+    {
+      "id": "apple-watch-series-12-gps-46mm-watch8-3",
+      "namen": [
+        "apple watch series 12 (gps, 46mm)",
+        "apple watch series 12",
+        "watch8,3"
+      ],
+      "a": [
+        "A3584",
+        "A3585"
+      ],
+      "emc": [],
+      "jahr": "2026",
+      "chip": "S11",
+      "ram": ""
+    },
+    {
+      "id": "apple-watch-series-12-gps-cellular-42mm-watch8-4",
+      "namen": [
+        "apple watch series 12 (gps + cellular, 42mm)",
+        "apple watch series 12",
+        "watch8,4"
+      ],
+      "a": [
+        "A3582",
+        "A3586"
+      ],
+      "emc": [],
+      "jahr": "2026",
+      "chip": "S10",
+      "ram": ""
+    },
+    {
+      "id": "apple-watch-series-12-gps-cellular-46mm-watch8-5",
+      "namen": [
+        "apple watch series 12 (gps + cellular, 46mm)",
+        "apple watch series 12",
+        "watch8,5"
+      ],
+      "a": [
+        "A3587",
+        "A3588"
+      ],
+      "emc": [],
+      "jahr": "2026",
+      "chip": "S10",
+      "ram": ""
+    },
+    {
+      "id": "apple-watch-series-2-38mm-watch2-3",
+      "namen": [
+        "apple watch series 2 (38mm)",
+        "apple watch series 2",
+        "watch2,3"
+      ],
+      "a": [
+        "A1757",
+        "A1816"
+      ],
+      "emc": [],
+      "jahr": "2016",
+      "chip": "S2",
+      "ram": ""
+    },
+    {
+      "id": "apple-watch-series-2-42mm-watch2-4",
+      "namen": [
+        "apple watch series 2 (42mm)",
+        "apple watch series 2",
+        "watch2,4"
+      ],
+      "a": [
+        "A1758",
+        "A1817"
+      ],
+      "emc": [],
+      "jahr": "2016",
+      "chip": "S2",
+      "ram": ""
+    },
+    {
+      "id": "apple-watch-series-3-gps-38mm-watch3-3",
+      "namen": [
+        "apple watch series 3 (gps, 38mm)",
+        "apple watch series 3",
+        "watch3,3"
+      ],
+      "a": [
+        "A1858",
+        "A1959"
+      ],
+      "emc": [],
+      "jahr": "2017",
+      "chip": "S3",
+      "ram": ""
+    },
+    {
+      "id": "apple-watch-series-3-gps-42mm-watch3-4",
+      "namen": [
+        "apple watch series 3 (gps, 42mm)",
+        "apple watch series 3",
+        "watch3,4"
+      ],
+      "a": [
+        "A1859",
+        "A1960"
+      ],
+      "emc": [],
+      "jahr": "2017",
+      "chip": "S3",
+      "ram": ""
+    },
+    {
+      "id": "apple-watch-series-3-gps-cellular-38mm-watch3-1",
+      "namen": [
+        "apple watch series 3 (gps + cellular, 38mm)",
+        "apple watch series 3",
+        "watch3,1"
+      ],
+      "a": [
+        "A1860",
+        "A1889",
+        "A1890",
+        "A1957",
+        "A1969",
+        "A1970"
+      ],
+      "emc": [],
+      "jahr": "2017",
+      "chip": "S3",
+      "ram": ""
+    },
+    {
+      "id": "apple-watch-series-3-gps-cellular-42mm-watch3-2",
+      "namen": [
+        "apple watch series 3 (gps + cellular, 42mm)",
+        "apple watch series 3",
+        "watch3,2"
+      ],
+      "a": [
+        "A1861",
+        "A1891",
+        "A1892",
+        "A1958",
+        "A1972",
+        "A1973"
+      ],
+      "emc": [],
+      "jahr": "2017",
+      "chip": "S3",
+      "ram": ""
+    },
+    {
+      "id": "apple-watch-series-4-gps-40mm-watch4-1",
+      "namen": [
+        "apple watch series 4 (gps, 40mm)",
+        "apple watch series 4",
+        "watch4,1"
+      ],
+      "a": [
+        "A1977"
+      ],
+      "emc": [],
+      "jahr": "2018",
+      "chip": "S4",
+      "ram": ""
+    },
+    {
+      "id": "apple-watch-series-4-gps-44mm-watch4-2",
+      "namen": [
+        "apple watch series 4 (gps, 44mm)",
+        "apple watch series 4",
+        "watch4,2"
+      ],
+      "a": [
+        "A1978"
+      ],
+      "emc": [],
+      "jahr": "2018",
+      "chip": "S4",
+      "ram": ""
+    },
+    {
+      "id": "apple-watch-series-4-gps-cellular-40mm-watch4-3",
+      "namen": [
+        "apple watch series 4 (gps + cellular, 40mm)",
+        "apple watch series 4",
+        "watch4,3"
+      ],
+      "a": [
+        "A1975",
+        "A2007"
+      ],
+      "emc": [],
+      "jahr": "2018",
+      "chip": "S4",
+      "ram": ""
+    },
+    {
+      "id": "apple-watch-series-4-gps-cellular-44mm-watch4-4",
+      "namen": [
+        "apple watch series 4 (gps + cellular, 44mm)",
+        "apple watch series 4",
+        "watch4,4"
+      ],
+      "a": [
+        "A1976",
+        "A2008"
+      ],
+      "emc": [],
+      "jahr": "2018",
+      "chip": "S4",
+      "ram": ""
+    },
+    {
+      "id": "apple-watch-series-5-gps-40mm-watch5-1",
+      "namen": [
+        "apple watch series 5 (gps, 40mm)",
+        "apple watch series 5",
+        "watch5,1"
+      ],
+      "a": [
+        "A2092"
+      ],
+      "emc": [],
+      "jahr": "2019",
+      "chip": "S5",
+      "ram": ""
+    },
+    {
+      "id": "apple-watch-series-5-gps-44mm-watch5-2",
+      "namen": [
+        "apple watch series 5 (gps, 44mm)",
+        "apple watch series 5",
+        "watch5,2"
+      ],
+      "a": [
+        "A2093"
+      ],
+      "emc": [],
+      "jahr": "2019",
+      "chip": "S5",
+      "ram": ""
+    },
+    {
+      "id": "apple-watch-series-5-gps-cellular-40mm-watch5-3",
+      "namen": [
+        "apple watch series 5 (gps + cellular, 40mm)",
+        "apple watch series 5",
+        "watch5,3"
+      ],
+      "a": [
+        "A2094",
+        "A2156"
+      ],
+      "emc": [],
+      "jahr": "2019",
+      "chip": "S5",
+      "ram": ""
+    },
+    {
+      "id": "apple-watch-series-5-gps-cellular-44mm-watch5-4",
+      "namen": [
+        "apple watch series 5 (gps + cellular, 44mm)",
+        "apple watch series 5",
+        "watch5,4"
+      ],
+      "a": [
+        "A2095",
+        "A2157"
+      ],
+      "emc": [],
+      "jahr": "2019",
+      "chip": "S5",
+      "ram": ""
+    },
+    {
+      "id": "apple-watch-series-6-gps-40mm-watch6-1",
+      "namen": [
+        "apple watch series 6 (gps, 40mm)",
+        "apple watch series 6",
+        "watch6,1"
+      ],
+      "a": [
+        "A2291"
+      ],
+      "emc": [],
+      "jahr": "2020",
+      "chip": "S6",
+      "ram": ""
+    },
+    {
+      "id": "apple-watch-series-6-gps-44mm-watch6-2",
+      "namen": [
+        "apple watch series 6 (gps, 44mm)",
+        "apple watch series 6",
+        "watch6,2"
+      ],
+      "a": [
+        "A2292"
+      ],
+      "emc": [],
+      "jahr": "2020",
+      "chip": "S6",
+      "ram": ""
+    },
+    {
+      "id": "apple-watch-series-6-gps-cellular-40mm-watch6-3",
+      "namen": [
+        "apple watch series 6 (gps + cellular, 40mm)",
+        "apple watch series 6",
+        "watch6,3"
+      ],
+      "a": [
+        "A2293",
+        "A2375"
+      ],
+      "emc": [],
+      "jahr": "2020",
+      "chip": "S6",
+      "ram": ""
+    },
+    {
+      "id": "apple-watch-series-6-gps-cellular-44mm-watch6-4",
+      "namen": [
+        "apple watch series 6 (gps + cellular, 44mm)",
+        "apple watch series 6",
+        "watch6,4"
+      ],
+      "a": [
+        "A2294",
+        "A2376"
+      ],
+      "emc": [],
+      "jahr": "2020",
+      "chip": "S6",
+      "ram": ""
+    },
+    {
+      "id": "apple-watch-series-7-gps-41mm-watch6-6",
+      "namen": [
+        "apple watch series 7 (gps, 41mm)",
+        "apple watch series 7",
+        "watch6,6"
+      ],
+      "a": [
+        "A2473"
+      ],
+      "emc": [],
+      "jahr": "2021",
+      "chip": "S7",
+      "ram": ""
+    },
+    {
+      "id": "apple-watch-series-7-gps-45mm-watch6-7",
+      "namen": [
+        "apple watch series 7 (gps, 45mm)",
+        "apple watch series 7",
+        "watch6,7"
+      ],
+      "a": [
+        "A2474"
+      ],
+      "emc": [],
+      "jahr": "2021",
+      "chip": "S7",
+      "ram": ""
+    },
+    {
+      "id": "apple-watch-series-7-gps-cellular-41mm-watch6-8",
+      "namen": [
+        "apple watch series 7 (gps + cellular, 41mm)",
+        "apple watch series 7",
+        "watch6,8"
+      ],
+      "a": [
+        "A2475",
+        "A2476"
+      ],
+      "emc": [],
+      "jahr": "2021",
+      "chip": "S7",
+      "ram": ""
+    },
+    {
+      "id": "apple-watch-series-7-gps-cellular-45mm-watch6-9",
+      "namen": [
+        "apple watch series 7 (gps + cellular, 45mm)",
+        "apple watch series 7",
+        "watch6,9"
+      ],
+      "a": [
+        "A2477",
+        "A2478"
+      ],
+      "emc": [],
+      "jahr": "2021",
+      "chip": "S7",
+      "ram": ""
+    },
+    {
+      "id": "apple-watch-series-8-gps-41mm-watch6-14",
+      "namen": [
+        "apple watch series 8 (gps, 41mm)",
+        "apple watch series 8",
+        "watch6,14"
+      ],
+      "a": [
+        "A2770"
+      ],
+      "emc": [],
+      "jahr": "2022",
+      "chip": "S8",
+      "ram": ""
+    },
+    {
+      "id": "apple-watch-series-8-gps-45mm-watch6-15",
+      "namen": [
+        "apple watch series 8 (gps, 45mm)",
+        "apple watch series 8",
+        "watch6,15"
+      ],
+      "a": [
+        "A2771"
+      ],
+      "emc": [],
+      "jahr": "2022",
+      "chip": "S8",
+      "ram": ""
+    },
+    {
+      "id": "apple-watch-series-8-gps-cellular-41mm-watch6-16",
+      "namen": [
+        "apple watch series 8 (gps + cellular, 41mm)",
+        "apple watch series 8",
+        "watch6,16"
+      ],
+      "a": [
+        "A2772",
+        "A2773",
+        "A2857"
+      ],
+      "emc": [],
+      "jahr": "2022",
+      "chip": "S8",
+      "ram": ""
+    },
+    {
+      "id": "apple-watch-series-8-gps-cellular-45mm-watch6-17",
+      "namen": [
+        "apple watch series 8 (gps + cellular, 45mm)",
+        "apple watch series 8",
+        "watch6,17"
+      ],
+      "a": [
+        "A2774",
+        "A2775",
+        "A2858"
+      ],
+      "emc": [],
+      "jahr": "2022",
+      "chip": "S8",
+      "ram": ""
+    },
+    {
+      "id": "apple-watch-series-9-gps-41mm-watch7-1",
+      "namen": [
+        "apple watch series 9 (gps, 41mm)",
+        "apple watch series 9",
+        "watch7,1"
+      ],
+      "a": [
+        "A2978"
+      ],
+      "emc": [],
+      "jahr": "2023",
+      "chip": "S9",
+      "ram": ""
+    },
+    {
+      "id": "apple-watch-series-9-gps-45mm-watch7-2",
+      "namen": [
+        "apple watch series 9 (gps, 45mm)",
+        "apple watch series 9",
+        "watch7,2"
+      ],
+      "a": [
+        "A2980"
+      ],
+      "emc": [],
+      "jahr": "2023",
+      "chip": "S9",
+      "ram": ""
+    },
+    {
+      "id": "apple-watch-series-9-gps-cellular-41mm-watch7-3",
+      "namen": [
+        "apple watch series 9 (gps + cellular, 41mm)",
+        "apple watch series 9",
+        "watch7,3"
+      ],
+      "a": [
+        "A2982",
+        "A2983"
+      ],
+      "emc": [],
+      "jahr": "2023",
+      "chip": "S9",
+      "ram": ""
+    },
+    {
+      "id": "apple-watch-series-9-gps-cellular-45mm-watch7-4",
+      "namen": [
+        "apple watch series 9 (gps + cellular, 45mm)",
+        "apple watch series 9",
+        "watch7,4"
+      ],
+      "a": [
+        "A2984",
+        "A2985"
+      ],
+      "emc": [],
+      "jahr": "2023",
+      "chip": "S9",
+      "ram": ""
+    },
+    {
+      "id": "apple-watch-ultra-2-watch7-5",
+      "namen": [
+        "apple watch ultra 2",
+        "watch7,5"
+      ],
+      "a": [
+        "A2986",
+        "A2987"
+      ],
+      "emc": [],
+      "jahr": "2023",
+      "chip": "S9",
+      "ram": ""
+    },
+    {
+      "id": "apple-watch-ultra-3-watch7-12",
+      "namen": [
+        "apple watch ultra 3",
+        "watch7,12"
+      ],
+      "a": [
+        "A3281",
+        "A3282"
+      ],
+      "emc": [],
+      "jahr": "2025",
+      "chip": "S10",
+      "ram": ""
+    },
+    {
+      "id": "apple-watch-ultra-4-watch8-1",
+      "namen": [
+        "apple watch ultra 4",
+        "watch8,1"
+      ],
+      "a": [
+        "A3579",
+        "A3580"
+      ],
+      "emc": [],
+      "jahr": "2026",
+      "chip": "S11",
+      "ram": ""
+    },
+    {
+      "id": "apple-watch-ultra-watch6-18",
+      "namen": [
+        "apple watch ultra",
+        "watch6,18"
+      ],
+      "a": [
+        "A2622",
+        "A2684",
+        "A2859"
+      ],
+      "emc": [],
+      "jahr": "2022",
+      "chip": "S8",
+      "ram": ""
+    },
+    {
+      "id": "developer-transition-kit-adp2-1",
+      "namen": [
+        "developer transition kit",
+        "adp2,1"
+      ],
+      "a": [
+        "A1093"
+      ],
+      "emc": [],
+      "jahr": "2005",
+      "chip": "",
+      "ram": ""
+    },
+    {
+      "id": "developer-transition-kit-adp3-2",
+      "namen": [
+        "developer transition kit",
+        "adp3,2"
+      ],
+      "a": [
+        "A2330"
+      ],
+      "emc": [],
+      "jahr": "2020",
+      "chip": "A12Z",
+      "ram": "1"
+    },
+    {
+      "id": "imac-17-inch-early-2006-imac4-1",
+      "namen": [
+        "imac (17-inch, early 2006)",
+        "imac",
+        "imac4,1"
+      ],
+      "a": [
+        "A1173"
+      ],
+      "emc": [],
+      "jahr": "2006",
+      "chip": "",
+      "ram": ""
+    },
+    {
+      "id": "imac-17-inch-late-2006-dedicated-graphics-imac5-1",
+      "namen": [
+        "imac (17-inch, late 2006, dedicated graphics)",
+        "imac",
+        "imac5,1"
+      ],
+      "a": [
+        "A1208"
+      ],
+      "emc": [],
+      "jahr": "2006",
+      "chip": "",
+      "ram": ""
+    },
+    {
+      "id": "imac-17-inch-mid-2006-imac4-2",
+      "namen": [
+        "imac (17-inch, mid 2006)",
+        "imac",
+        "imac4,2"
+      ],
+      "a": [
+        "A1195"
+      ],
+      "emc": [],
+      "jahr": "2006",
+      "chip": "",
+      "ram": ""
+    },
+    {
+      "id": "imac-20-inch-early-2006-imac4-1",
+      "namen": [
+        "imac (20-inch, early 2006)",
+        "imac",
+        "imac4,1"
+      ],
+      "a": [
+        "A1174"
+      ],
+      "emc": [],
+      "jahr": "2006",
+      "chip": "",
+      "ram": ""
+    },
+    {
+      "id": "imac-20-inch-late-2006-imac5-1",
+      "namen": [
+        "imac (20-inch, late 2006)",
+        "imac",
+        "imac5,1"
+      ],
+      "a": [
+        "A1207"
+      ],
+      "emc": [],
+      "jahr": "2006",
+      "chip": "",
+      "ram": ""
+    },
+    {
+      "id": "imac-20-inch-mid-2007-imac7-1",
+      "namen": [
+        "imac (20-inch, mid 2007)",
+        "imac",
+        "imac7,1"
+      ],
+      "a": [
+        "A1224"
+      ],
+      "emc": [],
+      "jahr": "2007",
+      "chip": "",
+      "ram": ""
+    },
+    {
+      "id": "imac-20-inch-usb-2-0-powermac6-3",
+      "namen": [
+        "imac (20-inch usb 2.0)",
+        "imac",
+        "powermac6,3"
+      ],
+      "a": [
+        "A1065"
+      ],
+      "emc": [],
+      "jahr": "2003",
+      "chip": "",
+      "ram": ""
+    },
+    {
+      "id": "imac-21-5-inch-late-2009-imac10-1",
+      "namen": [
+        "imac (21.5-inch, late 2009)",
+        "imac",
+        "imac10,1"
+      ],
+      "a": [
+        "A1311"
+      ],
+      "emc": [],
+      "jahr": "2009",
+      "chip": "",
+      "ram": ""
+    },
+    {
+      "id": "imac-21-5-inch-late-2012-imac13-1",
+      "namen": [
+        "imac (21.5-inch, late 2012)",
+        "imac",
+        "imac13,1"
+      ],
+      "a": [
+        "A1418"
+      ],
+      "emc": [],
+      "jahr": "2012",
+      "chip": "",
+      "ram": ""
+    },
+    {
+      "id": "imac-24-inch-late-2006-imac6-1",
+      "namen": [
+        "imac (24-inch, late 2006)",
+        "imac",
+        "imac6,1"
+      ],
+      "a": [
+        "A1200"
+      ],
+      "emc": [],
+      "jahr": "2006",
+      "chip": "",
+      "ram": ""
+    },
+    {
+      "id": "imac-24-inch-m3-2023-four-ports-mac15-5",
+      "namen": [
+        "imac (24-inch, m3, 2023, four ports)",
+        "imac",
+        "mac15,5"
+      ],
+      "a": [
+        "A2874"
+      ],
+      "emc": [],
+      "jahr": "2023",
+      "chip": "M3",
+      "ram": ""
+    },
+    {
+      "id": "imac-24-inch-m3-2023-two-ports-mac15-4",
+      "namen": [
+        "imac (24-inch, m3, 2023, two ports)",
+        "imac",
+        "mac15,4"
+      ],
+      "a": [
+        "A2873"
+      ],
+      "emc": [],
+      "jahr": "2023",
+      "chip": "M3",
+      "ram": ""
+    },
+    {
+      "id": "imac-24-inch-m4-2024-four-ports-mac16-3",
+      "namen": [
+        "imac (24-inch, m4, 2024, four ports)",
+        "imac",
+        "mac16,3"
+      ],
+      "a": [
+        "A3137"
+      ],
+      "emc": [],
+      "jahr": "2024",
+      "chip": "M4",
+      "ram": ""
+    },
+    {
+      "id": "imac-24-inch-m4-2024-two-ports-mac16-2",
+      "namen": [
+        "imac (24-inch, m4, 2024, two ports)",
+        "imac",
+        "mac16,2"
+      ],
+      "a": [
+        "A3247"
+      ],
+      "emc": [],
+      "jahr": "2024",
+      "chip": "M4",
+      "ram": ""
+    },
+    {
+      "id": "imac-24-inch-mid-2007-imac7-1",
+      "namen": [
+        "imac (24-inch, mid 2007)",
+        "imac",
+        "imac7,1"
+      ],
+      "a": [
+        "A1225"
+      ],
+      "emc": [],
+      "jahr": "2007",
+      "chip": "",
+      "ram": ""
+    },
+    {
+      "id": "imac-27-inch-late-2009-core-2-duo-imac10-1",
+      "namen": [
+        "imac (27-inch, late 2009, core 2 duo)",
+        "imac",
+        "imac10,1"
+      ],
+      "a": [
+        "A1312"
+      ],
+      "emc": [],
+      "jahr": "2009",
+      "chip": "",
+      "ram": ""
+    },
+    {
+      "id": "imac-27-inch-late-2012-imac13-2",
+      "namen": [
+        "imac (27-inch, late 2012)",
+        "imac",
+        "imac13,2"
+      ],
+      "a": [
+        "A1419"
+      ],
+      "emc": [],
+      "jahr": "2012",
+      "chip": "",
+      "ram": ""
+    },
+    {
+      "id": "imac-g5-17-inch-isight-powermac12-1",
+      "namen": [
+        "imac g5 (17-inch, isight)",
+        "imac g5",
+        "powermac12,1"
+      ],
+      "a": [
+        "A1144"
+      ],
+      "emc": [],
+      "jahr": "2005",
+      "chip": "",
+      "ram": ""
+    },
+    {
+      "id": "imac-g5-17-inch-powermac8-1",
+      "namen": [
+        "imac g5 (17-inch)",
+        "imac g5",
+        "powermac8,1"
+      ],
+      "a": [
+        "A1058"
+      ],
+      "emc": [],
+      "jahr": "2004",
+      "chip": "",
+      "ram": ""
+    },
+    {
+      "id": "imac-g5-20-inch-isight-powermac12-1",
+      "namen": [
+        "imac g5 (20-inch, isight)",
+        "imac g5",
+        "powermac12,1"
+      ],
+      "a": [
+        "A1145"
+      ],
+      "emc": [],
+      "jahr": "2005",
+      "chip": "",
+      "ram": ""
+    },
+    {
+      "id": "imac-g5-20-inch-powermac8-1",
+      "namen": [
+        "imac g5 (20-inch)",
+        "imac g5",
+        "powermac8,1"
+      ],
+      "a": [
+        "A1076"
+      ],
+      "emc": [],
+      "jahr": "2004",
+      "chip": "",
+      "ram": ""
+    },
+    {
+      "id": "imac-pro-retina-5k-27-inch-late-2017-imacpro1-1",
+      "namen": [
+        "imac pro (retina 5k, 27-inch, late 2017)",
+        "imac pro",
+        "imacpro1,1"
+      ],
+      "a": [
+        "A1862"
+      ],
+      "emc": [],
+      "jahr": "2017",
+      "chip": "",
+      "ram": ""
+    },
+    {
+      "id": "imac-retina-4k-21-5-inch-2019-imac19-2",
+      "namen": [
+        "imac (retina 4k, 21.5-inch, 2019)",
+        "imac",
+        "imac19,2"
+      ],
+      "a": [
+        "A2116"
+      ],
+      "emc": [],
+      "jahr": "2019",
+      "chip": "",
+      "ram": ""
+    },
+    {
+      "id": "imac24-m1-2021",
+      "namen": [
+        "imac 24",
+        "imac m1",
+        "imac 2021",
+        "imac 24 zoll"
+      ],
+      "a": [
+        "A2438",
+        "A2439"
+      ],
+      "emc": [],
+      "jahr": "2021",
+      "chip": "M1",
+      "ram": "8 GB"
+    },
+    {
+      "id": "imac27-2020",
+      "namen": [
+        "imac 27",
+        "imac 2020",
+        "imac 27 zoll",
+        "imac 5k"
+      ],
+      "a": [
+        "A2115"
+      ],
+      "emc": [],
+      "jahr": "2020",
+      "chip": "Intel i5",
+      "ram": "8 GB"
+    },
+    {
+      "id": "ipad-10th-generation-wi-fi-cellular-ipad13-19",
+      "namen": [
+        "ipad (10th generation) wi-fi + cellular",
+        "ipad wi-fi + cellular",
+        "ipad13,19"
+      ],
+      "a": [
+        "A2757",
+        "A2777",
+        "A3162"
+      ],
+      "emc": [],
+      "jahr": "2022",
+      "chip": "A14",
+      "ram": ""
+    },
+    {
+      "id": "ipad-10th-generation-wi-fi-ipad13-18",
+      "namen": [
+        "ipad (10th generation) wi-fi",
+        "ipad wi-fi",
+        "ipad13,18"
+      ],
+      "a": [
+        "A2696"
+      ],
+      "emc": [],
+      "jahr": "2022",
+      "chip": "A14",
+      "ram": ""
+    },
+    {
+      "id": "ipad-2-wi-fi-3g-cdma-ipad2-3",
+      "namen": [
+        "ipad 2 wi-fi + 3g (cdma)",
+        "ipad 2 wi-fi + 3g",
+        "ipad2,3"
+      ],
+      "a": [
+        "A1397"
+      ],
+      "emc": [],
+      "jahr": "2011",
+      "chip": "A5",
+      "ram": ""
+    },
+    {
+      "id": "ipad-2-wi-fi-3g-gsm-ipad2-2",
+      "namen": [
+        "ipad 2 wi-fi + 3g (gsm)",
+        "ipad 2 wi-fi + 3g",
+        "ipad2,2"
+      ],
+      "a": [
+        "A1396"
+      ],
+      "emc": [],
+      "jahr": "2011",
+      "chip": "A5",
+      "ram": ""
+    },
+    {
+      "id": "ipad-2-wi-fi-ipad2-1",
+      "namen": [
+        "ipad 2 wi-fi",
+        "ipad2,1"
+      ],
+      "a": [
+        "A1395"
+      ],
+      "emc": [],
+      "jahr": "2011",
+      "chip": "A5",
+      "ram": ""
+    },
+    {
+      "id": "ipad-3rd-generation-wi-fi-cellular-ipad3-3",
+      "namen": [
+        "ipad (3rd generation) wi-fi + cellular",
+        "ipad wi-fi + cellular",
+        "ipad3,3"
+      ],
+      "a": [
+        "A1430"
+      ],
+      "emc": [],
+      "jahr": "2012",
+      "chip": "A5X",
+      "ram": ""
+    },
+    {
+      "id": "ipad-3rd-generation-wi-fi-cellular-vz-ipad3-2",
+      "namen": [
+        "ipad (3rd generation) wi-fi + cellular (vz)",
+        "ipad wi-fi + cellular",
+        "ipad3,2"
+      ],
+      "a": [
+        "A1403"
+      ],
+      "emc": [],
+      "jahr": "2012",
+      "chip": "A5X",
+      "ram": ""
+    },
+    {
+      "id": "ipad-3rd-generation-wi-fi-ipad3-1",
+      "namen": [
+        "ipad (3rd generation) wi-fi",
+        "ipad wi-fi",
+        "ipad3,1"
+      ],
+      "a": [
+        "A1416"
+      ],
+      "emc": [],
+      "jahr": "2012",
+      "chip": "A5X",
+      "ram": ""
+    },
+    {
+      "id": "ipad-4th-generation-wi-fi-cellular-ipad3-5",
+      "namen": [
+        "ipad (4th generation) wi-fi + cellular",
+        "ipad wi-fi + cellular",
+        "ipad3,5"
+      ],
+      "a": [
+        "A1459"
+      ],
+      "emc": [],
+      "jahr": "2012",
+      "chip": "A6X",
+      "ram": ""
+    },
+    {
+      "id": "ipad-4th-generation-wi-fi-cellular-mm-ipad3-6",
+      "namen": [
+        "ipad (4th generation) wi-fi + cellular (mm)",
+        "ipad wi-fi + cellular",
+        "ipad3,6"
+      ],
+      "a": [
+        "A1460"
+      ],
+      "emc": [],
+      "jahr": "2012",
+      "chip": "A6X",
+      "ram": ""
+    },
+    {
+      "id": "ipad-4th-generation-wi-fi-ipad3-4",
+      "namen": [
+        "ipad (4th generation) wi-fi",
+        "ipad wi-fi",
+        "ipad3,4"
+      ],
+      "a": [
+        "A1458"
+      ],
+      "emc": [],
+      "jahr": "2012",
+      "chip": "A6X",
+      "ram": ""
+    },
+    {
+      "id": "ipad-5th-generation-wi-fi-cellular-ipad6-12",
+      "namen": [
+        "ipad (5th generation) wi-fi + cellular",
+        "ipad wi-fi + cellular",
+        "ipad6,12"
+      ],
+      "a": [
+        "A1823"
+      ],
+      "emc": [],
+      "jahr": "2017",
+      "chip": "A9",
+      "ram": ""
+    },
+    {
+      "id": "ipad-5th-generation-wi-fi-ipad6-11",
+      "namen": [
+        "ipad (5th generation) wi-fi",
+        "ipad wi-fi",
+        "ipad6,11"
+      ],
+      "a": [
+        "A1822"
+      ],
+      "emc": [],
+      "jahr": "2017",
+      "chip": "A9",
+      "ram": ""
+    },
+    {
+      "id": "ipad-6th-generation-wi-fi-cellular-ipad7-6",
+      "namen": [
+        "ipad (6th generation) wi-fi + cellular",
+        "ipad wi-fi + cellular",
+        "ipad7,6"
+      ],
+      "a": [
+        "A1954"
+      ],
+      "emc": [],
+      "jahr": "2018",
+      "chip": "A10",
+      "ram": ""
+    },
+    {
+      "id": "ipad-6th-generation-wi-fi-ipad7-5",
+      "namen": [
+        "ipad (6th generation) wi-fi",
+        "ipad wi-fi",
+        "ipad7,5"
+      ],
+      "a": [
+        "A1893"
+      ],
+      "emc": [],
+      "jahr": "2018",
+      "chip": "A10",
+      "ram": ""
+    },
+    {
+      "id": "ipad-7th-generation-wi-fi-cellular-ipad7-12",
+      "namen": [
+        "ipad (7th generation) wi-fi + cellular",
+        "ipad wi-fi + cellular",
+        "ipad7,12"
+      ],
+      "a": [
+        "A2198",
+        "A2199",
+        "A2200"
+      ],
+      "emc": [],
+      "jahr": "2019",
+      "chip": "A10",
+      "ram": ""
+    },
+    {
+      "id": "ipad-7th-generation-wi-fi-ipad7-11",
+      "namen": [
+        "ipad (7th generation) wi-fi",
+        "ipad wi-fi",
+        "ipad7,11"
+      ],
+      "a": [
+        "A2197"
+      ],
+      "emc": [],
+      "jahr": "2019",
+      "chip": "A10",
+      "ram": ""
+    },
+    {
+      "id": "ipad-8th-generation-wi-fi-cellular-ipad11-7",
+      "namen": [
+        "ipad (8th generation) wi-fi + cellular",
+        "ipad wi-fi + cellular",
+        "ipad11,7"
+      ],
+      "a": [
+        "A2428",
+        "A2429",
+        "A2430"
+      ],
+      "emc": [],
+      "jahr": "2020",
+      "chip": "A12",
+      "ram": ""
+    },
+    {
+      "id": "ipad-8th-generation-wi-fi-ipad11-6",
+      "namen": [
+        "ipad (8th generation) wi-fi",
+        "ipad wi-fi",
+        "ipad11,6"
+      ],
+      "a": [
+        "A2270"
+      ],
+      "emc": [],
+      "jahr": "2020",
+      "chip": "A12",
+      "ram": ""
+    },
+    {
+      "id": "ipad-9th-generation-wi-fi-cellular-ipad12-2",
+      "namen": [
+        "ipad (9th generation) wi-fi + cellular",
+        "ipad wi-fi + cellular",
+        "ipad12,2"
+      ],
+      "a": [
+        "A2603",
+        "A2604",
+        "A2605"
+      ],
+      "emc": [],
+      "jahr": "2021",
+      "chip": "A13",
+      "ram": ""
+    },
+    {
+      "id": "ipad-9th-generation-wi-fi-ipad12-1",
+      "namen": [
+        "ipad (9th generation) wi-fi",
+        "ipad wi-fi",
+        "ipad12,1"
+      ],
+      "a": [
+        "A2602"
+      ],
+      "emc": [],
+      "jahr": "2021",
+      "chip": "A13",
+      "ram": ""
+    },
+    {
+      "id": "ipad-a16-wi-fi-cellular-ipad15-8",
+      "namen": [
+        "ipad (a16) wi-fi + cellular",
+        "ipad wi-fi + cellular",
+        "ipad15,8"
+      ],
+      "a": [
+        "A3355",
+        "A3356"
+      ],
+      "emc": [],
+      "jahr": "2025",
+      "chip": "A16",
+      "ram": ""
+    },
+    {
+      "id": "ipad-a16-wi-fi-ipad15-7",
+      "namen": [
+        "ipad (a16) wi-fi",
+        "ipad wi-fi",
+        "ipad15,7"
+      ],
+      "a": [
+        "A3354"
+      ],
+      "emc": [],
+      "jahr": "2025",
+      "chip": "A16",
+      "ram": ""
+    },
+    {
+      "id": "ipad-air-11-inch-m2-wi-fi-cellular-ipad14-9",
+      "namen": [
+        "ipad air 11-inch (m2) wi-fi + cellular",
+        "ipad air 11-inch wi-fi + cellular",
+        "ipad14,9"
+      ],
+      "a": [
+        "A2903",
+        "A2904"
+      ],
+      "emc": [],
+      "jahr": "2024",
+      "chip": "M2",
+      "ram": ""
+    },
+    {
+      "id": "ipad-air-11-inch-m2-wi-fi-ipad14-8",
+      "namen": [
+        "ipad air 11-inch (m2) wi-fi",
+        "ipad air 11-inch wi-fi",
+        "ipad14,8"
+      ],
+      "a": [
+        "A2902"
+      ],
+      "emc": [],
+      "jahr": "2024",
+      "chip": "M2",
+      "ram": ""
+    },
+    {
+      "id": "ipad-air-11-inch-m3-wi-fi-cellular-ipad15-4",
+      "namen": [
+        "ipad air 11-inch (m3) wi-fi + cellular",
+        "ipad air 11-inch wi-fi + cellular",
+        "ipad15,4"
+      ],
+      "a": [
+        "A3267",
+        "A3270"
+      ],
+      "emc": [],
+      "jahr": "2025",
+      "chip": "M3",
+      "ram": ""
+    },
+    {
+      "id": "ipad-air-11-inch-m3-wi-fi-ipad15-3",
+      "namen": [
+        "ipad air 11-inch (m3) wi-fi",
+        "ipad air 11-inch wi-fi",
+        "ipad15,3"
+      ],
+      "a": [
+        "A3266"
+      ],
+      "emc": [],
+      "jahr": "2025",
+      "chip": "M3",
+      "ram": ""
+    },
+    {
+      "id": "ipad-air-11-inch-m4-wi-fi-cellular-ipad16-9",
+      "namen": [
+        "ipad air 11-inch (m4) wi-fi + cellular",
+        "ipad air 11-inch wi-fi + cellular",
+        "ipad16,9"
+      ],
+      "a": [
+        "A3460",
+        "A3463"
+      ],
+      "emc": [],
+      "jahr": "2026",
+      "chip": "M4",
+      "ram": ""
+    },
+    {
+      "id": "ipad-air-11-inch-m4-wi-fi-ipad16-8",
+      "namen": [
+        "ipad air 11-inch (m4) wi-fi",
+        "ipad air 11-inch wi-fi",
+        "ipad16,8"
+      ],
+      "a": [
+        "A3459"
+      ],
+      "emc": [],
+      "jahr": "2026",
+      "chip": "M4",
+      "ram": ""
+    },
+    {
+      "id": "ipad-air-13-inch-m2-wi-fi-cellular-ipad14-11",
+      "namen": [
+        "ipad air 13-inch (m2) wi-fi + cellular",
+        "ipad air 13-inch wi-fi + cellular",
+        "ipad14,11"
+      ],
+      "a": [
+        "A2899",
+        "A2900"
+      ],
+      "emc": [],
+      "jahr": "2024",
+      "chip": "M2",
+      "ram": ""
+    },
+    {
+      "id": "ipad-air-13-inch-m2-wi-fi-ipad14-10",
+      "namen": [
+        "ipad air 13-inch (m2) wi-fi",
+        "ipad air 13-inch wi-fi",
+        "ipad14,10"
+      ],
+      "a": [
+        "A2898"
+      ],
+      "emc": [],
+      "jahr": "2024",
+      "chip": "M2",
+      "ram": ""
+    },
+    {
+      "id": "ipad-air-13-inch-m3-wi-fi-cellular-ipad15-6",
+      "namen": [
+        "ipad air 13-inch (m3) wi-fi + cellular",
+        "ipad air 13-inch wi-fi + cellular",
+        "ipad15,6"
+      ],
+      "a": [
+        "A3269",
+        "A3271"
+      ],
+      "emc": [],
+      "jahr": "2025",
+      "chip": "M3",
+      "ram": ""
+    },
+    {
+      "id": "ipad-air-13-inch-m3-wi-fi-ipad15-5",
+      "namen": [
+        "ipad air 13-inch (m3) wi-fi",
+        "ipad air 13-inch wi-fi",
+        "ipad15,5"
+      ],
+      "a": [
+        "A3268"
+      ],
+      "emc": [],
+      "jahr": "2025",
+      "chip": "M3",
+      "ram": ""
+    },
+    {
+      "id": "ipad-air-13-inch-m4-wi-fi-cellular-ipad16-11",
+      "namen": [
+        "ipad air 13-inch (m4) wi-fi + cellular",
+        "ipad air 13-inch wi-fi + cellular",
+        "ipad16,11"
+      ],
+      "a": [
+        "A3462",
+        "A3464"
+      ],
+      "emc": [],
+      "jahr": "2026",
+      "chip": "M4",
+      "ram": ""
+    },
+    {
+      "id": "ipad-air-13-inch-m4-wi-fi-ipad16-10",
+      "namen": [
+        "ipad air 13-inch (m4) wi-fi",
+        "ipad air 13-inch wi-fi",
+        "ipad16,10"
+      ],
+      "a": [
+        "A3461"
+      ],
+      "emc": [],
+      "jahr": "2026",
+      "chip": "M4",
+      "ram": ""
+    },
+    {
+      "id": "ipad-air-2-wi-fi-cellular-ipad5-4",
+      "namen": [
+        "ipad air 2 wi-fi + cellular",
+        "ipad5,4"
+      ],
+      "a": [
+        "A1567"
+      ],
+      "emc": [],
+      "jahr": "2014",
+      "chip": "A8X",
+      "ram": ""
+    },
+    {
+      "id": "ipad-air-2-wi-fi-ipad5-3",
+      "namen": [
+        "ipad air 2 wi-fi",
+        "ipad5,3"
+      ],
+      "a": [
+        "A1566"
+      ],
+      "emc": [],
+      "jahr": "2014",
+      "chip": "A8X",
+      "ram": ""
+    },
+    {
+      "id": "ipad-air-3rd-generation-wi-fi-cellular-ipad11-4",
+      "namen": [
+        "ipad air (3rd generation) wi-fi + cellular",
+        "ipad air wi-fi + cellular",
+        "ipad11,4"
+      ],
+      "a": [
+        "A2123",
+        "A2153",
+        "A2154"
+      ],
+      "emc": [],
+      "jahr": "2019",
+      "chip": "A12",
+      "ram": ""
+    },
+    {
+      "id": "ipad-air-3rd-generation-wi-fi-ipad11-3",
+      "namen": [
+        "ipad air (3rd generation) wi-fi",
+        "ipad air wi-fi",
+        "ipad11,3"
+      ],
+      "a": [
+        "A2152"
+      ],
+      "emc": [],
+      "jahr": "2019",
+      "chip": "A12",
+      "ram": ""
+    },
+    {
+      "id": "ipad-air-4th-generation-wi-fi-cellular-ipad13-2",
+      "namen": [
+        "ipad air (4th generation) wi-fi + cellular",
+        "ipad air wi-fi + cellular",
+        "ipad13,2"
+      ],
+      "a": [
+        "A2072",
+        "A2324",
+        "A2325"
+      ],
+      "emc": [],
+      "jahr": "2020",
+      "chip": "A14",
+      "ram": ""
+    },
+    {
+      "id": "ipad-air-4th-generation-wi-fi-ipad13-1",
+      "namen": [
+        "ipad air (4th generation) wi-fi",
+        "ipad air wi-fi",
+        "ipad13,1"
+      ],
+      "a": [
+        "A2316"
+      ],
+      "emc": [],
+      "jahr": "2020",
+      "chip": "A14",
+      "ram": ""
+    },
+    {
+      "id": "ipad-air-5th-generation-wi-fi-cellular-ipad13-17",
+      "namen": [
+        "ipad air (5th generation) wi-fi + cellular",
+        "ipad air wi-fi + cellular",
+        "ipad13,17"
+      ],
+      "a": [
+        "A2589",
+        "A2591"
+      ],
+      "emc": [],
+      "jahr": "2022",
+      "chip": "M1",
+      "ram": ""
+    },
+    {
+      "id": "ipad-air-5th-generation-wi-fi-ipad13-16",
+      "namen": [
+        "ipad air (5th generation) wi-fi",
+        "ipad air wi-fi",
+        "ipad13,16"
+      ],
+      "a": [
+        "A2588"
+      ],
+      "emc": [],
+      "jahr": "2022",
+      "chip": "M1",
+      "ram": ""
+    },
+    {
+      "id": "ipad-air-wi-fi-cellular-ipad4-2",
+      "namen": [
+        "ipad air wi-fi + cellular",
+        "ipad4,2"
+      ],
+      "a": [
+        "A1475"
+      ],
+      "emc": [],
+      "jahr": "2013",
+      "chip": "A7",
+      "ram": ""
+    },
+    {
+      "id": "ipad-air-wi-fi-cellular-td-lte-ipad4-3",
+      "namen": [
+        "ipad air wi-fi + cellular (td-lte)",
+        "ipad air wi-fi + cellular",
+        "ipad4,3"
+      ],
+      "a": [
+        "A1476"
+      ],
+      "emc": [],
+      "jahr": "2014",
+      "chip": "A7",
+      "ram": ""
+    },
+    {
+      "id": "ipad-air-wi-fi-ipad4-1",
+      "namen": [
+        "ipad air wi-fi",
+        "ipad4,1"
+      ],
+      "a": [
+        "A1474"
+      ],
+      "emc": [],
+      "jahr": "2013",
+      "chip": "A7",
+      "ram": ""
+    },
+    {
+      "id": "ipad-ipad1-1",
+      "namen": [
+        "ipad",
+        "ipad1,1"
+      ],
+      "a": [
+        "A1219",
+        "A1337"
+      ],
+      "emc": [],
+      "jahr": "2010",
+      "chip": "A4",
+      "ram": ""
+    },
+    {
+      "id": "ipad-mini-2-wi-fi-cellular-ipad4-5",
+      "namen": [
+        "ipad mini 2 wi-fi + cellular",
+        "ipad4,5"
+      ],
+      "a": [
+        "A1490"
+      ],
+      "emc": [],
+      "jahr": "2013",
+      "chip": "A7",
+      "ram": ""
+    },
+    {
+      "id": "ipad-mini-2-wi-fi-cellular-td-lte-ipad4-6",
+      "namen": [
+        "ipad mini 2 wi-fi + cellular (td-lte)",
+        "ipad mini 2 wi-fi + cellular",
+        "ipad4,6"
+      ],
+      "a": [
+        "A1491"
+      ],
+      "emc": [],
+      "jahr": "2014",
+      "chip": "A7",
+      "ram": ""
+    },
+    {
+      "id": "ipad-mini-2-wi-fi-ipad4-4",
+      "namen": [
+        "ipad mini 2 wi-fi",
+        "ipad4,4"
+      ],
+      "a": [
+        "A1489"
+      ],
+      "emc": [],
+      "jahr": "2013",
+      "chip": "A7",
+      "ram": ""
+    },
+    {
+      "id": "ipad-mini-3-wi-fi-cellular-ipad4-8",
+      "namen": [
+        "ipad mini 3 wi-fi + cellular",
+        "ipad4,8"
+      ],
+      "a": [
+        "A1600"
+      ],
+      "emc": [],
+      "jahr": "2014",
+      "chip": "A7",
+      "ram": ""
+    },
+    {
+      "id": "ipad-mini-3-wi-fi-cellular-td-lte-ipad4-9",
+      "namen": [
+        "ipad mini 3 wi-fi + cellular (td-lte)",
+        "ipad mini 3 wi-fi + cellular",
+        "ipad4,9"
+      ],
+      "a": [
+        "A1601"
+      ],
+      "emc": [],
+      "jahr": "2014",
+      "chip": "A7",
+      "ram": ""
+    },
+    {
+      "id": "ipad-mini-3-wi-fi-ipad4-7",
+      "namen": [
+        "ipad mini 3 wi-fi",
+        "ipad4,7"
+      ],
+      "a": [
+        "A1599"
+      ],
+      "emc": [],
+      "jahr": "2014",
+      "chip": "A7",
+      "ram": ""
+    },
+    {
+      "id": "ipad-mini-4-wi-fi-cellular-ipad5-2",
+      "namen": [
+        "ipad mini 4 wi-fi + cellular",
+        "ipad5,2"
+      ],
+      "a": [
+        "A1550"
+      ],
+      "emc": [],
+      "jahr": "2015",
+      "chip": "A8",
+      "ram": ""
+    },
+    {
+      "id": "ipad-mini-4-wi-fi-ipad5-1",
+      "namen": [
+        "ipad mini 4 wi-fi",
+        "ipad5,1"
+      ],
+      "a": [
+        "A1538"
+      ],
+      "emc": [],
+      "jahr": "2015",
+      "chip": "A8",
+      "ram": ""
+    },
+    {
+      "id": "ipad-mini-5th-generation-wi-fi-cellular-ipad11-2",
+      "namen": [
+        "ipad mini (5th generation) wi-fi + cellular",
+        "ipad mini wi-fi + cellular",
+        "ipad11,2"
+      ],
+      "a": [
+        "A2124",
+        "A2125",
+        "A2126"
+      ],
+      "emc": [],
+      "jahr": "2019",
+      "chip": "A12",
+      "ram": ""
+    },
+    {
+      "id": "ipad-mini-5th-generation-wi-fi-ipad11-1",
+      "namen": [
+        "ipad mini (5th generation) wi-fi",
+        "ipad mini wi-fi",
+        "ipad11,1"
+      ],
+      "a": [
+        "A2133"
+      ],
+      "emc": [],
+      "jahr": "2019",
+      "chip": "A12",
+      "ram": ""
+    },
+    {
+      "id": "ipad-mini-6th-generation-wi-fi-cellular-ipad14-2",
+      "namen": [
+        "ipad mini (6th generation) wi-fi + cellular",
+        "ipad mini wi-fi + cellular",
+        "ipad14,2"
+      ],
+      "a": [
+        "A2568",
+        "A2569"
+      ],
+      "emc": [],
+      "jahr": "2021",
+      "chip": "A15",
+      "ram": ""
+    },
+    {
+      "id": "ipad-mini-6th-generation-wi-fi-ipad14-1",
+      "namen": [
+        "ipad mini (6th generation) wi-fi",
+        "ipad mini wi-fi",
+        "ipad14,1"
+      ],
+      "a": [
+        "A2567"
+      ],
+      "emc": [],
+      "jahr": "2021",
+      "chip": "A15",
+      "ram": ""
+    },
+    {
+      "id": "ipad-mini-a17-pro-wi-fi-cellular-ipad16-2",
+      "namen": [
+        "ipad mini (a17 pro) wi-fi + cellular",
+        "ipad mini wi-fi + cellular",
+        "ipad16,2"
+      ],
+      "a": [
+        "A2995",
+        "A2996"
+      ],
+      "emc": [],
+      "jahr": "2024",
+      "chip": "A17 Pro",
+      "ram": ""
+    },
+    {
+      "id": "ipad-mini-a17-pro-wi-fi-ipad16-1",
+      "namen": [
+        "ipad mini (a17 pro) wi-fi",
+        "ipad mini wi-fi",
+        "ipad16,1"
+      ],
+      "a": [
+        "A2993"
+      ],
+      "emc": [],
+      "jahr": "2024",
+      "chip": "A17 Pro",
+      "ram": ""
+    },
+    {
+      "id": "ipad-mini-wi-fi-cellular-ipad2-6",
+      "namen": [
+        "ipad mini wi-fi + cellular",
+        "ipad2,6"
+      ],
+      "a": [
+        "A1454"
+      ],
+      "emc": [],
+      "jahr": "2012",
+      "chip": "A5",
+      "ram": ""
+    },
+    {
+      "id": "ipad-mini-wi-fi-cellular-mm-ipad2-7",
+      "namen": [
+        "ipad mini wi-fi + cellular (mm)",
+        "ipad mini wi-fi + cellular",
+        "ipad2,7"
+      ],
+      "a": [
+        "A1455"
+      ],
+      "emc": [],
+      "jahr": "2012",
+      "chip": "A5",
+      "ram": ""
+    },
+    {
+      "id": "ipad-mini-wi-fi-ipad2-5",
+      "namen": [
+        "ipad mini wi-fi",
+        "ipad2,5"
+      ],
+      "a": [
+        "A1432"
+      ],
+      "emc": [],
+      "jahr": "2012",
+      "chip": "A5",
+      "ram": ""
+    },
+    {
+      "id": "ipad-pro-10-5-inch-wi-fi-cellular-ipad7-4",
+      "namen": [
+        "ipad pro (10.5-inch) wi-fi + cellular",
+        "ipad pro wi-fi + cellular",
+        "ipad7,4"
+      ],
+      "a": [
+        "A1709",
+        "A1852"
+      ],
+      "emc": [],
+      "jahr": "2017",
+      "chip": "A10X",
+      "ram": ""
+    },
+    {
+      "id": "ipad-pro-10-5-inch-wi-fi-ipad7-3",
+      "namen": [
+        "ipad pro (10.5-inch) wi-fi",
+        "ipad pro wi-fi",
+        "ipad7,3"
+      ],
+      "a": [
+        "A1701"
+      ],
+      "emc": [],
+      "jahr": "2017",
+      "chip": "A10X",
+      "ram": ""
+    },
+    {
+      "id": "ipad-pro-11-inch-1st-generation-wi-fi-cellular-ipad8-3",
+      "namen": [
+        "ipad pro 11-inch (1st generation) wi-fi + cellular",
+        "ipad pro 11-inch wi-fi + cellular",
+        "ipad8,3"
+      ],
+      "a": [
+        "A1934",
+        "A1979",
+        "A2013"
+      ],
+      "emc": [],
+      "jahr": "2018",
+      "chip": "A12X",
+      "ram": ""
+    },
+    {
+      "id": "ipad-pro-11-inch-1st-generation-wi-fi-ipad8-1",
+      "namen": [
+        "ipad pro 11-inch (1st generation) wi-fi",
+        "ipad pro 11-inch wi-fi",
+        "ipad8,1"
+      ],
+      "a": [
+        "A1980"
+      ],
+      "emc": [],
+      "jahr": "2018",
+      "chip": "A12X",
+      "ram": ""
+    },
+    {
+      "id": "ipad-pro-11-inch-2nd-generation-wi-fi-cellular-ipad8-10",
+      "namen": [
+        "ipad pro 11-inch (2nd generation) wi-fi + cellular",
+        "ipad pro 11-inch wi-fi + cellular",
+        "ipad8,10"
+      ],
+      "a": [
+        "A2068",
+        "A2230",
+        "A2231"
+      ],
+      "emc": [],
+      "jahr": "2020",
+      "chip": "A12Z",
+      "ram": ""
+    },
+    {
+      "id": "ipad-pro-11-inch-2nd-generation-wi-fi-ipad8-9",
+      "namen": [
+        "ipad pro 11-inch (2nd generation) wi-fi",
+        "ipad pro 11-inch wi-fi",
+        "ipad8,9"
+      ],
+      "a": [
+        "A2228"
+      ],
+      "emc": [],
+      "jahr": "2020",
+      "chip": "A12Z",
+      "ram": ""
+    },
+    {
+      "id": "ipad-pro-11-inch-3rd-generation-wi-fi-cellular-ipad13-6",
+      "namen": [
+        "ipad pro 11-inch (3rd generation) wi-fi + cellular",
+        "ipad pro 11-inch wi-fi + cellular",
+        "ipad13,6"
+      ],
+      "a": [
+        "A2301",
+        "A2459",
+        "A2460"
+      ],
+      "emc": [],
+      "jahr": "2021",
+      "chip": "M1",
+      "ram": ""
+    },
+    {
+      "id": "ipad-pro-11-inch-3rd-generation-wi-fi-ipad13-4",
+      "namen": [
+        "ipad pro 11-inch (3rd generation) wi-fi",
+        "ipad pro 11-inch wi-fi",
+        "ipad13,4"
+      ],
+      "a": [
+        "A2377"
+      ],
+      "emc": [],
+      "jahr": "2021",
+      "chip": "M1",
+      "ram": ""
+    },
+    {
+      "id": "ipad-pro-11-inch-4th-generation-wi-fi-cellular-ipad14-4",
+      "namen": [
+        "ipad pro 11-inch (4th generation) wi-fi + cellular",
+        "ipad pro 11-inch wi-fi + cellular",
+        "ipad14,4"
+      ],
+      "a": [
+        "A2435",
+        "A2761",
+        "A2762"
+      ],
+      "emc": [],
+      "jahr": "2022",
+      "chip": "M2",
+      "ram": ""
+    },
+    {
+      "id": "ipad-pro-11-inch-4th-generation-wi-fi-ipad14-3",
+      "namen": [
+        "ipad pro 11-inch (4th generation) wi-fi",
+        "ipad pro 11-inch wi-fi",
+        "ipad14,3"
+      ],
+      "a": [
+        "A2759"
+      ],
+      "emc": [],
+      "jahr": "2022",
+      "chip": "M2",
+      "ram": ""
+    },
+    {
+      "id": "ipad-pro-11-inch-m4-wi-fi-cellular-ipad16-4",
+      "namen": [
+        "ipad pro 11-inch (m4) wi-fi + cellular",
+        "ipad pro 11-inch wi-fi + cellular",
+        "ipad16,4"
+      ],
+      "a": [
+        "A2837",
+        "A3006"
+      ],
+      "emc": [],
+      "jahr": "2024",
+      "chip": "M4",
+      "ram": ""
+    },
+    {
+      "id": "ipad-pro-11-inch-m4-wi-fi-ipad16-3",
+      "namen": [
+        "ipad pro 11-inch (m4) wi-fi",
+        "ipad pro 11-inch wi-fi",
+        "ipad16,3"
+      ],
+      "a": [
+        "A2836"
+      ],
+      "emc": [],
+      "jahr": "2024",
+      "chip": "M4",
+      "ram": ""
+    },
+    {
+      "id": "ipad-pro-11-inch-wi-fi-cellular-m5-ipad17-2",
+      "namen": [
+        "ipad pro 11-inch wi-fi + cellular (m5)",
+        "ipad pro 11-inch wi-fi + cellular",
+        "ipad17,2"
+      ],
+      "a": [
+        "A3358",
+        "A3359"
+      ],
+      "emc": [],
+      "jahr": "2025",
+      "chip": "M5",
+      "ram": ""
+    },
+    {
+      "id": "ipad-pro-11-inch-wi-fi-m5-ipad17-1",
+      "namen": [
+        "ipad pro 11-inch wi-fi (m5)",
+        "ipad pro 11-inch wi-fi",
+        "ipad17,1"
+      ],
+      "a": [
+        "A3357"
+      ],
+      "emc": [],
+      "jahr": "2025",
+      "chip": "M5",
+      "ram": ""
+    },
+    {
+      "id": "ipad-pro-12-9-inch-1st-generation-wi-fi-cellular-ipad6-8",
+      "namen": [
+        "ipad pro (12.9-inch) (1st generation) wi-fi + cellular",
+        "ipad pro  wi-fi + cellular",
+        "ipad6,8"
+      ],
+      "a": [
+        "A1652"
+      ],
+      "emc": [],
+      "jahr": "2015",
+      "chip": "A9X",
+      "ram": ""
+    },
+    {
+      "id": "ipad-pro-12-9-inch-1st-generation-wi-fi-ipad6-7",
+      "namen": [
+        "ipad pro (12.9-inch) (1st generation) wi-fi",
+        "ipad pro  wi-fi",
+        "ipad6,7"
+      ],
+      "a": [
+        "A1584"
+      ],
+      "emc": [],
+      "jahr": "2015",
+      "chip": "A9X",
+      "ram": ""
+    },
+    {
+      "id": "ipad-pro-12-9-inch-2nd-generation-wi-fi-cellular-ipad7-2",
+      "namen": [
+        "ipad pro (12.9-inch) (2nd generation) wi-fi + cellular",
+        "ipad pro  wi-fi + cellular",
+        "ipad7,2"
+      ],
+      "a": [
+        "A1671",
+        "A1821"
+      ],
+      "emc": [],
+      "jahr": "2017",
+      "chip": "A10X",
+      "ram": ""
+    },
+    {
+      "id": "ipad-pro-12-9-inch-2nd-generation-wi-fi-ipad7-1",
+      "namen": [
+        "ipad pro (12.9-inch) (2nd generation) wi-fi",
+        "ipad pro  wi-fi",
+        "ipad7,1"
+      ],
+      "a": [
+        "A1670"
+      ],
+      "emc": [],
+      "jahr": "2017",
+      "chip": "A10X",
+      "ram": ""
+    },
+    {
+      "id": "ipad-pro-12-9-inch-3rd-generation-wi-fi-cellular-ipad8-7",
+      "namen": [
+        "ipad pro 12.9-inch (3rd generation) wi-fi + cellular",
+        "ipad pro 12.9-inch wi-fi + cellular",
+        "ipad8,7"
+      ],
+      "a": [
+        "A1895",
+        "A1983",
+        "A2014"
+      ],
+      "emc": [],
+      "jahr": "2018",
+      "chip": "A12X",
+      "ram": ""
+    },
+    {
+      "id": "ipad-pro-12-9-inch-3rd-generation-wi-fi-ipad8-5",
+      "namen": [
+        "ipad pro 12.9-inch (3rd generation) wi-fi",
+        "ipad pro 12.9-inch wi-fi",
+        "ipad8,5"
+      ],
+      "a": [
+        "A1876"
+      ],
+      "emc": [],
+      "jahr": "2018",
+      "chip": "A12X",
+      "ram": ""
+    },
+    {
+      "id": "ipad-pro-12-9-inch-4th-generation-wi-fi-cellular-ipad8-12",
+      "namen": [
+        "ipad pro 12.9-inch (4th generation) wi-fi + cellular",
+        "ipad pro 12.9-inch wi-fi + cellular",
+        "ipad8,12"
+      ],
+      "a": [
+        "A2069",
+        "A2232",
+        "A2233"
+      ],
+      "emc": [],
+      "jahr": "2020",
+      "chip": "A12Z",
+      "ram": ""
+    },
+    {
+      "id": "ipad-pro-12-9-inch-4th-generation-wi-fi-ipad8-11",
+      "namen": [
+        "ipad pro 12.9-inch (4th generation) wi-fi",
+        "ipad pro 12.9-inch wi-fi",
+        "ipad8,11"
+      ],
+      "a": [
+        "A2229"
+      ],
+      "emc": [],
+      "jahr": "2020",
+      "chip": "A12Z",
+      "ram": ""
+    },
+    {
+      "id": "ipad-pro-12-9-inch-5th-generation-wi-fi-cellular-ipad13-10",
+      "namen": [
+        "ipad pro 12.9-inch (5th generation) wi-fi + cellular",
+        "ipad pro 12.9-inch wi-fi + cellular",
+        "ipad13,10"
+      ],
+      "a": [
+        "A2379",
+        "A2461",
+        "A2462"
+      ],
+      "emc": [],
+      "jahr": "2021",
+      "chip": "M1",
+      "ram": ""
+    },
+    {
+      "id": "ipad-pro-12-9-inch-5th-generation-wi-fi-ipad13-8",
+      "namen": [
+        "ipad pro 12.9-inch (5th generation) wi-fi",
+        "ipad pro 12.9-inch wi-fi",
+        "ipad13,8"
+      ],
+      "a": [
+        "A2378"
+      ],
+      "emc": [],
+      "jahr": "2021",
+      "chip": "M1",
+      "ram": ""
+    },
+    {
+      "id": "ipad-pro-12-9-inch-6th-generation-wi-fi-cellular-ipad14-6",
+      "namen": [
+        "ipad pro 12.9-inch (6th generation) wi-fi + cellular",
+        "ipad pro 12.9-inch wi-fi + cellular",
+        "ipad14,6"
+      ],
+      "a": [
+        "A2437",
+        "A2764",
+        "A2766"
+      ],
+      "emc": [],
+      "jahr": "2022",
+      "chip": "M2",
+      "ram": ""
+    },
+    {
+      "id": "ipad-pro-12-9-inch-6th-generation-wi-fi-ipad14-5",
+      "namen": [
+        "ipad pro 12.9-inch (6th generation) wi-fi",
+        "ipad pro 12.9-inch wi-fi",
+        "ipad14,5"
+      ],
+      "a": [
+        "A2436"
+      ],
+      "emc": [],
+      "jahr": "2022",
+      "chip": "M2",
+      "ram": ""
+    },
+    {
+      "id": "ipad-pro-13-inch-m4-wi-fi-cellular-ipad16-6",
+      "namen": [
+        "ipad pro 13-inch (m4) wi-fi + cellular",
+        "ipad pro 13-inch wi-fi + cellular",
+        "ipad16,6"
+      ],
+      "a": [
+        "A2926",
+        "A3007"
+      ],
+      "emc": [],
+      "jahr": "2024",
+      "chip": "M4",
+      "ram": ""
+    },
+    {
+      "id": "ipad-pro-13-inch-m4-wi-fi-ipad16-5",
+      "namen": [
+        "ipad pro 13-inch (m4) wi-fi",
+        "ipad pro 13-inch wi-fi",
+        "ipad16,5"
+      ],
+      "a": [
+        "A2925"
+      ],
+      "emc": [],
+      "jahr": "2024",
+      "chip": "M4",
+      "ram": ""
+    },
+    {
+      "id": "ipad-pro-13-inch-wi-fi-cellular-m5-ipad17-4",
+      "namen": [
+        "ipad pro 13-inch wi-fi + cellular (m5)",
+        "ipad pro 13-inch wi-fi + cellular",
+        "ipad17,4"
+      ],
+      "a": [
+        "A3361",
+        "A3362"
+      ],
+      "emc": [],
+      "jahr": "2025",
+      "chip": "M5",
+      "ram": ""
+    },
+    {
+      "id": "ipad-pro-13-inch-wi-fi-m5-ipad17-3",
+      "namen": [
+        "ipad pro 13-inch wi-fi (m5)",
+        "ipad pro 13-inch wi-fi",
+        "ipad17,3"
+      ],
+      "a": [
+        "A3360"
+      ],
+      "emc": [],
+      "jahr": "2025",
+      "chip": "M5",
+      "ram": ""
+    },
+    {
+      "id": "ipad-pro-9-7-inch-wi-fi-cellular-ipad6-4",
+      "namen": [
+        "ipad pro (9.7-inch) wi-fi + cellular",
+        "ipad pro wi-fi + cellular",
+        "ipad6,4"
+      ],
+      "a": [
+        "A1674",
+        "A1675"
+      ],
+      "emc": [],
+      "jahr": "2016",
+      "chip": "A9X",
+      "ram": ""
+    },
+    {
+      "id": "ipad-pro-9-7-inch-wi-fi-ipad6-3",
+      "namen": [
+        "ipad pro (9.7-inch) wi-fi",
+        "ipad pro wi-fi",
+        "ipad6,3"
+      ],
+      "a": [
+        "A1673"
+      ],
+      "emc": [],
+      "jahr": "2016",
+      "chip": "A9X",
+      "ram": ""
+    },
+    {
+      "id": "ipad10-2022",
+      "namen": [
+        "ipad 10",
+        "ipad 2022",
+        "ipad 10. generation"
+      ],
+      "a": [],
+      "emc": [],
+      "jahr": "2022",
+      "chip": "A14",
+      "ram": "4 GB"
+    },
+    {
+      "id": "ipadair5-2022",
+      "namen": [
+        "ipad air 5",
+        "ipad air 2022",
+        "ipad air m1"
+      ],
+      "a": [],
+      "emc": [],
+      "jahr": "2022",
+      "chip": "M1",
+      "ram": "8 GB"
+    },
+    {
+      "id": "ipadpro11-2022",
+      "namen": [
+        "ipad pro 11",
+        "ipad pro 11 zoll",
+        "ipad pro 2022"
+      ],
+      "a": [],
+      "emc": [],
+      "jahr": "2022",
+      "chip": "M2",
+      "ram": "8 GB"
+    },
+    {
+      "id": "iphone-11-iphone12-1",
+      "namen": [
+        "iphone 11",
+        "iphone12,1"
+      ],
+      "a": [
+        "A2111",
+        "A2221",
+        "A2222",
+        "A2223"
+      ],
+      "emc": [],
+      "jahr": "2019",
+      "chip": "A13",
+      "ram": ""
+    },
+    {
+      "id": "iphone-11-pro-iphone12-3",
+      "namen": [
+        "iphone 11 pro",
+        "iphone12,3"
+      ],
+      "a": [
+        "A2160",
+        "A2215",
+        "A2216",
+        "A2217"
+      ],
+      "emc": [],
+      "jahr": "2019",
+      "chip": "A13",
+      "ram": ""
+    },
+    {
+      "id": "iphone-11-pro-max-iphone12-5",
+      "namen": [
+        "iphone 11 pro max",
+        "iphone12,5"
+      ],
+      "a": [
+        "A2161",
+        "A2218",
+        "A2219",
+        "A2220"
+      ],
+      "emc": [],
+      "jahr": "2019",
+      "chip": "A13",
+      "ram": ""
+    },
+    {
+      "id": "iphone-12-iphone13-2",
+      "namen": [
+        "iphone 12",
+        "iphone13,2"
+      ],
+      "a": [
+        "A2172",
+        "A2402",
+        "A2403",
+        "A2404",
+        "A2405"
+      ],
+      "emc": [],
+      "jahr": "2020",
+      "chip": "A14",
+      "ram": ""
+    },
+    {
+      "id": "iphone-12-mini-iphone13-1",
+      "namen": [
+        "iphone 12 mini",
+        "iphone13,1"
+      ],
+      "a": [
+        "A2176",
+        "A2398",
+        "A2399",
+        "A2400",
+        "A2401"
+      ],
+      "emc": [],
+      "jahr": "2020",
+      "chip": "A14",
+      "ram": ""
+    },
+    {
+      "id": "iphone-12-pro-iphone13-3",
+      "namen": [
+        "iphone 12 pro",
+        "iphone13,3"
+      ],
+      "a": [
+        "A2341",
+        "A2406",
+        "A2407",
+        "A2408",
+        "A2409"
+      ],
+      "emc": [],
+      "jahr": "2020",
+      "chip": "A14",
+      "ram": ""
+    },
+    {
+      "id": "iphone-12-pro-max-iphone13-4",
+      "namen": [
+        "iphone 12 pro max",
+        "iphone13,4"
+      ],
+      "a": [
+        "A2342",
+        "A2410",
+        "A2411",
+        "A2412",
+        "A2413"
+      ],
+      "emc": [],
+      "jahr": "2020",
+      "chip": "A14",
+      "ram": ""
+    },
+    {
+      "id": "iphone-13-iphone14-5",
+      "namen": [
+        "iphone 13",
+        "iphone14,5"
+      ],
+      "a": [
+        "A2482",
+        "A2631",
+        "A2633",
+        "A2634",
+        "A2635"
+      ],
+      "emc": [],
+      "jahr": "2021",
+      "chip": "A15",
+      "ram": "4"
+    },
+    {
+      "id": "iphone-13-mini-iphone14-4",
+      "namen": [
+        "iphone 13 mini",
+        "iphone14,4"
+      ],
+      "a": [
+        "A2481",
+        "A2626",
+        "A2628",
+        "A2629",
+        "A2630"
+      ],
+      "emc": [],
+      "jahr": "2021",
+      "chip": "A15",
+      "ram": "4"
+    },
+    {
+      "id": "iphone-13-pro-iphone14-2",
+      "namen": [
+        "iphone 13 pro",
+        "iphone14,2"
+      ],
+      "a": [
+        "A2483",
+        "A2636",
+        "A2638",
+        "A2639",
+        "A2640"
+      ],
+      "emc": [],
+      "jahr": "2021",
+      "chip": "A15",
+      "ram": "6"
+    },
+    {
+      "id": "iphone-13-pro-max-iphone14-3",
+      "namen": [
+        "iphone 13 pro max",
+        "iphone14,3"
+      ],
+      "a": [
+        "A2484",
+        "A2641",
+        "A2643",
+        "A2644",
+        "A2645"
+      ],
+      "emc": [],
+      "jahr": "2021",
+      "chip": "A15",
+      "ram": "6"
+    },
+    {
+      "id": "iphone-14-iphone14-7",
+      "namen": [
+        "iphone 14",
+        "iphone14,7"
+      ],
+      "a": [
+        "A2649",
+        "A2881",
+        "A2882",
+        "A2883",
+        "A2884"
+      ],
+      "emc": [],
+      "jahr": "2022",
+      "chip": "A15",
+      "ram": "6"
+    },
+    {
+      "id": "iphone-14-plus-iphone14-8",
+      "namen": [
+        "iphone 14 plus",
+        "iphone14,8"
+      ],
+      "a": [
+        "A2632",
+        "A2885",
+        "A2886",
+        "A2887",
+        "A2888"
+      ],
+      "emc": [],
+      "jahr": "2022",
+      "chip": "A15",
+      "ram": "6"
+    },
+    {
+      "id": "iphone-14-pro-iphone15-2",
+      "namen": [
+        "iphone 14 pro",
+        "iphone15,2"
+      ],
+      "a": [
+        "A2889",
+        "A2890",
+        "A2891",
+        "A2892"
+      ],
+      "emc": [],
+      "jahr": "2022",
+      "chip": "A16",
+      "ram": "6"
+    },
+    {
+      "id": "iphone-14-pro-max-iphone15-3",
+      "namen": [
+        "iphone 14 pro max",
+        "iphone15,3"
+      ],
+      "a": [
+        "A2893",
+        "A2894",
+        "A2895",
+        "A2896"
+      ],
+      "emc": [],
+      "jahr": "2022",
+      "chip": "A16",
+      "ram": "6"
+    },
+    {
+      "id": "iphone-15-iphone15-4",
+      "namen": [
+        "iphone 15",
+        "iphone15,4"
+      ],
+      "a": [
+        "A2846",
+        "A3089",
+        "A3090",
+        "A3092"
+      ],
+      "emc": [],
+      "jahr": "2023",
+      "chip": "A16",
+      "ram": "6"
+    },
+    {
+      "id": "iphone-15-plus-iphone15-5",
+      "namen": [
+        "iphone 15 plus",
+        "iphone15,5"
+      ],
+      "a": [
+        "A2847",
+        "A3093",
+        "A3094",
+        "A3096"
+      ],
+      "emc": [],
+      "jahr": "2023",
+      "chip": "A16",
+      "ram": "6"
+    },
+    {
+      "id": "iphone-15-pro-iphone16-1",
+      "namen": [
+        "iphone 15 pro",
+        "iphone16,1"
+      ],
+      "a": [
+        "A3101",
+        "A3102",
+        "A3104"
+      ],
+      "emc": [],
+      "jahr": "2023",
+      "chip": "A17 Pro",
+      "ram": ""
+    },
+    {
+      "id": "iphone-15-pro-max-iphone16-2",
+      "namen": [
+        "iphone 15 pro max",
+        "iphone16,2"
+      ],
+      "a": [
+        "A3105",
+        "A3106",
+        "A3108"
+      ],
+      "emc": [],
+      "jahr": "2023",
+      "chip": "A17 Pro",
+      "ram": ""
+    },
+    {
+      "id": "iphone-16-iphone17-3",
+      "namen": [
+        "iphone 16",
+        "iphone17,3"
+      ],
+      "a": [
+        "A3081",
+        "A3286",
+        "A3287",
+        "A3288"
+      ],
+      "emc": [],
+      "jahr": "2024",
+      "chip": "A18",
+      "ram": ""
+    },
+    {
+      "id": "iphone-16-plus-iphone17-4",
+      "namen": [
+        "iphone 16 plus",
+        "iphone17,4"
+      ],
+      "a": [
+        "A3082",
+        "A3289",
+        "A3290",
+        "A3291"
+      ],
+      "emc": [],
+      "jahr": "2024",
+      "chip": "A18",
+      "ram": ""
+    },
+    {
+      "id": "iphone-16-pro-iphone17-1",
+      "namen": [
+        "iphone 16 pro",
+        "iphone17,1"
+      ],
+      "a": [
+        "A3292",
+        "A3293",
+        "A3294"
+      ],
+      "emc": [],
+      "jahr": "2024",
+      "chip": "A18 Pro",
+      "ram": ""
+    },
+    {
+      "id": "iphone-16-pro-max-iphone17-2",
+      "namen": [
+        "iphone 16 pro max",
+        "iphone17,2"
+      ],
+      "a": [
+        "A3084",
+        "A3295",
+        "A3296",
+        "A3297"
+      ],
+      "emc": [],
+      "jahr": "2024",
+      "chip": "A18 Pro",
+      "ram": ""
+    },
+    {
+      "id": "iphone-16e-iphone17-5",
+      "namen": [
+        "iphone 16e",
+        "iphone17,5"
+      ],
+      "a": [
+        "A3212",
+        "A3408",
+        "A3409",
+        "A3410"
+      ],
+      "emc": [],
+      "jahr": "2025",
+      "chip": "A18",
+      "ram": ""
+    },
+    {
+      "id": "iphone-17-iphone18-3",
+      "namen": [
+        "iphone 17",
+        "iphone18,3"
+      ],
+      "a": [
+        "A3258",
+        "A3519",
+        "A3520",
+        "A3521"
+      ],
+      "emc": [],
+      "jahr": "2025",
+      "chip": "A19",
+      "ram": ""
+    },
+    {
+      "id": "iphone-17-pro-iphone18-1",
+      "namen": [
+        "iphone 17 pro",
+        "iphone18,1"
+      ],
+      "a": [
+        "A3256",
+        "A3522",
+        "A3523",
+        "A3524"
+      ],
+      "emc": [],
+      "jahr": "2025",
+      "chip": "A19 Pro",
+      "ram": ""
+    },
+    {
+      "id": "iphone-17-pro-max-iphone18-2",
+      "namen": [
+        "iphone 17 pro max",
+        "iphone18,2"
+      ],
+      "a": [
+        "A3257",
+        "A3525",
+        "A3526",
+        "A3527"
+      ],
+      "emc": [],
+      "jahr": "2025",
+      "chip": "A19 Pro",
+      "ram": ""
+    },
+    {
+      "id": "iphone-17e-iphone18-5",
+      "namen": [
+        "iphone 17e",
+        "iphone18,5"
+      ],
+      "a": [
+        "A3575",
+        "A3634",
+        "A3635"
+      ],
+      "emc": [],
+      "jahr": "2026",
+      "chip": "A19",
+      "ram": ""
+    },
+    {
+      "id": "iphone-18-pro-iphone19-2",
+      "namen": [
+        "iphone 18 pro",
+        "iphone19,2"
+      ],
+      "a": [
+        "A3472",
+        "A3713",
+        "A3714",
+        "A3715"
+      ],
+      "emc": [],
+      "jahr": "2026",
+      "chip": "A20 Pro",
+      "ram": ""
+    },
+    {
+      "id": "iphone-18-pro-max-global-iphone19-7",
+      "namen": [
+        "iphone 18 pro max (global)",
+        "iphone 18 pro max",
+        "iphone19,7"
+      ],
+      "a": [
+        "A3716",
+        "A3717",
+        "A3718"
+      ],
+      "emc": [],
+      "jahr": "2026",
+      "chip": "A20 Pro",
+      "ram": ""
+    },
+    {
+      "id": "iphone-18-pro-max-us-iphone19-3",
+      "namen": [
+        "iphone 18 pro max (us)",
+        "iphone 18 pro max",
+        "iphone19,3"
+      ],
+      "a": [
+        "A3473"
+      ],
+      "emc": [],
+      "jahr": "2026",
+      "chip": "A20 Pro",
+      "ram": ""
+    },
+    {
+      "id": "iphone-3g-iphone1-2",
+      "namen": [
+        "iphone 3g",
+        "iphone1,2"
+      ],
+      "a": [
+        "A1241",
+        "A1324"
+      ],
+      "emc": [],
+      "jahr": "2008",
+      "chip": "APL0098",
+      "ram": "1"
+    },
+    {
+      "id": "iphone-3gs-iphone2-1",
+      "namen": [
+        "iphone 3gs",
+        "iphone2,1"
+      ],
+      "a": [
+        "A1303",
+        "A1325"
+      ],
+      "emc": [],
+      "jahr": "2009",
+      "chip": "APL0298",
+      "ram": "2"
+    },
+    {
+      "id": "iphone-4-cdma-iphone3-3",
+      "namen": [
+        "iphone 4 (cdma)",
+        "iphone 4",
+        "iphone3,3"
+      ],
+      "a": [
+        "A1349"
+      ],
+      "emc": [],
+      "jahr": "2011",
+      "chip": "A4",
+      "ram": "5"
+    },
+    {
+      "id": "iphone-4-gsm-iphone3-1",
+      "namen": [
+        "iphone 4 (gsm)",
+        "iphone 4",
+        "iphone3,1"
+      ],
+      "a": [
+        "A1332"
+      ],
+      "emc": [],
+      "jahr": "2010",
+      "chip": "A4",
+      "ram": "5"
+    },
+    {
+      "id": "iphone-4s-iphone4-1",
+      "namen": [
+        "iphone 4s",
+        "iphone4,1"
+      ],
+      "a": [
+        "A1387",
+        "A1431"
+      ],
+      "emc": [],
+      "jahr": "2011",
+      "chip": "A5",
+      "ram": "5"
+    },
+    {
+      "id": "iphone-5-cdma-iphone5-2",
+      "namen": [
+        "iphone 5 (cdma)",
+        "iphone 5",
+        "iphone5,2"
+      ],
+      "a": [
+        "A1442"
+      ],
+      "emc": [],
+      "jahr": "2012",
+      "chip": "A6",
+      "ram": "1"
+    },
+    {
+      "id": "iphone-5-gsm-iphone5-1",
+      "namen": [
+        "iphone 5 (gsm)",
+        "iphone 5",
+        "iphone5,1"
+      ],
+      "a": [
+        "A1428",
+        "A1429"
+      ],
+      "emc": [],
+      "jahr": "2012",
+      "chip": "A6",
+      "ram": "1"
+    },
+    {
+      "id": "iphone-5c-cdma-iphone5-4",
+      "namen": [
+        "iphone 5c (cdma)",
+        "iphone 5c",
+        "iphone5,4"
+      ],
+      "a": [
+        "A1507",
+        "A1516",
+        "A1526",
+        "A1529"
+      ],
+      "emc": [],
+      "jahr": "2013",
+      "chip": "A6",
+      "ram": "1"
+    },
+    {
+      "id": "iphone-5c-gsm-iphone5-3",
+      "namen": [
+        "iphone 5c (gsm)",
+        "iphone 5c",
+        "iphone5,3"
+      ],
+      "a": [
+        "A1456",
+        "A1532"
+      ],
+      "emc": [],
+      "jahr": "2013",
+      "chip": "A6",
+      "ram": "1"
+    },
+    {
+      "id": "iphone-5s-cdma-iphone6-2",
+      "namen": [
+        "iphone 5s (cdma)",
+        "iphone 5s",
+        "iphone6,2"
+      ],
+      "a": [
+        "A1457",
+        "A1518",
+        "A1528",
+        "A1530"
+      ],
+      "emc": [],
+      "jahr": "2013",
+      "chip": "A7",
+      "ram": "1"
+    },
+    {
+      "id": "iphone-5s-gsm-iphone6-1",
+      "namen": [
+        "iphone 5s (gsm)",
+        "iphone 5s",
+        "iphone6,1"
+      ],
+      "a": [
+        "A1453",
+        "A1533"
+      ],
+      "emc": [],
+      "jahr": "2013",
+      "chip": "A7",
+      "ram": "1"
+    },
+    {
+      "id": "iphone-6-iphone7-2",
+      "namen": [
+        "iphone 6",
+        "iphone7,2"
+      ],
+      "a": [
+        "A1549",
+        "A1586",
+        "A1589"
+      ],
+      "emc": [],
+      "jahr": "2014",
+      "chip": "A8",
+      "ram": ""
+    },
+    {
+      "id": "iphone-6-plus-iphone7-1",
+      "namen": [
+        "iphone 6 plus",
+        "iphone7,1"
+      ],
+      "a": [
+        "A1522",
+        "A1524",
+        "A1593"
+      ],
+      "emc": [],
+      "jahr": "2014",
+      "chip": "A8",
+      "ram": ""
+    },
+    {
+      "id": "iphone-6s-iphone8-1",
+      "namen": [
+        "iphone 6s",
+        "iphone8,1"
+      ],
+      "a": [
+        "A1633",
+        "A1688",
+        "A1691",
+        "A1700"
+      ],
+      "emc": [],
+      "jahr": "2015",
+      "chip": "A9",
+      "ram": ""
+    },
+    {
+      "id": "iphone-6s-plus-iphone8-2",
+      "namen": [
+        "iphone 6s plus",
+        "iphone8,2"
+      ],
+      "a": [
+        "A1634",
+        "A1687",
+        "A1690",
+        "A1699"
+      ],
+      "emc": [],
+      "jahr": "2015",
+      "chip": "A9",
+      "ram": ""
+    },
+    {
+      "id": "iphone-7-cdma-iphone9-1",
+      "namen": [
+        "iphone 7 (cdma)",
+        "iphone 7",
+        "iphone9,1"
+      ],
+      "a": [
+        "A1660",
+        "A1779",
+        "A1780"
+      ],
+      "emc": [],
+      "jahr": "2016",
+      "chip": "A10",
+      "ram": ""
+    },
+    {
+      "id": "iphone-7-gsm-iphone9-3",
+      "namen": [
+        "iphone 7 (gsm)",
+        "iphone 7",
+        "iphone9,3"
+      ],
+      "a": [
+        "A1778"
+      ],
+      "emc": [],
+      "jahr": "2016",
+      "chip": "A10",
+      "ram": ""
+    },
+    {
+      "id": "iphone-7-plus-cdma-iphone9-2",
+      "namen": [
+        "iphone 7 plus (cdma)",
+        "iphone 7 plus",
+        "iphone9,2"
+      ],
+      "a": [
+        "A1661",
+        "A1785",
+        "A1786"
+      ],
+      "emc": [],
+      "jahr": "2016",
+      "chip": "A10",
+      "ram": ""
+    },
+    {
+      "id": "iphone-7-plus-gsm-iphone9-4",
+      "namen": [
+        "iphone 7 plus (gsm)",
+        "iphone 7 plus",
+        "iphone9,4"
+      ],
+      "a": [
+        "A1784"
+      ],
+      "emc": [],
+      "jahr": "2016",
+      "chip": "A10",
+      "ram": ""
+    },
+    {
+      "id": "iphone-8-cdma-iphone10-1",
+      "namen": [
+        "iphone 8 (cdma)",
+        "iphone 8",
+        "iphone10,1"
+      ],
+      "a": [
+        "A1863",
+        "A1906",
+        "A1907"
+      ],
+      "emc": [],
+      "jahr": "2017",
+      "chip": "A11",
+      "ram": ""
+    },
+    {
+      "id": "iphone-8-gsm-iphone10-4",
+      "namen": [
+        "iphone 8 (gsm)",
+        "iphone 8",
+        "iphone10,4"
+      ],
+      "a": [
+        "A1905"
+      ],
+      "emc": [],
+      "jahr": "2017",
+      "chip": "A11",
+      "ram": ""
+    },
+    {
+      "id": "iphone-8-plus-cdma-iphone10-2",
+      "namen": [
+        "iphone 8 plus (cdma)",
+        "iphone 8 plus",
+        "iphone10,2"
+      ],
+      "a": [
+        "A1864",
+        "A1898",
+        "A1899"
+      ],
+      "emc": [],
+      "jahr": "2017",
+      "chip": "A11",
+      "ram": ""
+    },
+    {
+      "id": "iphone-8-plus-gsm-iphone10-5",
+      "namen": [
+        "iphone 8 plus (gsm)",
+        "iphone 8 plus",
+        "iphone10,5"
+      ],
+      "a": [
+        "A1897"
+      ],
+      "emc": [],
+      "jahr": "2017",
+      "chip": "A11",
+      "ram": ""
+    },
+    {
+      "id": "iphone-air-iphone18-4",
+      "namen": [
+        "iphone air",
+        "iphone18,4"
+      ],
+      "a": [
+        "A3260",
+        "A3516",
+        "A3517",
+        "A3518"
+      ],
+      "emc": [],
+      "jahr": "2025",
+      "chip": "A19 Pro",
+      "ram": ""
+    },
+    {
+      "id": "iphone-duo-iphone19-4",
+      "namen": [
+        "iphone duo",
+        "iphone19,4"
+      ],
+      "a": [
+        "A3447",
+        "A3719",
+        "A3720",
+        "A3721"
+      ],
+      "emc": [],
+      "jahr": "2026",
+      "chip": "A20 Pro",
+      "ram": ""
+    },
+    {
+      "id": "iphone-iphone1-1",
+      "namen": [
+        "iphone",
+        "iphone1,1"
+      ],
+      "a": [
+        "A1203"
+      ],
+      "emc": [],
+      "jahr": "2007",
+      "chip": "APL0098",
+      "ram": "1"
+    },
+    {
+      "id": "iphone-se-1st-generation-iphone8-4",
+      "namen": [
+        "iphone se (1st generation)",
+        "iphone se",
+        "iphone8,4"
+      ],
+      "a": [
+        "A1662",
+        "A1723",
+        "A1724"
+      ],
+      "emc": [],
+      "jahr": "2016",
+      "chip": "A9",
+      "ram": ""
+    },
+    {
+      "id": "iphone-se-2nd-generation-iphone12-8",
+      "namen": [
+        "iphone se (2nd generation)",
+        "iphone se",
+        "iphone12,8"
+      ],
+      "a": [
+        "A2275",
+        "A2296",
+        "A2297",
+        "A2298"
+      ],
+      "emc": [],
+      "jahr": "2020",
+      "chip": "A13",
+      "ram": ""
+    },
+    {
+      "id": "iphone-se-3rd-generation-iphone14-6",
+      "namen": [
+        "iphone se (3rd generation)",
+        "iphone se",
+        "iphone14,6"
+      ],
+      "a": [
+        "A2595",
+        "A2782",
+        "A2783",
+        "A2784",
+        "A2785"
+      ],
+      "emc": [],
+      "jahr": "2022",
+      "chip": "A15",
+      "ram": "4"
+    },
+    {
+      "id": "iphone-x-cdma-iphone10-3",
+      "namen": [
+        "iphone x (cdma)",
+        "iphone x",
+        "iphone10,3"
+      ],
+      "a": [
+        "A1865",
+        "A1902",
+        "A1903"
+      ],
+      "emc": [],
+      "jahr": "2017",
+      "chip": "A11",
+      "ram": ""
+    },
+    {
+      "id": "iphone-x-gsm-iphone10-6",
+      "namen": [
+        "iphone x (gsm)",
+        "iphone x",
+        "iphone10,6"
+      ],
+      "a": [
+        "A1901"
+      ],
+      "emc": [],
+      "jahr": "2017",
+      "chip": "A11",
+      "ram": ""
+    },
+    {
+      "id": "iphone-xr-iphone11-8",
+      "namen": [
+        "iphone xr",
+        "iphone11,8"
+      ],
+      "a": [
+        "A1984",
+        "A2105",
+        "A2106",
+        "A2107",
+        "A2108"
+      ],
+      "emc": [],
+      "jahr": "2018",
+      "chip": "A12",
+      "ram": ""
+    },
+    {
+      "id": "iphone-xs-iphone11-2",
+      "namen": [
+        "iphone xs",
+        "iphone11,2"
+      ],
+      "a": [
+        "A1920",
+        "A2097",
+        "A2098",
+        "A2099",
+        "A2100"
+      ],
+      "emc": [],
+      "jahr": "2018",
+      "chip": "A12",
+      "ram": ""
+    },
+    {
+      "id": "iphone-xs-max-china-mainland-iphone11-4",
+      "namen": [
+        "iphone xs max (china mainland)",
+        "iphone xs max",
+        "iphone11,4"
+      ],
+      "a": [
+        "A2103"
+      ],
+      "emc": [],
+      "jahr": "2018",
+      "chip": "A12",
+      "ram": ""
+    },
+    {
+      "id": "iphone-xs-max-iphone11-6",
+      "namen": [
+        "iphone xs max",
+        "iphone11,6"
+      ],
+      "a": [
+        "A1921",
+        "A2101",
+        "A2102",
+        "A2104"
+      ],
+      "emc": [],
+      "jahr": "2018",
+      "chip": "A12",
+      "ram": ""
+    },
+    {
+      "id": "iphone12-2020",
+      "namen": [
+        "iphone 12"
+      ],
+      "a": [],
+      "emc": [],
+      "jahr": "2020",
+      "chip": "A14",
+      "ram": "4 GB"
+    },
+    {
+      "id": "iphone13-2021",
+      "namen": [
+        "iphone 13"
+      ],
+      "a": [],
+      "emc": [],
+      "jahr": "2021",
+      "chip": "A15",
+      "ram": "4 GB"
+    },
+    {
+      "id": "iphone14pro-2022",
+      "namen": [
+        "iphone 14 pro"
+      ],
+      "a": [
+        "A2650"
+      ],
+      "emc": [],
+      "jahr": "2022",
+      "chip": "A16",
+      "ram": "6 GB"
+    },
+    {
+      "id": "iphone14promax-2022",
+      "namen": [
+        "iphone 14 pro max"
+      ],
+      "a": [
+        "A2651"
+      ],
+      "emc": [],
+      "jahr": "2022",
+      "chip": "A16",
+      "ram": "6 GB"
+    },
+    {
+      "id": "iphone15pro-2023",
+      "namen": [
+        "iphone 15 pro"
+      ],
+      "a": [
+        "A2848"
+      ],
+      "emc": [],
+      "jahr": "2023",
+      "chip": "A17 Pro",
+      "ram": "8 GB"
+    },
+    {
+      "id": "iphone15promax-2023",
+      "namen": [
+        "iphone 15 pro max"
+      ],
+      "a": [
+        "A2849"
+      ],
+      "emc": [],
+      "jahr": "2023",
+      "chip": "A17 Pro",
+      "ram": "8 GB"
+    },
+    {
+      "id": "iphone16pro-2024",
+      "namen": [
+        "iphone 16 pro"
+      ],
+      "a": [
+        "A3083"
+      ],
+      "emc": [],
+      "jahr": "2024",
+      "chip": "A18 Pro",
+      "ram": "8 GB"
+    },
+    {
+      "id": "ipod-click-wheel-u2-edition",
+      "namen": [
+        "ipod (click wheel) u2 edition",
+        "ipod u2 edition"
+      ],
+      "a": [
+        "A1059"
+      ],
+      "emc": [],
+      "jahr": "2004",
+      "chip": "PortalPlayer PP5020",
+      "ram": ""
+    },
+    {
+      "id": "ipod-dock-connector",
+      "namen": [
+        "ipod (dock connector)",
+        "ipod"
+      ],
+      "a": [
+        "A1040"
+      ],
+      "emc": [],
+      "jahr": "2003",
+      "chip": "PortalPlayer PP5002",
+      "ram": ""
+    },
+    {
+      "id": "ipod-mini-2nd-generation",
+      "namen": [
+        "ipod mini (2nd generation)",
+        "ipod mini"
+      ],
+      "a": [
+        "A1051"
+      ],
+      "emc": [],
+      "jahr": "2005",
+      "chip": "PortalPlayer PP5022",
+      "ram": ""
+    },
+    {
+      "id": "ipod-nano",
+      "namen": [
+        "ipod nano"
+      ],
+      "a": [
+        "A1137"
+      ],
+      "emc": [],
+      "jahr": "2006",
+      "chip": "PortalPlayer PP5021C",
+      "ram": ""
+    },
+    {
+      "id": "ipod-nano-2nd-generation",
+      "namen": [
+        "ipod nano (2nd generation)",
+        "ipod nano"
+      ],
+      "a": [
+        "A1199"
+      ],
+      "emc": [],
+      "jahr": "2006",
+      "chip": "Samsung S5L8701",
+      "ram": ""
+    },
+    {
+      "id": "ipod-nano-3rd-generation",
+      "namen": [
+        "ipod nano (3rd generation)",
+        "ipod nano"
+      ],
+      "a": [
+        "A1236"
+      ],
+      "emc": [],
+      "jahr": "2007",
+      "chip": "Samsung S5L8702",
+      "ram": ""
+    },
+    {
+      "id": "ipod-nano-4th-generation",
+      "namen": [
+        "ipod nano (4th generation)",
+        "ipod nano"
+      ],
+      "a": [
+        "A1285"
+      ],
+      "emc": [],
+      "jahr": "2008",
+      "chip": "Samsung S5L8720",
+      "ram": ""
+    },
+    {
+      "id": "ipod-nano-5th-generation",
+      "namen": [
+        "ipod nano (5th generation)",
+        "ipod nano"
+      ],
+      "a": [
+        "A1320"
+      ],
+      "emc": [],
+      "jahr": "2009",
+      "chip": "Samsung S5L8730",
+      "ram": ""
+    },
+    {
+      "id": "ipod-nano-6th-generation",
+      "namen": [
+        "ipod nano (6th generation)",
+        "ipod nano"
+      ],
+      "a": [
+        "A1366"
+      ],
+      "emc": [],
+      "jahr": "2010",
+      "chip": "Samsung S5L8723",
+      "ram": ""
+    },
+    {
+      "id": "ipod-nano-7th-generation-mid-2015",
+      "namen": [
+        "ipod nano (7th generation mid 2015)",
+        "ipod nano"
+      ],
+      "a": [
+        "A1446"
+      ],
+      "emc": [],
+      "jahr": "2015",
+      "chip": "Samsung S5L8740",
+      "ram": ""
+    },
+    {
+      "id": "ipod-shuffle-1-gb",
+      "namen": [
+        "ipod shuffle (1 gb)",
+        "ipod shuffle"
+      ],
+      "a": [
+        "A1112"
+      ],
+      "emc": [],
+      "jahr": "2006",
+      "chip": "SigmaTel D-Major STMP 3550",
+      "ram": ""
+    },
+    {
+      "id": "ipod-shuffle-2nd-generation",
+      "namen": [
+        "ipod shuffle (2nd generation)",
+        "ipod shuffle"
+      ],
+      "a": [
+        "A1204"
+      ],
+      "emc": [],
+      "jahr": "2006",
+      "chip": "Samsung S5L8442",
+      "ram": ""
+    },
+    {
+      "id": "ipod-shuffle-3rd-generation-late-2009",
+      "namen": [
+        "ipod shuffle (3rd generation late 2009)",
+        "ipod shuffle"
+      ],
+      "a": [
+        "A1271"
+      ],
+      "emc": [],
+      "jahr": "2009",
+      "chip": "Samsung S5L8442",
+      "ram": ""
+    },
+    {
+      "id": "ipod-shuffle-4th-generation-late-2012",
+      "namen": [
+        "ipod shuffle (4th generation late 2012)",
+        "ipod shuffle"
+      ],
+      "a": [
+        "A1373"
+      ],
+      "emc": [],
+      "jahr": "2012",
+      "chip": "Samsung S5L8443",
+      "ram": ""
+    },
+    {
+      "id": "ipod-touch-1st-generation-ipod1-1",
+      "namen": [
+        "ipod touch (1st generation)",
+        "ipod touch",
+        "ipod1,1"
+      ],
+      "a": [
+        "A1213"
+      ],
+      "emc": [],
+      "jahr": "2007",
+      "chip": "APL0098",
+      "ram": ""
+    },
+    {
+      "id": "ipod-touch-2nd-generation-ipod2-1",
+      "namen": [
+        "ipod touch (2nd generation)",
+        "ipod touch",
+        "ipod2,1"
+      ],
+      "a": [
+        "A1288",
+        "A1319"
+      ],
+      "emc": [],
+      "jahr": "2008",
+      "chip": "APL0278",
+      "ram": ""
+    },
+    {
+      "id": "ipod-touch-3rd-generation-ipod3-1",
+      "namen": [
+        "ipod touch (3rd generation)",
+        "ipod touch",
+        "ipod3,1"
+      ],
+      "a": [
+        "A1318"
+      ],
+      "emc": [],
+      "jahr": "2009",
+      "chip": "APL2298",
+      "ram": ""
+    },
+    {
+      "id": "ipod-touch-4th-generation-ipod4-1",
+      "namen": [
+        "ipod touch (4th generation)",
+        "ipod touch",
+        "ipod4,1"
+      ],
+      "a": [
+        "A1367"
+      ],
+      "emc": [],
+      "jahr": "2010",
+      "chip": "A4",
+      "ram": ""
+    },
+    {
+      "id": "ipod-touch-5th-generation-ipod5-1",
+      "namen": [
+        "ipod touch (5th generation)",
+        "ipod touch",
+        "ipod5,1"
+      ],
+      "a": [
+        "A1421",
+        "A1509"
+      ],
+      "emc": [],
+      "jahr": "2012",
+      "chip": "A5",
+      "ram": ""
+    },
+    {
+      "id": "ipod-touch-6th-generation-ipod7-1",
+      "namen": [
+        "ipod touch (6th generation)",
+        "ipod touch",
+        "ipod7,1"
+      ],
+      "a": [
+        "A1574"
+      ],
+      "emc": [],
+      "jahr": "2015",
+      "chip": "A8",
+      "ram": ""
+    },
+    {
+      "id": "ipod-touch-7th-generation-ipod9-1",
+      "namen": [
+        "ipod touch (7th generation)",
+        "ipod touch",
+        "ipod9,1"
+      ],
+      "a": [
+        "A2178"
+      ],
+      "emc": [],
+      "jahr": "2019",
+      "chip": "A10",
+      "ram": ""
+    },
+    {
+      "id": "ipod-touch-wheel-beck-edition",
+      "namen": [
+        "ipod (touch wheel) beck edition",
+        "ipod beck edition"
+      ],
+      "a": [
+        "A1019"
+      ],
+      "emc": [],
+      "jahr": "2002",
+      "chip": "PortalPlayer PP5002",
+      "ram": ""
+    },
+    {
+      "id": "ipod-with-color-display-harry-potter-edition",
+      "namen": [
+        "ipod with color display harry potter edition"
+      ],
+      "a": [
+        "A1099"
+      ],
+      "emc": [],
+      "jahr": "2005",
+      "chip": "PortalPlayer PP5020",
+      "ram": ""
+    },
+    {
+      "id": "ipod-with-video-harry-potter-edition",
+      "namen": [
+        "ipod with video harry potter edition"
+      ],
+      "a": [
+        "A1238"
+      ],
+      "emc": [],
+      "jahr": "2005",
+      "chip": "PortalPlayer PP5021C",
+      "ram": ""
+    },
+    {
+      "id": "ipod-with-video-late-2006",
+      "namen": [
+        "ipod with video (late 2006)",
+        "ipod with video"
+      ],
+      "a": [
+        "A1136"
+      ],
+      "emc": [],
+      "jahr": "2006",
+      "chip": "PortalPlayer PP5021C",
+      "ram": ""
+    },
+    {
+      "id": "mac-mini-early-2005-powermac10-1",
+      "namen": [
+        "mac mini (early 2005)",
+        "mac mini",
+        "powermac10,1"
+      ],
+      "a": [
+        "A1103"
+      ],
+      "emc": [],
+      "jahr": "2005",
+      "chip": "",
+      "ram": ""
+    },
+    {
+      "id": "mac-mini-early-2006-macmini1-1",
+      "namen": [
+        "mac mini (early 2006)",
+        "mac mini",
+        "macmini1,1"
+      ],
+      "a": [
+        "A1176"
+      ],
+      "emc": [],
+      "jahr": "2006",
+      "chip": "",
+      "ram": ""
+    },
+    {
+      "id": "mac-mini-early-2009-macmini3-1",
+      "namen": [
+        "mac mini (early 2009)",
+        "mac mini",
+        "macmini3,1"
+      ],
+      "a": [
+        "A1283"
+      ],
+      "emc": [],
+      "jahr": "2009",
+      "chip": "",
+      "ram": ""
+    },
+    {
+      "id": "mac-mini-late-2018-macmini8-1",
+      "namen": [
+        "mac mini (late 2018)",
+        "mac mini",
+        "macmini8,1"
+      ],
+      "a": [
+        "A1993"
+      ],
+      "emc": [],
+      "jahr": "2018",
+      "chip": "",
+      "ram": ""
+    },
+    {
+      "id": "mac-mini-m2-2023-mac14-3",
+      "namen": [
+        "mac mini (m2, 2023)",
+        "mac mini",
+        "mac14,3"
+      ],
+      "a": [
+        "A2686"
+      ],
+      "emc": [],
+      "jahr": "2023",
+      "chip": "M2",
+      "ram": "8GB"
+    },
+    {
+      "id": "mac-mini-m2-pro-2023-mac14-12",
+      "namen": [
+        "mac mini (m2 pro, 2023)",
+        "mac mini",
+        "mac14,12"
+      ],
+      "a": [
+        "A2816"
+      ],
+      "emc": [],
+      "jahr": "2023",
+      "chip": "M2 Pro",
+      "ram": "16GB"
+    },
+    {
+      "id": "mac-mini-m4-2024-mac16-10",
+      "namen": [
+        "mac mini (m4, 2024)",
+        "mac mini",
+        "mac16,10"
+      ],
+      "a": [
+        "A3238"
+      ],
+      "emc": [],
+      "jahr": "2024",
+      "chip": "M4",
+      "ram": ""
+    },
+    {
+      "id": "mac-mini-m4-pro-2024-mac16-11",
+      "namen": [
+        "mac mini (m4 pro, 2024)",
+        "mac mini",
+        "mac16,11"
+      ],
+      "a": [
+        "A3239"
+      ],
+      "emc": [],
+      "jahr": "2024",
+      "chip": "M4 Pro",
+      "ram": ""
+    },
+    {
+      "id": "mac-mini-m5-pro-mac17-16",
+      "namen": [
+        "mac mini (m5 pro)",
+        "mac mini",
+        "mac17,16"
+      ],
+      "a": [
+        "A3535"
+      ],
+      "emc": [],
+      "jahr": "2026",
+      "chip": "M5 Pro",
+      "ram": ""
+    },
+    {
+      "id": "mac-mini-m6-mac18-5",
+      "namen": [
+        "mac mini (m6)",
+        "mac mini",
+        "mac18,5"
+      ],
+      "a": [
+        "A3534"
+      ],
+      "emc": [],
+      "jahr": "2026",
+      "chip": "M6",
+      "ram": ""
+    },
+    {
+      "id": "mac-mini-server-mid-2010-macmini4-1",
+      "namen": [
+        "mac mini server (mid 2010)",
+        "mac mini server",
+        "macmini4,1"
+      ],
+      "a": [
+        "A1347"
+      ],
+      "emc": [],
+      "jahr": "2010",
+      "chip": "",
+      "ram": ""
+    },
+    {
+      "id": "mac-pro-2019-macpro7-1",
+      "namen": [
+        "mac pro (2019)",
+        "mac pro",
+        "macpro7,1"
+      ],
+      "a": [
+        "A1991"
+      ],
+      "emc": [],
+      "jahr": "2019",
+      "chip": "",
+      "ram": ""
+    },
+    {
+      "id": "mac-pro-2023-mac14-8",
+      "namen": [
+        "mac pro (2023)",
+        "mac pro",
+        "mac14,8"
+      ],
+      "a": [
+        "A2786"
+      ],
+      "emc": [],
+      "jahr": "2023",
+      "chip": "M2 Ultra",
+      "ram": "64GB"
+    },
+    {
+      "id": "mac-pro-early-2009-macpro4-1",
+      "namen": [
+        "mac pro (early 2009)",
+        "mac pro",
+        "macpro4,1"
+      ],
+      "a": [
+        "A1289"
+      ],
+      "emc": [],
+      "jahr": "2009",
+      "chip": "",
+      "ram": ""
+    },
+    {
+      "id": "mac-pro-late-2013-macpro6-1",
+      "namen": [
+        "mac pro (late 2013)",
+        "mac pro",
+        "macpro6,1"
+      ],
+      "a": [
+        "A1481"
+      ],
+      "emc": [],
+      "jahr": "2013",
+      "chip": "",
+      "ram": ""
+    },
+    {
+      "id": "mac-pro-mid-2006-macpro1-1",
+      "namen": [
+        "mac pro (mid 2006)",
+        "mac pro",
+        "macpro1,1"
+      ],
+      "a": [
+        "A1186"
+      ],
+      "emc": [],
+      "jahr": "2006",
+      "chip": "",
+      "ram": ""
+    },
+    {
+      "id": "mac-pro-rack-2019-macpro7-1",
+      "namen": [
+        "mac pro (rack, 2019)",
+        "mac pro",
+        "macpro7,1"
+      ],
+      "a": [
+        "A2304"
+      ],
+      "emc": [],
+      "jahr": "2020",
+      "chip": "",
+      "ram": ""
+    },
+    {
+      "id": "mac-pro-rack-2023-mac14-8",
+      "namen": [
+        "mac pro (rack, 2023)",
+        "mac pro",
+        "mac14,8"
+      ],
+      "a": [
+        "A2787"
+      ],
+      "emc": [],
+      "jahr": "2023",
+      "chip": "M2 Ultra",
+      "ram": "64GB"
+    },
+    {
+      "id": "mac-studio-m2-max-2023-mac14-13",
+      "namen": [
+        "mac studio (m2 max, 2023)",
+        "mac studio",
+        "mac14,13"
+      ],
+      "a": [
+        "A2901"
+      ],
+      "emc": [],
+      "jahr": "2023",
+      "chip": "M2 Max",
+      "ram": "32GB"
+    },
+    {
+      "id": "mac-studio-m3-ultra-2025-mac15-14",
+      "namen": [
+        "mac studio (m3 ultra, 2025)",
+        "mac studio",
+        "mac15,14"
+      ],
+      "a": [
+        "A3389"
+      ],
+      "emc": [],
+      "jahr": "2025",
+      "chip": "M3 Ultra",
+      "ram": ""
+    },
+    {
+      "id": "mac-studio-m4-max-2025-mac16-9",
+      "namen": [
+        "mac studio (m4 max, 2025)",
+        "mac studio",
+        "mac16,9"
+      ],
+      "a": [
+        "A3143"
+      ],
+      "emc": [],
+      "jahr": "2025",
+      "chip": "M4 Max",
+      "ram": ""
+    },
+    {
+      "id": "mac-studio-m5-max-mac17-14",
+      "namen": [
+        "mac studio (m5 max)",
+        "mac studio",
+        "mac17,14"
+      ],
+      "a": [
+        "A3545"
+      ],
+      "emc": [],
+      "jahr": "2026",
+      "chip": "M5 Max",
+      "ram": ""
+    },
+    {
+      "id": "mac-studio-m5-ultra-mac17-15",
+      "namen": [
+        "mac studio (m5 ultra)",
+        "mac studio",
+        "mac17,15"
+      ],
+      "a": [
+        "A3546"
+      ],
+      "emc": [],
+      "jahr": "2026",
+      "chip": "M5 Ultra",
+      "ram": ""
+    },
+    {
+      "id": "macbook-13-inch-late-2009-macbook6-1",
+      "namen": [
+        "macbook (13-inch, late 2009)",
+        "macbook",
+        "macbook6,1"
+      ],
+      "a": [
+        "A1342"
+      ],
+      "emc": [],
+      "jahr": "2009",
+      "chip": "",
+      "ram": ""
+    },
+    {
+      "id": "macbook-13-inch-mid-2006-macbook1-1",
+      "namen": [
+        "macbook (13-inch, mid 2006)",
+        "macbook",
+        "macbook1,1"
+      ],
+      "a": [
+        "A1181"
+      ],
+      "emc": [],
+      "jahr": "2006",
+      "chip": "",
+      "ram": ""
+    },
+    {
+      "id": "macbook-air-11-inch-late-2010-macbookair3-1",
+      "namen": [
+        "macbook air (11-inch, late 2010)",
+        "macbook air",
+        "macbookair3,1"
+      ],
+      "a": [
+        "A1370"
+      ],
+      "emc": [],
+      "jahr": "2010",
+      "chip": "",
+      "ram": ""
+    },
+    {
+      "id": "macbook-air-11-inch-mid-2012-macbookair5-1",
+      "namen": [
+        "macbook air (11-inch, mid 2012)",
+        "macbook air",
+        "macbookair5,1"
+      ],
+      "a": [
+        "A1465"
+      ],
+      "emc": [],
+      "jahr": "2012",
+      "chip": "",
+      "ram": ""
+    },
+    {
+      "id": "macbook-air-13-inch-m4-2025-mac16-12",
+      "namen": [
+        "macbook air (13-inch, m4, 2025)",
+        "macbook air",
+        "mac16,12"
+      ],
+      "a": [
+        "A3240"
+      ],
+      "emc": [],
+      "jahr": "2025",
+      "chip": "M4",
+      "ram": ""
+    },
+    {
+      "id": "macbook-air-13-inch-m5-mac17-3",
+      "namen": [
+        "macbook air (13-inch, m5)",
+        "macbook air",
+        "mac17,3"
+      ],
+      "a": [
+        "A3449"
+      ],
+      "emc": [],
+      "jahr": "2026",
+      "chip": "M5",
+      "ram": ""
+    },
+    {
+      "id": "macbook-air-15-inch-m2-2023-mac14-15",
+      "namen": [
+        "macbook air (15-inch, m2, 2023)",
+        "macbook air",
+        "mac14,15"
+      ],
+      "a": [
+        "A2941"
+      ],
+      "emc": [],
+      "jahr": "2023",
+      "chip": "M2",
+      "ram": "8GB"
+    },
+    {
+      "id": "macbook-air-15-inch-m4-2025-mac16-13",
+      "namen": [
+        "macbook air (15-inch, m4, 2025)",
+        "macbook air",
+        "mac16,13"
+      ],
+      "a": [
+        "A3241"
+      ],
+      "emc": [],
+      "jahr": "2025",
+      "chip": "M4",
+      "ram": ""
+    },
+    {
+      "id": "macbook-air-15-inch-m5-mac17-4",
+      "namen": [
+        "macbook air (15-inch, m5)",
+        "macbook air",
+        "mac17,4"
+      ],
+      "a": [
+        "A3448"
+      ],
+      "emc": [],
+      "jahr": "2026",
+      "chip": "M5",
+      "ram": ""
+    },
+    {
+      "id": "macbook-air-early-2008-macbookair1-1",
+      "namen": [
+        "macbook air (early 2008)",
+        "macbook air",
+        "macbookair1,1"
+      ],
+      "a": [
+        "A1237"
+      ],
+      "emc": [],
+      "jahr": "2008",
+      "chip": "",
+      "ram": ""
+    },
+    {
+      "id": "macbook-neo-mac17-5",
+      "namen": [
+        "macbook neo",
+        "mac17,5"
+      ],
+      "a": [
+        "A3404"
+      ],
+      "emc": [],
+      "jahr": "2026",
+      "chip": "A18 Pro",
+      "ram": ""
+    },
+    {
+      "id": "macbook-pro-13-inch-2016-four-thunderbolt-3-ports-macbookpro13-2",
+      "namen": [
+        "macbook pro (13-inch, 2016, four thunderbolt 3 ports)",
+        "macbook pro",
+        "macbookpro13,2"
+      ],
+      "a": [
+        "A1706"
+      ],
+      "emc": [],
+      "jahr": "2016",
+      "chip": "",
+      "ram": ""
+    },
+    {
+      "id": "macbook-pro-13-inch-2016-two-thunderbolt-3-ports-macbookpro13-1",
+      "namen": [
+        "macbook pro (13-inch, 2016, two thunderbolt 3 ports)",
+        "macbook pro",
+        "macbookpro13,1"
+      ],
+      "a": [
+        "A1708"
+      ],
+      "emc": [],
+      "jahr": "2016",
+      "chip": "",
+      "ram": ""
+    },
+    {
+      "id": "macbook-pro-13-inch-2018-macbookpro15-2",
+      "namen": [
+        "macbook pro (13-inch, 2018)",
+        "macbook pro",
+        "macbookpro15,2"
+      ],
+      "a": [
+        "A1989"
+      ],
+      "emc": [],
+      "jahr": "2018",
+      "chip": "",
+      "ram": ""
+    },
+    {
+      "id": "macbook-pro-13-inch-2020-four-thunderbolt-3-ports-macbookpro16-2",
+      "namen": [
+        "macbook pro (13-inch, 2020, four thunderbolt 3 ports)",
+        "macbook pro",
+        "macbookpro16,2"
+      ],
+      "a": [
+        "A2251"
+      ],
+      "emc": [],
+      "jahr": "2020",
+      "chip": "",
+      "ram": ""
+    },
+    {
+      "id": "macbook-pro-14-inch-m2-max-2023-mac14-5",
+      "namen": [
+        "macbook pro (14-inch, m2 max, 2023)",
+        "macbook pro",
+        "mac14,5"
+      ],
+      "a": [
+        "A2779"
+      ],
+      "emc": [],
+      "jahr": "2023",
+      "chip": "M2 Max",
+      "ram": "32GB"
+    },
+    {
+      "id": "macbook-pro-14-inch-m3-nov-2023-mac15-3",
+      "namen": [
+        "macbook pro (14-inch, m3, nov 2023)",
+        "macbook pro",
+        "mac15,3"
+      ],
+      "a": [
+        "A2918"
+      ],
+      "emc": [],
+      "jahr": "2023",
+      "chip": "M3",
+      "ram": ""
+    },
+    {
+      "id": "macbook-pro-14-inch-m4-max-nov-2024-mac16-6",
+      "namen": [
+        "macbook pro (14-inch, m4 max, nov 2024)",
+        "macbook pro",
+        "mac16,6"
+      ],
+      "a": [
+        "A3185"
+      ],
+      "emc": [],
+      "jahr": "2024",
+      "chip": "M4 Max",
+      "ram": ""
+    },
+    {
+      "id": "macbook-pro-14-inch-m4-nov-2024-mac16-1",
+      "namen": [
+        "macbook pro (14-inch, m4, nov 2024)",
+        "macbook pro",
+        "mac16,1"
+      ],
+      "a": [
+        "A3112"
+      ],
+      "emc": [],
+      "jahr": "2024",
+      "chip": "M4",
+      "ram": ""
+    },
+    {
+      "id": "macbook-pro-14-inch-m4-pro-nov-2024-mac16-8",
+      "namen": [
+        "macbook pro (14-inch, m4 pro, nov 2024)",
+        "macbook pro",
+        "mac16,8"
+      ],
+      "a": [
+        "A3401"
+      ],
+      "emc": [],
+      "jahr": "2024",
+      "chip": "M4 Pro",
+      "ram": ""
+    },
+    {
+      "id": "macbook-pro-14-inch-m5-mac17-2",
+      "namen": [
+        "macbook pro 14-inch (m5)",
+        "macbook pro 14-inch",
+        "mac17,2"
+      ],
+      "a": [
+        "A3434"
+      ],
+      "emc": [],
+      "jahr": "2025",
+      "chip": "M5",
+      "ram": ""
+    },
+    {
+      "id": "macbook-pro-14-inch-m5-max-mac17-7",
+      "namen": [
+        "macbook pro (14-inch, m5 max)",
+        "macbook pro",
+        "mac17,7"
+      ],
+      "a": [
+        "A3427"
+      ],
+      "emc": [],
+      "jahr": "2026",
+      "chip": "M5 Max",
+      "ram": ""
+    },
+    {
+      "id": "macbook-pro-14-inch-m5-pro-mac17-9",
+      "namen": [
+        "macbook pro (14-inch, m5 pro)",
+        "macbook pro",
+        "mac17,9"
+      ],
+      "a": [
+        "A3426"
+      ],
+      "emc": [],
+      "jahr": "2026",
+      "chip": "M5 Pro",
+      "ram": ""
+    },
+    {
+      "id": "macbook-pro-15-inch-2016-macbookpro13-3",
+      "namen": [
+        "macbook pro (15-inch, 2016)",
+        "macbook pro",
+        "macbookpro13,3"
+      ],
+      "a": [
+        "A1707"
+      ],
+      "emc": [],
+      "jahr": "2016",
+      "chip": "",
+      "ram": ""
+    },
+    {
+      "id": "macbook-pro-15-inch-early-2006-macbookpro1-1",
+      "namen": [
+        "macbook pro (15-inch, early 2006)",
+        "macbook pro",
+        "macbookpro1,1"
+      ],
+      "a": [
+        "A1150"
+      ],
+      "emc": [],
+      "jahr": "2006",
+      "chip": "",
+      "ram": ""
+    },
+    {
+      "id": "macbook-pro-15-inch-early-2008-macbookpro4-1",
+      "namen": [
+        "macbook pro (15-inch, early 2008)",
+        "macbook pro",
+        "macbookpro4,1"
+      ],
+      "a": [
+        "A1260"
+      ],
+      "emc": [],
+      "jahr": "2008",
+      "chip": "",
+      "ram": ""
+    },
+    {
+      "id": "macbook-pro-15-inch-late-2006-macbookpro2-2",
+      "namen": [
+        "macbook pro (15-inch, late 2006)",
+        "macbook pro",
+        "macbookpro2,2"
+      ],
+      "a": [
+        "A1211"
+      ],
+      "emc": [],
+      "jahr": "2006",
+      "chip": "",
+      "ram": ""
+    },
+    {
+      "id": "macbook-pro-15-inch-late-2007-macbookpro3-1",
+      "namen": [
+        "macbook pro (15-inch, late 2007)",
+        "macbook pro",
+        "macbookpro3,1"
+      ],
+      "a": [
+        "A1226"
+      ],
+      "emc": [],
+      "jahr": "2007",
+      "chip": "",
+      "ram": ""
+    },
+    {
+      "id": "macbook-pro-15-inch-late-2008-macbookpro5-1",
+      "namen": [
+        "macbook pro (15-inch, late 2008)",
+        "macbook pro",
+        "macbookpro5,1"
+      ],
+      "a": [
+        "A1286"
+      ],
+      "emc": [],
+      "jahr": "2008",
+      "chip": "",
+      "ram": ""
+    },
+    {
+      "id": "macbook-pro-16-inch-m2-pro-2023-mac14-10",
+      "namen": [
+        "macbook pro (16-inch, m2 pro, 2023)",
+        "macbook pro",
+        "mac14,10"
+      ],
+      "a": [
+        "A2780"
+      ],
+      "emc": [],
+      "jahr": "2023",
+      "chip": "M2 Pro",
+      "ram": "16GB"
+    },
+    {
+      "id": "macbook-pro-16-inch-m4-max-nov-2024-mac16-5",
+      "namen": [
+        "macbook pro (16-inch, m4 max, nov 2024)",
+        "macbook pro",
+        "mac16,5"
+      ],
+      "a": [
+        "A3186"
+      ],
+      "emc": [],
+      "jahr": "2024",
+      "chip": "M4 Max",
+      "ram": ""
+    },
+    {
+      "id": "macbook-pro-16-inch-m4-pro-nov-2024-mac16-7",
+      "namen": [
+        "macbook pro (16-inch, m4 pro, nov 2024)",
+        "macbook pro",
+        "mac16,7"
+      ],
+      "a": [
+        "A3403"
+      ],
+      "emc": [],
+      "jahr": "2024",
+      "chip": "M4 Pro",
+      "ram": ""
+    },
+    {
+      "id": "macbook-pro-16-inch-m5-max-mac17-6",
+      "namen": [
+        "macbook pro (16-inch, m5 max)",
+        "macbook pro",
+        "mac17,6"
+      ],
+      "a": [
+        "A3429"
+      ],
+      "emc": [],
+      "jahr": "2026",
+      "chip": "M5 Max",
+      "ram": ""
+    },
+    {
+      "id": "macbook-pro-16-inch-m5-pro-mac17-8",
+      "namen": [
+        "macbook pro (16-inch, m5 pro)",
+        "macbook pro",
+        "mac17,8"
+      ],
+      "a": [
+        "A3428"
+      ],
+      "emc": [],
+      "jahr": "2026",
+      "chip": "M5 Pro",
+      "ram": ""
+    },
+    {
+      "id": "macbook-pro-17-inch-early-2006-macbookpro1-2",
+      "namen": [
+        "macbook pro (17-inch, early 2006)",
+        "macbook pro",
+        "macbookpro1,2"
+      ],
+      "a": [
+        "A1151"
+      ],
+      "emc": [],
+      "jahr": "2006",
+      "chip": "",
+      "ram": ""
+    },
+    {
+      "id": "macbook-pro-17-inch-early-2008-macbookpro4-1",
+      "namen": [
+        "macbook pro (17-inch, early 2008)",
+        "macbook pro",
+        "macbookpro4,1"
+      ],
+      "a": [
+        "A1261"
+      ],
+      "emc": [],
+      "jahr": "2008",
+      "chip": "",
+      "ram": ""
+    },
+    {
+      "id": "macbook-pro-17-inch-early-2009-macbookpro5-2",
+      "namen": [
+        "macbook pro (17-inch, early 2009)",
+        "macbook pro",
+        "macbookpro5,2"
+      ],
+      "a": [
+        "A1297"
+      ],
+      "emc": [],
+      "jahr": "2009",
+      "chip": "",
+      "ram": ""
+    },
+    {
+      "id": "macbook-pro-17-inch-late-2006-macbookpro2-1",
+      "namen": [
+        "macbook pro (17-inch, late 2006)",
+        "macbook pro",
+        "macbookpro2,1"
+      ],
+      "a": [
+        "A1212"
+      ],
+      "emc": [],
+      "jahr": "2006",
+      "chip": "",
+      "ram": ""
+    },
+    {
+      "id": "macbook-pro-17-inch-late-2007-macbookpro3-1",
+      "namen": [
+        "macbook pro (17-inch, late 2007)",
+        "macbook pro",
+        "macbookpro3,1"
+      ],
+      "a": [
+        "A1229"
+      ],
+      "emc": [],
+      "jahr": "2007",
+      "chip": "",
+      "ram": ""
+    },
+    {
+      "id": "macbook-pro-retina-13-inch-early-2013-macbookpro10-2",
+      "namen": [
+        "macbook pro (retina, 13-inch, early 2013)",
+        "macbook pro",
+        "macbookpro10,2"
+      ],
+      "a": [
+        "A1425"
+      ],
+      "emc": [],
+      "jahr": "2013",
+      "chip": "",
+      "ram": ""
+    },
+    {
+      "id": "macbook-pro-retina-13-inch-late-2013-macbookpro11-1",
+      "namen": [
+        "macbook pro (retina, 13-inch, late 2013)",
+        "macbook pro",
+        "macbookpro11,1"
+      ],
+      "a": [
+        "A1502"
+      ],
+      "emc": [],
+      "jahr": "2013",
+      "chip": "",
+      "ram": ""
+    },
+    {
+      "id": "macbook-pro-retina-15-inch-early-2013-macbookpro10-1",
+      "namen": [
+        "macbook pro (retina, 15-inch, early 2013)",
+        "macbook pro",
+        "macbookpro10,1"
+      ],
+      "a": [
+        "A1398"
+      ],
+      "emc": [],
+      "jahr": "2013",
+      "chip": "",
+      "ram": ""
+    },
+    {
+      "id": "macbook-retina-12-inch-2017-macbook10-1",
+      "namen": [
+        "macbook (retina, 12-inch, 2017)",
+        "macbook",
+        "macbook10,1"
+      ],
+      "a": [
+        "A1534"
+      ],
+      "emc": [],
+      "jahr": "2017",
+      "chip": "",
+      "ram": ""
+    },
+    {
+      "id": "mini-m1-2020",
+      "namen": [
+        "mac mini m1",
+        "mac mini 2020",
+        "mini m1"
+      ],
+      "a": [
+        "A2348"
+      ],
+      "emc": [],
+      "jahr": "2020",
+      "chip": "M1",
+      "ram": "8 GB"
+    },
+    {
+      "id": "pro13-2008-2012",
+      "namen": [
+        "macbook a1278",
+        "macbook 13 a1278",
+        "macbook pro 13 2010",
+        "macbook pro 13 2011",
+        "macbook pro 13 2012"
+      ],
+      "a": [
+        "A1278"
+      ],
+      "emc": [],
+      "jahr": "2008–2012",
+      "chip": "Core 2 Duo",
+      "ram": "4 GB"
+    },
+    {
+      "id": "pro13-2019",
+      "namen": [
+        "macbook pro 13 2019",
+        "macbook pro 2019"
+      ],
+      "a": [
+        "A2159"
+      ],
+      "emc": [],
+      "jahr": "2019",
+      "chip": "Intel i5",
+      "ram": "8 GB"
+    },
+    {
+      "id": "pro13-intel-2020",
+      "namen": [
+        "macbook pro 13 2020",
+        "macbook pro 13 intel"
+      ],
+      "a": [
+        "A2289"
+      ],
+      "emc": [],
+      "jahr": "2020",
+      "chip": "Intel i5",
+      "ram": "8 GB"
+    },
+    {
+      "id": "pro13-m1-2020",
+      "namen": [
+        "macbook pro m1",
+        "macbook pro 13 m1",
+        "macbook pro 2020",
+        "pro m1"
+      ],
+      "a": [
+        "A2338"
+      ],
+      "emc": [],
+      "jahr": "2020",
+      "chip": "M1",
+      "ram": "8 GB"
+    },
+    {
+      "id": "pro13-m2-2022",
+      "namen": [
+        "macbook pro m2",
+        "macbook pro 13 2022"
+      ],
+      "a": [
+        "A2338"
+      ],
+      "emc": [],
+      "jahr": "2022",
+      "chip": "M2",
+      "ram": "8 GB"
+    },
+    {
+      "id": "pro14-m1-2021",
+      "namen": [
+        "macbook pro 14",
+        "macbook pro 14 m1",
+        "macbook pro 2021",
+        "pro 14"
+      ],
+      "a": [
+        "A2442"
+      ],
+      "emc": [],
+      "jahr": "2021",
+      "chip": "M1 Pro",
+      "ram": "16 GB"
+    },
+    {
+      "id": "pro14-m3-2023",
+      "namen": [
+        "macbook pro 14 m3",
+        "macbook pro 2023"
+      ],
+      "a": [
+        "A2992"
+      ],
+      "emc": [],
+      "jahr": "2023",
+      "chip": "M3",
+      "ram": "8 GB"
+    },
+    {
+      "id": "pro15-2019",
+      "namen": [
+        "macbook pro 15 2019",
+        "macbook pro 15 i7",
+        "macbook pro 15 i9"
+      ],
+      "a": [
+        "A1990"
+      ],
+      "emc": [],
+      "jahr": "2019",
+      "chip": "Intel i7",
+      "ram": "16 GB"
+    },
+    {
+      "id": "pro16-i9-2019",
+      "namen": [
+        "macbook pro 16 2019",
+        "macbook pro 16 i9",
+        "pro 16 i9"
+      ],
+      "a": [
+        "A2141"
+      ],
+      "emc": [],
+      "jahr": "2019",
+      "chip": "i9 Intel",
+      "ram": "16 GB"
+    },
+    {
+      "id": "pro16-m1-2021",
+      "namen": [
+        "macbook pro 16",
+        "macbook pro 16 m1",
+        "pro 16"
+      ],
+      "a": [
+        "A2485"
+      ],
+      "emc": [],
+      "jahr": "2021",
+      "chip": "M1 Pro",
+      "ram": "16 GB"
+    },
+    {
+      "id": "pro16-m3-2023",
+      "namen": [
+        "macbook pro 16 m3"
+      ],
+      "a": [
+        "A2991"
+      ],
+      "emc": [],
+      "jahr": "2023",
+      "chip": "M3 Pro",
+      "ram": "18 GB"
+    },
+    {
+      "id": "studio-m1-2022",
+      "namen": [
+        "mac studio",
+        "mac studio m1",
+        "mac studio 2022"
+      ],
+      "a": [
+        "A2615"
+      ],
+      "emc": [],
+      "jahr": "2022",
+      "chip": "M1 Max",
+      "ram": "32 GB"
+    },
+    {
+      "id": "unreleased-macbook-pro",
+      "namen": [
+        "unreleased macbook pro"
+      ],
+      "a": [
+        "A2147",
+        "A2158",
+        "A2182"
+      ],
+      "emc": [],
+      "jahr": "",
+      "chip": "",
+      "ram": ""
+    },
+    {
+      "id": "watch-s8-2022",
+      "namen": [
+        "apple watch series 8",
+        "apple watch 8",
+        "watch 8"
+      ],
+      "a": [],
+      "emc": [],
+      "jahr": "2022",
+      "chip": "S8",
+      "ram": ""
+    },
+    {
+      "id": "watch-s9-2023",
+      "namen": [
+        "apple watch series 9",
+        "apple watch 9",
+        "watch 9"
+      ],
+      "a": [],
+      "emc": [],
+      "jahr": "2023",
+      "chip": "S9",
+      "ram": ""
+    },
+    {
+      "id": "watch-ultra2-2023",
+      "namen": [
+        "apple watch ultra 2",
+        "watch ultra 2",
+        "ultra 2"
+      ],
+      "a": [],
+      "emc": [],
+      "jahr": "2023",
+      "chip": "S9",
+      "ram": ""
+    }
   ]
 }
