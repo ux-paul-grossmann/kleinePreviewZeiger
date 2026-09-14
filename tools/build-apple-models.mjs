@@ -56,6 +56,14 @@ function sammleAppleDB() {
           if (name) alias.add(name.toLowerCase());
           const kurz = name.replace(/\s*\(.*?\)\s*/g, " ").trim().toLowerCase();
           if (kurz && kurz !== name.toLowerCase()) alias.add(kurz);
+          // Größe-Alias wie "macbook pro 15" für Titel "MacBook Pro 15\" 2017"
+          const inch = name.match(/(\d{2})\s*-?inch/i);
+          if (inch) {
+            const base = kurz.split(/\s+/).slice(0, 3).join(" "); // z.B. "macbook pro"
+            if (base) alias.add(`${base} ${inch[1]}`.trim().toLowerCase());
+            alias.add(`macbook pro ${inch[1]}`.toLowerCase());
+            alias.add(`macbook air ${inch[1]}`.toLowerCase());
+          }
           if (identifier) alias.add(identifier.toLowerCase());
           out.push({
             _src: `appledb:${path.relative(APPLEDB_ROOT, p)}`,
