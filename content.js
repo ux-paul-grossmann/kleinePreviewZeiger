@@ -896,16 +896,24 @@
         cpu = cpu.replace(/\s*mit\s*/i, " ").trim();
       }
       badges.push({ text: cpu, tone: "cpu" });
+    } else {
+      // Fallback: nacktes "i5"/"i7" ohne GHz-Angabe
+      const cpuBare = t.match(/\bi([3579])\b/i);
+      if (cpuBare) badges.push({ text: "i" + cpuBare[1], tone: "cpu" });
     }
-    // RAM: "16 GB RAM", "8GB RAM", "16GB" nahe RAM
-    const ramM = t.match(/(\d+)\s*GB\s*RAM/i);
-    if (ramM) {
-      const gb = parseInt(ramM[1], 10);
+    // RAM: "16 GB RAM" explizit, sonst nacktes "4GB"/"16 GB" ohne SSD dahinter
+    const ramExp = t.match(/(\d+)\s*GB\s*RAM/i);
+    let ramGb = ramExp ? parseInt(ramExp[1], 10) : null;
+    if (ramGb === null) {
+      const ramBare = t.match(/(\d+)\s*GB(?!\s*SSD)/i);
+      if (ramBare) ramGb = parseInt(ramBare[1], 10);
+    }
+    if (ramGb !== null) {
       let tone = "ram";
-      if (gb >= 16) tone = "good";
-      else if (gb >= 8) tone = "mid";
+      if (ramGb >= 16) tone = "good";
+      else if (ramGb >= 8) tone = "mid";
       else tone = "bad";
-      badges.push({ text: gb + " GB RAM", tone });
+      badges.push({ text: ramGb + " GB RAM", tone });
     }
     // SSD / Storage: "512 GB SSD", "1 TB SSD", "240GB SSD"
     const ssdM = t.match(/(\d+(?:[.,]\d+)?)\s*(GB|TB)\s*SSD/i);
@@ -984,12 +992,29 @@
     });
     if (treffer.some((t) => t.bestIsA)) treffer = treffer.filter((t) => t.bestIsA);
     else {
-      // Generisch ohne Ziffer (z.B. nur "macbook pro", Tasche/Kabel) -> keine Tags,
+      // MagSafe ohne Rechner-Treffer -> Kompatibilitäts-Tags statt nichts
+      const magsafe = textGross.match(/\bMAGSAFE\s*([12])\b/) || textGross.match(/\bMAGSAFE\b/);
+      if (magsafe) {
+        const generation = magsafe[1] || "1";
+        const liste = generation === "2"
+          ? ["MBA 2012–17", "MBP 13 Retina 2012–15", "MBP 15 Retina 2012–15"]
+          : ["MB 13 2006–10", "MBP 13 2009–12", "MBP 15 2008–12", "MBP 17 2008–11", "MBA 2008–12"];
+        return liste.map((text) => ({ text }));
+      }
+      // Generisch ohne Ziffer (z.B. nur "macbook pro", Tasche) -> keine Tags,
       // außer Jahr im Text stützt (z.B. "Anfang 2015" + "macbook pro")
       if (!jahreImText.length) treffer = treffer.filter((t) => /\d/.test(t.fund));
       if (!treffer.length) return treffer;
       const maxLen = Math.max(...treffer.map((t) => t.bestLen || 0));
       treffer = treffer.filter((t) => t.bestLen === maxLen);
+    }
+    // Größe im Text ("13 Zoll", '15"', "13-inch") -> nur passende Displaygröße
+    const groesseM = String(textRoh || "").match(/(\d{2})(?:[.,]\d+)?\s*(?:zoll|inch|")/i);
+    if (groesseM) {
+      const sz = groesseM[1];
+      const re = new RegExp(`\\b${sz}\\b`);
+      const mitGroesse = treffer.filter((t) => re.test(((t.modell.namen || []).join(" ") + " " + t.modell.id).toLowerCase()));
+      if (mitGroesse.length) treffer = mitGroesse;
     }
     if (jahreImText.length && treffer.some((t) => jahrPasst(t.modell.jahr, jahreImText, 1))) {
       const gefiltert = treffer.filter((t) => jahrPasst(t.modell.jahr, jahreImText, 1));
@@ -1018,8 +1043,13 @@
       treffer = treffer.filter((t) => t.aNr !== nr);
       treffer.push({ modell: gruppe[0].modell, fund: nr, aNr: nr, bestLen: 100, text: textNeu });
     });
-    // Jahr-Nähe, max 3
-    const jahrScore = (jahrStr) => jahrPasst(jahrStr, jahreImText, 0) ? 2 : jahrPasst(jahrStr, jahreImText, 1) ? 1 : 0;
+    // Jahr-Nähe exakt (3) > Bereich/Toleranz (2/1), max 3
+    const jahrScore = (jahrStr) => {
+      if (!jahreImText.length) return 0;
+      const s = String(jahrStr || "").trim();
+      if (jahreImText.some((y) => s === String(y))) return 3;
+      return jahrPasst(jahrStr, jahreImText, 0) ? 2 : jahrPasst(jahrStr, jahreImText, 1) ? 1 : 0;
+    };
     treffer.sort((a, b) => {
       const len = (b.bestLen || 0) - (a.bestLen || 0);
       if (len !== 0) return len;
