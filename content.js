@@ -837,7 +837,7 @@
       mapsUrl = `https://www.google.com/maps/search/?api=1&query=`;
     }
 
-    const zoomLevels = ["1.5x", "2.0x", "2.5x", "3.0x", "4.0x"];
+    const zoomLevels = ["1.5x", "2.0x", "2.5x", "3.0x", "4.0x", "8.0x"];
 
     previewCard.innerHTML = `
       <div class="kb-arrow" id="kb-arrow"></div>
