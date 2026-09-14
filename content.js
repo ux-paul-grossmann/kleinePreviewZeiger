@@ -995,7 +995,6 @@
         <h4 class="kb-title">${title}</h4>
         ${modAn("kbModPreis") ? `<span class="kb-price">${price}</span>` : ""}
       </div>
-      ${appleTags}
       ${modAn("kbModDetails") ? `<div class="kb-details">
         ${modAn("kbModStandort") ? `<p class="kb-location">
           <svg class="kb-location-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="14" height="14" fill="var(--kb-text-muted)">
@@ -1009,6 +1008,7 @@
         <a href="${url}" target="_blank" rel="noopener noreferrer" class="kb-btn kb-btn-primary">Anzeige ansehen <svg class="kb-btn-icon" viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg></a>
         ${modAn("kbModRoute") ? `<a href="${mapsUrl}" target="_blank" rel="noopener noreferrer" class="kb-btn kb-btn-secondary">Route planen</a>` : ""}
       </div>
+      ${appleTags ? `<div class="kb-apple-card"><div class="kb-apple-label">Apple Identifier</div>${appleTags}</div>` : ""}
       <div class="kb-debug-row">
         <button class="kb-debug-toggle" id="kb-debug-toggle" aria-label="Zonen-Debug an/aus">Zonen</button>
         <button class="kb-debug-toggle" id="kb-transp-toggle" aria-label="Card transparent an/aus">Transparent</button>

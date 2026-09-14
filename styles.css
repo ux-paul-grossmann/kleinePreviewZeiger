@@ -701,7 +701,24 @@
   background-color: rgba(56, 189, 248, 0.15) !important;
 }
 
-/* Apple Tags: Pillen unter dem Titel mit Erkennung */
+/* Apple Card: Control Center Stil unter den Aktions Knöpfen */
+.kb-apple-card {
+  background: var(--kb-img-bg);
+  border: 1px solid var(--kb-border);
+  border-radius: 12px;
+  padding: 10px 12px;
+  margin-top: 10px;
+}
+
+.kb-apple-label {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--kb-text-main);
+  letter-spacing: 0.02em;
+  margin-bottom: 2px;
+}
+
+/* Apple Tags: Pillen in der Apple Card */
 .kb-apple-tags {
   display: flex;
   flex-wrap: wrap;
