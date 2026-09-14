@@ -165,6 +165,17 @@ document.addEventListener("DOMContentLoaded", () => {
   saveBtn.addEventListener("click", save);
   homeInput.addEventListener("keydown", (e) => { if (e.key === "Enter") { e.preventDefault(); save(); } });
 
+  // Apple Vorlage: Ausgabe Format laden und bei Eingabe speichern
+  const appleTemplate = document.getElementById("appleTemplate");
+  if (appleTemplate) {
+    chrome.storage.local.get(["kbAppleTemplate"], (r) => {
+      if (r.kbAppleTemplate) appleTemplate.value = r.kbAppleTemplate;
+    });
+    appleTemplate.addEventListener("change", (e) => {
+      chrome.storage.local.set({ kbAppleTemplate: e.target.value });
+    });
+  }
+
   // Akzentfarbe: Punkte synchronisieren, Auswahl speichern (Standard mehrfarbig)
   const accentDots = [...document.querySelectorAll(".accent-dot")];
   const syncAccentDots = (wert) => {

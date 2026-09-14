@@ -319,6 +319,10 @@
         if (!showTrackLog) lastTrackSig = "";
         syncCardDebugButtons();
       }
+      // Apple Vorlage: Ausgabe Format aus Popup übernehmen
+      if (area === "local" && changes.kbAppleTemplate) {
+        appleVorlage = changes.kbAppleTemplate.newValue || "{name} | {jahr} | {chip} | {ram}";
+      }
       // Advanced View Module: Stand merken, offene Preview-Card live neu aufbauen
       if (area === "local") {
         let modWechsel = false;
@@ -327,7 +331,7 @@
           if (k.indexOf("kbMod") === 0 || k.indexOf("kbTether") === 0) {
             mod[k] = changes[k].newValue;
             modWechsel = true;
-            if (k === "kbModZoom" || k === "kbModDetails" || k === "kbModStandort" || k === "kbModPreis" || k === "kbModRoute" || k === "kbModArrow" || k === "kbModArrowGeometrie") {
+            if (k === "kbModZoom" || k === "kbModDetails" || k === "kbModStandort" || k === "kbModPreis" || k === "kbModRoute" || k === "kbModArrow" || k === "kbModArrowGeometrie" || k === "kbModApple" || k === "kbAppleTemplate") {
               renderWechsel = true;
             }
           }
@@ -356,9 +360,18 @@
       }
     }
     // Advanced View Module: Stände einmalig laden
-    const MOD_SCHLUESSEL = ["kbModZoom", "kbModDetails", "kbModStandort", "kbModPreis", "kbModRoute", "kbModSwipe", "kbModSwipeUebergang", "kbModPositioning", "kbModPositionZonen", "kbModPositionAbstand", "kbModPositionFlip", "kbModPositionClamp", "kbModPositionStuck", "kbModTether", "kbTetherRichtung", "kbTetherDistanz", "kbModPositionVoraus", "kbModPositionRuder", "kbModPositionEngstellen", "kbModPositionFreeze", "kbModPositionWachstum", "kbModPositionHysterese", "kbModArrow", "kbModArrowGeometrie"];
+    const MOD_SCHLUESSEL = ["kbModZoom", "kbModDetails", "kbModStandort", "kbModPreis", "kbModRoute", "kbModSwipe", "kbModSwipeUebergang", "kbModApple", "kbModPositioning", "kbModPositionZonen", "kbModPositionAbstand", "kbModPositionFlip", "kbModPositionClamp", "kbModPositionStuck", "kbModTether", "kbTetherRichtung", "kbTetherDistanz", "kbModPositionVoraus", "kbModPositionRuder", "kbModPositionEngstellen", "kbModPositionFreeze", "kbModPositionWachstum", "kbModPositionHysterese", "kbModArrow", "kbModArrowGeometrie"];
     chrome.storage.local.get(MOD_SCHLUESSEL, (r) => {
       mod = r;
+    });
+    // Apple Module: Modelle und Vorlage einmalig laden
+    ladeAppleModelle();
+    chrome.storage.local.get(["kbAppleTemplate"], (r) => {
+      if (r.kbAppleTemplate) appleVorlage = r.kbAppleTemplate;
+    });
+    // Apple Vorlage: Ausgabe Format aus Popup übernehmen
+    chrome.storage.local.get(["kbAppleTemplate"], (r) => {
+      if (r.kbAppleTemplate) appleVorlage = r.kbAppleTemplate;
     });
     // Popup Akzent: initial auf den Hauptknopf anwenden
     chrome.storage.local.get(["kbAccent"], (r) => {
@@ -819,6 +832,91 @@
     };
   }
 
+  // Apple Identifier Modul: kuratierte Modelle laden, Treffer als Tags zeigen
+  let APPLE_MODELLE = [];
+  let appleVorlage = "{name} | {jahr} | {chip} | {ram}";
+  async function ladeAppleModelle() {
+    if (APPLE_MODELLE.length) return;
+    try {
+      const basis = (typeof chrome !== "undefined" && chrome.runtime && chrome.runtime.getURL) ? chrome.runtime.getURL("apple-models.json") : "apple-models.json";
+      const antwort = await fetch(basis);
+      const daten = await antwort.json();
+      if (daten && daten.modelle) APPLE_MODELLE = daten.modelle;
+    } catch (fehler) { /* ohne Modelle keine Tags */ }
+  }
+  function appleNormalisieren(text) {
+    return String(text || "").toLowerCase().replace(/\s+/g, " ");
+  }
+  function wortTreffer(text, alias) {
+    const muster = alias.replace(/[.*+?^${}()|[\]\\]/g, "\\$&").replace(/ /g, "\\s+");
+    return new RegExp(`(^|[^a-z0-9])${muster}([^a-z0-9]|$)`, "i").test(text);
+  }
+  // Seriennummer Baujahr Codes, ca. Werte, ab 2021 zufällig ohne Info
+  const SN_JAHR = { C: "2010", D: "2011", F: "2012", G: "2013", H: "2014", J: "2015", K: "2016", L: "2017", M: "2018", N: "2019", P: "2020", Q: "2020", R: "2021", S: "2021", T: "2021" };
+  function dekodiereSeriennummer(sn) {
+    if (!/^[A-Z0-9]{12}$/.test(sn)) return null;
+    const jahr = SN_JAHR[sn.charAt(3)];
+    return jahr ? `ca. ${jahr}` : "zufällig";
+  }
+  function appleAnzeigeName(alias) {
+    const SONDER = { iphone: "iPhone", ipad: "iPad", macbook: "MacBook", imac: "iMac", watch: "Watch", apple: "Apple", ultra: "Ultra", series: "Series", mini: "Mini", studio: "Studio", pro: "Pro", max: "Max", air: "Air" };
+    return String(alias || "").split(" ").map((w) => {
+      const klein = w.toLowerCase();
+      if (SONDER[klein]) return SONDER[klein];
+      if (/^[a-z]+\d+$/i.test(w) || /^\d/.test(w)) return w.toUpperCase();
+      return w.charAt(0).toUpperCase() + w.slice(1);
+    }).join(" ");
+  }
+  function wendeAppleTemplate(vorlage, modell) {
+    const text = String(vorlage || "{name} | {jahr} | {chip} | {ram}")
+      .replace("{name}", appleAnzeigeName(modell.namen[0] || ""))
+      .replace("{jahr}", modell.jahr || "")
+      .replace("{chip}", modell.chip || "")
+      .replace("{ram}", modell.ram || "");
+    return text.split("|").map((s) => s.trim()).filter((s) => s).join(" | ");
+  }
+  // Erkennung: Marketing Namen und Nummern aus Titel plus Beschreibung fischen
+  // Treffer als {text} für Tags, maximal 6, Modelle zuerst
+  function erkenneApple(textRoh) {
+    const treffer = [];
+    const gesehen = {};
+    if (!APPLE_MODELLE.length) return treffer;
+    const text = appleNormalisieren(textRoh);
+    const textGross = String(textRoh || "").toUpperCase();
+    APPLE_MODELLE.forEach((m) => {
+      let fund = "";
+      (m.namen || []).forEach((n) => { if (!fund && wortTreffer(text, n)) fund = n; });
+      (m.a || []).forEach((nr) => {
+        if (!fund && new RegExp(`\\b${nr}\\b`, "i").test(textGross)) fund = nr;
+      });
+      (m.emc || []).forEach((nr) => {
+        if (!fund && new RegExp(`\\bEMC\\s?${nr}\\b`, "i").test(textGross)) fund = "EMC " + nr;
+      });
+      if (fund && !gesehen[m.id]) {
+        gesehen[m.id] = true;
+        treffer.push({ text: wendeAppleTemplate(appleVorlage, m) });
+      }
+    });
+    const rohNr = (muster, markierung) => {
+      const gefunden = textGross.match(muster) || [];
+      gefunden.forEach((nr) => {
+        if (treffer.length < 6 && !treffer.some((t) => t.text.indexOf(nr) !== -1)) {
+          treffer.push({ text: markierung ? `${markierung} ${nr}` : nr });
+        }
+      });
+    };
+    rohNr(/\bA\d{4}\b/g, "");
+    rohNr(/\bEMC\s?\d{3,4}\b/g, "");
+    const sns = textGross.match(/\b(?=[A-Z0-9]*[0-9])(?=[A-Z0-9]*[A-Z])[A-Z0-9]{12}\b/g) || [];
+    sns.forEach((sn) => {
+      if (treffer.length < 6 && !treffer.some((t) => t.text.indexOf(sn) !== -1)) {
+        const jahr = dekodiereSeriennummer(sn);
+        treffer.push({ text: jahr ? `SN ${sn} (${jahr})` : `SN ${sn}` });
+      }
+    });
+    return treffer;
+  }
+
   // Preview-Card Inhalt aufbauen und alle Schalter in der Preview-Card verdrahten
   function renderCardContent(data, title, price, url) {
     letztePreviewCard = { data, title, price, url };
@@ -838,6 +936,15 @@
     }
 
     const zoomLevels = ["1.5x", "2.0x", "2.5x", "3.0x", "4.0x", "8.0x"];
+
+    // Apple Tags: Treffer vorab als Pillen HTML aufbereiten
+    let appleTags = "";
+    if (modAn("kbModApple")) {
+      const appleTreffer = erkenneApple(title + "\n" + data.description);
+      if (appleTreffer.length) {
+        appleTags = `<div class="kb-apple-tags">${appleTreffer.map((t) => `<span class="kb-apple-tag">${t.text}</span>`).join("")}</div>`;
+      }
+    }
 
     previewCard.innerHTML = `
       <div class="kb-arrow" id="kb-arrow"></div>
@@ -888,6 +995,7 @@
         <h4 class="kb-title">${title}</h4>
         ${modAn("kbModPreis") ? `<span class="kb-price">${price}</span>` : ""}
       </div>
+      ${appleTags}
       ${modAn("kbModDetails") ? `<div class="kb-details">
         ${modAn("kbModStandort") ? `<p class="kb-location">
           <svg class="kb-location-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="14" height="14" fill="var(--kb-text-muted)">

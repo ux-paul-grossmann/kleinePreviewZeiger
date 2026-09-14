@@ -465,6 +465,23 @@
       <div class="hint" style="margin-top:6px;">Text, Standort und Preis einzeln schaltbar</div>
     </div>
 
+    <!-- Preview-Card: Apple Identifier erkennen und als Tags zeigen -->
+    <div class="card">
+      <div class="card-header">
+        <label for="modApple" style="margin:0;">Apple Identifier</label>
+        <label class="switch">
+          <input type="checkbox" id="modApple" data-kb-key="kbModApple" data-kb-default="true">
+          <span class="slider"></span>
+        </label>
+      </div>
+      <div class="hint" style="margin-top:0;">Namen, A Nummern, EMC und Seriennummern aus Titel und Beschreibung</div>
+      <label for="appleTemplate" style="margin-top:8px;">Ausgabe Format</label>
+      <div class="input-wrap">
+        <input id="appleTemplate" type="text" value="{name} | {jahr} | {chip} | {ram}">
+      </div>
+      <div class="hint">Platzhalter: {name} {jahr} {chip} {ram}, Samsung später</div>
+    </div>
+
     <!-- Preview-Card: Positionierung mit Sub Modulen -->
     <div class="card">
       <div class="card-header">
