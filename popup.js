@@ -64,8 +64,13 @@ document.addEventListener("DOMContentLoaded", () => {
       if (!s.dataset.kbVerbunden) {
         s.dataset.kbVerbunden = "ja";
         s.addEventListener("change", (e) => {
-          chrome.storage.local.set({ [s.dataset.kbKey]: e.target.checked });
-          if (s.dataset.kbKey.indexOf("kbMod") === 0) updateModSubs();
+          const schluessel = s.dataset.kbKey;
+          const wert = e.target.checked;
+          // Erst schreiben, dann lesen: sonst liefert Lesen den alten Stand
+          chrome.storage.local.set({ [schluessel]: wert }, () => {
+            if (schluessel.indexOf("kbMod") === 0) updateModSubs();
+            if (schluessel === "kbPopupX") syncPopupX();
+          });
         });
       }
     });
