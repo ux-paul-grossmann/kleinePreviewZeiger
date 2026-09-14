@@ -846,11 +846,13 @@
     } catch (fehler) { /* ohne Modelle keine Tags */ }
   }
   function appleNormalisieren(text) {
-    return String(text || "").toLowerCase().replace(/\s+/g, " ");
+    return String(text || "").toLowerCase().replace(/[^a-z0-9]+/g, " ").replace(/\s+/g, " ").trim();
   }
   function wortTreffer(text, alias) {
-    const muster = alias.replace(/[.*+?^${}()|[\]\\]/g, "\\$&").replace(/ /g, "\\s+");
-    return new RegExp(`(^|[^a-z0-9])${muster}([^a-z0-9]|$)`, "i").test(text);
+    const a = String(alias || "").toLowerCase().replace(/[^a-z0-9]+/g, " ").replace(/\s+/g, " ").trim();
+    if (!a) return false;
+    const muster = a.replace(/[.*+?^${}()|[\]\\]/g, "\\$&").replace(/ /g, "\\s+");
+    return new RegExp(`(^| )${muster}( |$)`, "i").test(text);
   }
   // Seriennummer Baujahr Codes, ca. Werte, ab 2021 zufällig ohne Info
   const SN_JAHR = { C: "2010", D: "2011", F: "2012", G: "2013", H: "2014", J: "2015", K: "2016", L: "2017", M: "2018", N: "2019", P: "2020", Q: "2020", R: "2021", S: "2021", T: "2021" };
@@ -885,21 +887,61 @@
     if (!APPLE_MODELLE.length) return treffer;
     const text = appleNormalisieren(textRoh);
     const textGross = String(textRoh || "").toUpperCase();
+    // Jahre aus Text ziehen für Filter (2006-2026)
+    const jahreImText = (textGross.match(/\b(20\d{2})\b/g) || []).map((x) => parseInt(x, 10)).filter((y) => y >= 2006 && y <= 2026);
+    const jahrPasst = (jahrStr, ziel, tol) => {
+      if (!jahrStr || !ziel.length) return false;
+      const t = tol || 0;
+      return ziel.some((y) => {
+        if (jahrStr.indexOf(String(y)) !== -1) return true;
+        const vonBis = jahrStr.match(/(\d{4})\D+(\d{4})/);
+        if (vonBis) { const a = parseInt(vonBis[1], 10), b = parseInt(vonBis[2], 10); return y >= Math.min(a, b) - t && y <= Math.max(a, b) + t; }
+        const j = parseInt(jahrStr, 10);
+        return !isNaN(j) && Math.abs(j - y) <= t;
+      });
+    };
     APPLE_MODELLE.forEach((m) => {
-      let fund = "";
-      (m.namen || []).forEach((n) => { if (!fund && wortTreffer(text, n)) fund = n; });
+      let best = "", bestLen = 0, bestIsA = false;
+      (m.namen || []).forEach((n) => { if (wortTreffer(text, n) && n.length > bestLen) { best = n; bestLen = n.length; bestIsA = false; } });
       (m.a || []).forEach((nr) => {
-        if (!fund && new RegExp(`\\b${nr}\\b`, "i").test(textGross)) fund = nr;
+        if (new RegExp(`\\b${nr}\\b`, "i").test(textGross)) {
+          const len = 100 + nr.length;
+          if (len > bestLen) { best = nr; bestLen = len; bestIsA = true; }
+        }
       });
       (m.emc || []).forEach((nr) => {
-        if (!fund && new RegExp(`\\bEMC\\s?${nr}\\b`, "i").test(textGross)) fund = "EMC " + nr;
+        const emc = "EMC " + nr;
+        if (new RegExp(`\\bEMC\\s?${nr}\\b`, "i").test(textGross)) {
+          const len = 100 + emc.length;
+          if (len > bestLen) { best = emc; bestLen = len; bestIsA = true; }
+        }
       });
-      if (fund && !gesehen[m.id]) {
+      if (best && !gesehen[m.id]) {
+        if (bestLen < 12 && !/^A\d{4}$/i.test(best) && !/^EMC/i.test(best)) {
+          if (jahreImText.length && !jahrPasst(m.jahr, jahreImText, 1)) return;
+        }
         gesehen[m.id] = true;
-        const aNr = /^A\d{4}$/i.test(fund) ? fund.toUpperCase() : "";
-        treffer.push({ modell: m, fund, aNr, text: wendeAppleTemplate(appleVorlage, m) });
+        const aNr = /^A\d{4}$/i.test(best) ? best.toUpperCase() : "";
+        treffer.push({ modell: m, fund: best, bestLen, bestIsA, aNr, text: wendeAppleTemplate(appleVorlage, m) });
       }
     });
+    if (treffer.some((t) => t.bestIsA)) treffer = treffer.filter((t) => t.bestIsA);
+    else {
+      const maxLen = Math.max(...treffer.map((t) => t.bestLen || 0));
+      treffer = treffer.filter((t) => t.bestLen === maxLen);
+    }
+    if (jahreImText.length && treffer.some((t) => jahrPasst(t.modell.jahr, jahreImText, 1))) {
+      const gefiltert = treffer.filter((t) => jahrPasst(t.modell.jahr, jahreImText, 1));
+      if (gefiltert.length) treffer = gefiltert;
+    }
+    // Jahr-Nähe, max 3
+    const jahrScore = (jahrStr) => jahrPasst(jahrStr, jahreImText, 0) ? 2 : jahrPasst(jahrStr, jahreImText, 1) ? 1 : 0;
+    treffer.sort((a, b) => {
+      const len = (b.bestLen || 0) - (a.bestLen || 0);
+      if (len !== 0) return len;
+      return jahrScore(b.modell.jahr) - jahrScore(a.modell.jahr);
+    });
+    if (treffer.length > 3) treffer = treffer.slice(0, 3);
     // A Nummern Gruppen mit mehr als einem Modell zu Bereich Tags verdichten
     const gruppen = {};
     treffer.forEach((t) => {

@@ -4,7 +4,7 @@
     "https://github.com/littlebyteorg/appledb (MIT)",
     "https://github.com/pbakondy/ios-device-list (MIT)"
   ],
-  "_erzeugt": "2026-09-14T03:16:14.607Z",
+  "_erzeugt": "2026-09-14T03:42:28.476Z",
   "modelle": [
     {
       "id": "air-13-2011",
@@ -29,7 +29,9 @@
         "macbook air 2014",
         "macbook air 2015",
         "macbook air 2017",
-        "macbook air a1466"
+        "macbook air a1466",
+        "macbook air 13",
+        "macbook air 13 2015"
       ],
       "a": [
         "A1466"
@@ -5071,7 +5073,8 @@
       "namen": [
         "macbook air (11-inch, late 2010)",
         "macbook air",
-        "macbookair3,1"
+        "macbookair3,1",
+        "macbook air 11"
       ],
       "a": [
         "A1370"
@@ -5086,7 +5089,8 @@
       "namen": [
         "macbook air (11-inch, mid 2012)",
         "macbook air",
-        "macbookair5,1"
+        "macbookair5,1",
+        "macbook air 11"
       ],
       "a": [
         "A1465"
@@ -5101,7 +5105,8 @@
       "namen": [
         "macbook air (13-inch, m4, 2025)",
         "macbook air",
-        "mac16,12"
+        "mac16,12",
+        "macbook air 13"
       ],
       "a": [
         "A3240"
@@ -5116,7 +5121,8 @@
       "namen": [
         "macbook air (13-inch, m5)",
         "macbook air",
-        "mac17,3"
+        "mac17,3",
+        "macbook air 13"
       ],
       "a": [
         "A3449"
@@ -5131,7 +5137,8 @@
       "namen": [
         "macbook air (15-inch, m2, 2023)",
         "macbook air",
-        "mac14,15"
+        "mac14,15",
+        "macbook air 15"
       ],
       "a": [
         "A2941"
@@ -5146,7 +5153,8 @@
       "namen": [
         "macbook air (15-inch, m4, 2025)",
         "macbook air",
-        "mac16,13"
+        "mac16,13",
+        "macbook air 15"
       ],
       "a": [
         "A3241"
@@ -5161,7 +5169,8 @@
       "namen": [
         "macbook air (15-inch, m5)",
         "macbook air",
-        "mac17,4"
+        "mac17,4",
+        "macbook air 15"
       ],
       "a": [
         "A3448"
@@ -5205,7 +5214,8 @@
       "namen": [
         "macbook pro (13-inch, 2016, four thunderbolt 3 ports)",
         "macbook pro",
-        "macbookpro13,2"
+        "macbookpro13,2",
+        "macbook pro 13"
       ],
       "a": [
         "A1706"
@@ -5220,7 +5230,8 @@
       "namen": [
         "macbook pro (13-inch, 2016, two thunderbolt 3 ports)",
         "macbook pro",
-        "macbookpro13,1"
+        "macbookpro13,1",
+        "macbook pro 13"
       ],
       "a": [
         "A1708"
@@ -5235,7 +5246,8 @@
       "namen": [
         "macbook pro (13-inch, 2018)",
         "macbook pro",
-        "macbookpro15,2"
+        "macbookpro15,2",
+        "macbook pro 13"
       ],
       "a": [
         "A1989"
@@ -5250,7 +5262,8 @@
       "namen": [
         "macbook pro (13-inch, 2020, four thunderbolt 3 ports)",
         "macbook pro",
-        "macbookpro16,2"
+        "macbookpro16,2",
+        "macbook pro 13"
       ],
       "a": [
         "A2251"
@@ -5265,7 +5278,8 @@
       "namen": [
         "macbook pro (14-inch, m2 max, 2023)",
         "macbook pro",
-        "mac14,5"
+        "mac14,5",
+        "macbook pro 14"
       ],
       "a": [
         "A2779"
@@ -5280,7 +5294,8 @@
       "namen": [
         "macbook pro (14-inch, m3, nov 2023)",
         "macbook pro",
-        "mac15,3"
+        "mac15,3",
+        "macbook pro 14"
       ],
       "a": [
         "A2918"
@@ -5295,7 +5310,8 @@
       "namen": [
         "macbook pro (14-inch, m4 max, nov 2024)",
         "macbook pro",
-        "mac16,6"
+        "mac16,6",
+        "macbook pro 14"
       ],
       "a": [
         "A3185"
@@ -5310,7 +5326,8 @@
       "namen": [
         "macbook pro (14-inch, m4, nov 2024)",
         "macbook pro",
-        "mac16,1"
+        "mac16,1",
+        "macbook pro 14"
       ],
       "a": [
         "A3112"
@@ -5325,7 +5342,8 @@
       "namen": [
         "macbook pro (14-inch, m4 pro, nov 2024)",
         "macbook pro",
-        "mac16,8"
+        "mac16,8",
+        "macbook pro 14"
       ],
       "a": [
         "A3401"
@@ -5340,7 +5358,8 @@
       "namen": [
         "macbook pro 14-inch (m5)",
         "macbook pro 14-inch",
-        "mac17,2"
+        "mac17,2",
+        "macbook pro 14"
       ],
       "a": [
         "A3434"
@@ -5355,7 +5374,8 @@
       "namen": [
         "macbook pro (14-inch, m5 max)",
         "macbook pro",
-        "mac17,7"
+        "mac17,7",
+        "macbook pro 14"
       ],
       "a": [
         "A3427"
@@ -5370,7 +5390,8 @@
       "namen": [
         "macbook pro (14-inch, m5 pro)",
         "macbook pro",
-        "mac17,9"
+        "mac17,9",
+        "macbook pro 14"
       ],
       "a": [
         "A3426"
@@ -5385,7 +5406,8 @@
       "namen": [
         "macbook pro (15-inch, 2016)",
         "macbook pro",
-        "macbookpro13,3"
+        "macbookpro13,3",
+        "macbook pro 15"
       ],
       "a": [
         "A1707"
@@ -5400,7 +5422,8 @@
       "namen": [
         "macbook pro (15-inch, early 2006)",
         "macbook pro",
-        "macbookpro1,1"
+        "macbookpro1,1",
+        "macbook pro 15"
       ],
       "a": [
         "A1150"
@@ -5415,7 +5438,8 @@
       "namen": [
         "macbook pro (15-inch, early 2008)",
         "macbook pro",
-        "macbookpro4,1"
+        "macbookpro4,1",
+        "macbook pro 15"
       ],
       "a": [
         "A1260"
@@ -5430,7 +5454,8 @@
       "namen": [
         "macbook pro (15-inch, late 2006)",
         "macbook pro",
-        "macbookpro2,2"
+        "macbookpro2,2",
+        "macbook pro 15"
       ],
       "a": [
         "A1211"
@@ -5445,7 +5470,8 @@
       "namen": [
         "macbook pro (15-inch, late 2007)",
         "macbook pro",
-        "macbookpro3,1"
+        "macbookpro3,1",
+        "macbook pro 15"
       ],
       "a": [
         "A1226"
@@ -5460,7 +5486,8 @@
       "namen": [
         "macbook pro (15-inch, late 2008)",
         "macbook pro",
-        "macbookpro5,1"
+        "macbookpro5,1",
+        "macbook pro 15"
       ],
       "a": [
         "A1286"
@@ -5475,7 +5502,8 @@
       "namen": [
         "macbook pro (16-inch, m2 pro, 2023)",
         "macbook pro",
-        "mac14,10"
+        "mac14,10",
+        "macbook pro 16"
       ],
       "a": [
         "A2780"
@@ -5490,7 +5518,8 @@
       "namen": [
         "macbook pro (16-inch, m4 max, nov 2024)",
         "macbook pro",
-        "mac16,5"
+        "mac16,5",
+        "macbook pro 16"
       ],
       "a": [
         "A3186"
@@ -5505,7 +5534,8 @@
       "namen": [
         "macbook pro (16-inch, m4 pro, nov 2024)",
         "macbook pro",
-        "mac16,7"
+        "mac16,7",
+        "macbook pro 16"
       ],
       "a": [
         "A3403"
@@ -5520,7 +5550,8 @@
       "namen": [
         "macbook pro (16-inch, m5 max)",
         "macbook pro",
-        "mac17,6"
+        "mac17,6",
+        "macbook pro 16"
       ],
       "a": [
         "A3429"
@@ -5535,7 +5566,8 @@
       "namen": [
         "macbook pro (16-inch, m5 pro)",
         "macbook pro",
-        "mac17,8"
+        "mac17,8",
+        "macbook pro 16"
       ],
       "a": [
         "A3428"
@@ -5550,7 +5582,8 @@
       "namen": [
         "macbook pro (17-inch, early 2006)",
         "macbook pro",
-        "macbookpro1,2"
+        "macbookpro1,2",
+        "macbook pro 17"
       ],
       "a": [
         "A1151"
@@ -5565,7 +5598,8 @@
       "namen": [
         "macbook pro (17-inch, early 2008)",
         "macbook pro",
-        "macbookpro4,1"
+        "macbookpro4,1",
+        "macbook pro 17"
       ],
       "a": [
         "A1261"
@@ -5580,7 +5614,8 @@
       "namen": [
         "macbook pro (17-inch, early 2009)",
         "macbook pro",
-        "macbookpro5,2"
+        "macbookpro5,2",
+        "macbook pro 17"
       ],
       "a": [
         "A1297"
@@ -5595,7 +5630,8 @@
       "namen": [
         "macbook pro (17-inch, late 2006)",
         "macbook pro",
-        "macbookpro2,1"
+        "macbookpro2,1",
+        "macbook pro 17"
       ],
       "a": [
         "A1212"
@@ -5610,7 +5646,8 @@
       "namen": [
         "macbook pro (17-inch, late 2007)",
         "macbook pro",
-        "macbookpro3,1"
+        "macbookpro3,1",
+        "macbook pro 17"
       ],
       "a": [
         "A1229"
@@ -5625,7 +5662,8 @@
       "namen": [
         "macbook pro (retina, 13-inch, early 2013)",
         "macbook pro",
-        "macbookpro10,2"
+        "macbookpro10,2",
+        "macbook pro 13"
       ],
       "a": [
         "A1425"
@@ -5640,7 +5678,8 @@
       "namen": [
         "macbook pro (retina, 13-inch, late 2013)",
         "macbook pro",
-        "macbookpro11,1"
+        "macbookpro11,1",
+        "macbook pro 13"
       ],
       "a": [
         "A1502"
@@ -5655,7 +5694,8 @@
       "namen": [
         "macbook pro (retina, 15-inch, early 2013)",
         "macbook pro",
-        "macbookpro10,1"
+        "macbookpro10,1",
+        "macbook pro 15"
       ],
       "a": [
         "A1398"
