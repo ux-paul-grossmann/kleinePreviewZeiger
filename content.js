@@ -44,6 +44,9 @@
     const wert = mod[schluessel];
     return wert === undefined ? standard : wert;
   }
+  // Apple Identifier State: Modelle und Vorlage vorab deklarieren (kein TDZ beim Laden)
+  let APPLE_MODELLE = [];
+  let appleVorlage = "{name} | {jahr} | {chip} | {ram}";
   // Letzte Preview-Card Daten für Live Neurender bei Modul Wechsel
   let letztePreviewCard = null;
   let lastTrackLog = 0;
@@ -833,8 +836,6 @@
   }
 
   // Apple Identifier Modul: kuratierte Modelle laden, Treffer als Tags zeigen
-  let APPLE_MODELLE = [];
-  let appleVorlage = "{name} | {jahr} | {chip} | {ram}";
   async function ladeAppleModelle() {
     if (APPLE_MODELLE.length) return;
     try {
