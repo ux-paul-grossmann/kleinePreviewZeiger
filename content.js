@@ -878,8 +878,9 @@
   }
   // Erkennung: Marketing Namen und Nummern aus Titel plus Beschreibung fischen
   // Treffer als {text} für Tags, maximal 6, Modelle zuerst
+  // Geteilte A Nummer: mehrere Modelle teilen eine Nummer, Bereich ausgeben
   function erkenneApple(textRoh) {
-    const treffer = [];
+    let treffer = [];
     const gesehen = {};
     if (!APPLE_MODELLE.length) return treffer;
     const text = appleNormalisieren(textRoh);
@@ -895,8 +896,32 @@
       });
       if (fund && !gesehen[m.id]) {
         gesehen[m.id] = true;
-        treffer.push({ text: wendeAppleTemplate(appleVorlage, m) });
+        const aNr = /^A\d{4}$/i.test(fund) ? fund.toUpperCase() : "";
+        treffer.push({ modell: m, fund, aNr, text: wendeAppleTemplate(appleVorlage, m) });
       }
+    });
+    // A Nummern Gruppen mit mehr als einem Modell zu Bereich Tags verdichten
+    const gruppen = {};
+    treffer.forEach((t) => {
+      if (t.aNr) {
+        if (!gruppen[t.aNr]) gruppen[t.aNr] = [];
+        gruppen[t.aNr].push(t);
+      }
+    });
+    Object.keys(gruppen).forEach((nr) => {
+      const gruppe = gruppen[nr];
+      if (gruppe.length < 2) return;
+      const jahre = gruppe.map((t) => parseInt(t.modell.jahr, 10)).filter((j) => !isNaN(j));
+      const chips = [];
+      gruppe.forEach((t) => {
+        if (t.modell.chip && chips.indexOf(t.modell.chip) === -1) chips.push(t.modell.chip);
+      });
+      const bereich = jahre.length ? `${Math.min(...jahre)}–${Math.max(...jahre)}` : "";
+      let textNeu = nr;
+      if (bereich) textNeu += ` · ${bereich}`;
+      if (chips.length) textNeu += ` · ${chips.join("/")}`;
+      treffer = treffer.filter((t) => t.aNr !== nr);
+      treffer.push({ modell: null, fund: nr, aNr: nr, text: textNeu });
     });
     const rohNr = (muster, markierung) => {
       const gefunden = textGross.match(muster) || [];
