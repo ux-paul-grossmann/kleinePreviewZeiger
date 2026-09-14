@@ -878,6 +878,63 @@
       .replace("{ram}", modell.ram || "");
     return text.split("|").map((s) => s.trim()).filter((s) => s).join(" | ");
   }
+
+  // Specs aus Titel+Beschreibung: CPU / RAM / SSD / Zyklen -> farbcodierte Badges
+  function extrahiereSpecs(textRoh) {
+    const badges = [];
+    const t = String(textRoh || "");
+    // CPU: Intel i7 mit GHz oder Apple Silicon M1/M2/M3/M4 (Pro/Max/Ultra)
+    const cpuM = t.match(/\b(?:Intel Core\s*)?i[3579]\b[^\\n]{0,30}\d[.,]\d+\s*GHz|\bApple\s+M[1-4]\s*(?:Pro|Max|Ultra)?\b|\bM[1-4]\s*(?:Pro|Max|Ultra)?\b/i);
+    if (cpuM) {
+      let cpu = cpuM[0].replace(/\s+/g, " ").trim();
+      const chipKurz = cpu.match(/M[1-4]\s*(?:Pro|Max|Ultra)?/i);
+      if (chipKurz) cpu = chipKurz[0].toUpperCase().replace(/\s+/g, " ");
+      else {
+        const ghz = cpu.match(/i[3579]\s*\d[.,]\d+\s*GHz/i);
+        cpu = ghz ? ghz[0].replace(/\s+/g, " ").replace(/Intel Core\s*/i, "") : cpu;
+        // "i7 mit 2,7 GHz" -> "i7 2,7 GHz"
+        cpu = cpu.replace(/\s*mit\s*/i, " ").trim();
+      }
+      badges.push({ text: cpu, tone: "cpu" });
+    }
+    // RAM: "16 GB RAM", "8GB RAM", "16GB" nahe RAM
+    const ramM = t.match(/(\d+)\s*GB\s*RAM/i);
+    if (ramM) {
+      const gb = parseInt(ramM[1], 10);
+      let tone = "ram";
+      if (gb >= 16) tone = "good";
+      else if (gb >= 8) tone = "mid";
+      else tone = "bad";
+      badges.push({ text: gb + " GB RAM", tone });
+    }
+    // SSD / Storage: "512 GB SSD", "1 TB SSD", "240GB SSD"
+    const ssdM = t.match(/(\d+(?:[.,]\d+)?)\s*(GB|TB)\s*SSD/i);
+    if (ssdM) {
+      const raw = ssdM[0].replace(/\s+/g, " ").trim().toUpperCase().replace(",", ".");
+      badges.push({ text: raw, tone: "storage" });
+    }
+    // Zyklen: "412 Ladezyklen", "312 Zyklen", "Cycle Count: 89", "Battery cycles 200"
+    const zykM = t.match(/(\d{2,4})\s*(?:Lade|Akku)?\s*zyklen/i) || t.match(/cycle\s*count\s*[:–-]?\s*(\d+)/i) || t.match(/battery[^\\n]{0,20}cycles?[^\\n]{0,10}(\d{2,4})/i);
+    if (zykM) {
+      const n = parseInt(zykM[1], 10);
+      let tone = "mid";
+      if (n <= 300) tone = "good";
+      else if (n <= 600) tone = "mid";
+      else tone = "bad";
+      badges.push({ text: n + " Zyklen", tone, value: n });
+    } else {
+      // Fallback: "Zyklen: 89" ohne Präfix
+      const zyk2 = t.match(/zyklen\s*[:–-]?\s*(\d{2,4})/i);
+      if (zyk2) {
+        const n = parseInt(zyk2[1], 10);
+        let tone = n <= 300 ? "good" : n <= 600 ? "mid" : "bad";
+        badges.push({ text: n + " Zyklen", tone });
+      }
+    }
+    // dedupe nach Text
+    const seen = new Set();
+    return badges.filter((b) => { if (seen.has(b.text.toLowerCase())) return false; seen.add(b.text.toLowerCase()); return true; });
+  }
   // Erkennung: Marketing Namen und Nummern aus Titel plus Beschreibung fischen
   // Treffer als {text} für Tags, maximal 6, Modelle zuerst
   // Geteilte A Nummer: mehrere Modelle teilen eine Nummer, Bereich ausgeben
@@ -1005,12 +1062,17 @@
 
     const zoomLevels = ["1.5x", "2.0x", "2.5x", "3.0x", "4.0x", "8.0x"];
 
-    // Apple Tags: Treffer vorab als Pillen HTML aufbereiten
+    // Apple Tags + Spec Badges vorab als Pillen HTML aufbereiten
     let appleTags = "";
+    let specTags = "";
     if (modAn("kbModApple")) {
       const appleTreffer = erkenneApple(title + "\n" + data.description);
       if (appleTreffer.length) {
         appleTags = `<div class="kb-apple-tags">${appleTreffer.map((t) => `<span class="kb-apple-tag">${t.text}</span>`).join("")}</div>`;
+      }
+      const specs = extrahiereSpecs(title + "\n" + data.description);
+      if (specs.length) {
+        specTags = `<div class="kb-spec-tags">${specs.map((s) => `<span class="kb-spec-tag kb-spec-${s.tone}">${s.text}</span>`).join("")}</div>`;
       }
     }
 
@@ -1076,7 +1138,7 @@
         <a href="${url}" target="_blank" rel="noopener noreferrer" class="kb-btn kb-btn-primary">Anzeige ansehen <svg class="kb-btn-icon" viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg></a>
         ${modAn("kbModRoute") ? `<a href="${mapsUrl}" target="_blank" rel="noopener noreferrer" class="kb-btn kb-btn-secondary">Route planen</a>` : ""}
       </div>
-      ${appleTags ? `<div class="kb-apple-card"><div class="kb-apple-label">Apple Identifier</div>${appleTags}</div>` : ""}
+      ${appleTags || specTags ? `<div class="kb-apple-card"><div class="kb-apple-label">Apple Identifier</div>${appleTags}${specTags}</div>` : ""}
       <div class="kb-debug-row">
         <button class="kb-debug-toggle" id="kb-debug-toggle" aria-label="Zonen-Debug an/aus">Zonen</button>
         <button class="kb-debug-toggle" id="kb-transp-toggle" aria-label="Card transparent an/aus">Transparent</button>
