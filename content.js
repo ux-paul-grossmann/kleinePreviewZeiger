@@ -356,7 +356,7 @@
       }
     }
     // Advanced View Module: Stände einmalig laden
-    const MOD_SCHLUESSEL = ["kbModZoom", "kbModDetails", "kbModStandort", "kbModPreis", "kbModRoute", "kbModPositioning", "kbModPositionZonen", "kbModPositionAbstand", "kbModPositionFlip", "kbModPositionClamp", "kbModPositionStuck", "kbModTether", "kbTetherRichtung", "kbTetherDistanz", "kbModPositionVoraus", "kbModPositionRuder", "kbModPositionEngstellen", "kbModPositionFreeze", "kbModPositionWachstum", "kbModPositionHysterese", "kbModArrow", "kbModArrowGeometrie"];
+    const MOD_SCHLUESSEL = ["kbModZoom", "kbModDetails", "kbModStandort", "kbModPreis", "kbModRoute", "kbModSwipe", "kbModSwipeUebergang", "kbModPositioning", "kbModPositionZonen", "kbModPositionAbstand", "kbModPositionFlip", "kbModPositionClamp", "kbModPositionStuck", "kbModTether", "kbTetherRichtung", "kbTetherDistanz", "kbModPositionVoraus", "kbModPositionRuder", "kbModPositionEngstellen", "kbModPositionFreeze", "kbModPositionWachstum", "kbModPositionHysterese", "kbModArrow", "kbModArrowGeometrie"];
     chrome.storage.local.get(MOD_SCHLUESSEL, (r) => {
       mod = r;
     });
@@ -931,11 +931,16 @@
 
     if (hasImages && data.images.length > 1) {
       const counterEl = previewCard.querySelector(".kb-img-counter");
-      // Bild wechseln mit Umbruch, Zoom zurücksetzen
+      // Bild wechseln mit Umbruch, Zoom zurücksetzen, Übergang je Toggle
       const zeigeBild = (richtung) => {
         currentImgIdx = (currentImgIdx + richtung + data.images.length) % data.images.length;
         imgEl.src = data.images[currentImgIdx];
         counterEl.textContent = `${currentImgIdx + 1} / ${data.images.length}`;
+        if (modAn("kbModSwipeUebergang")) {
+          imgEl.classList.remove("kb-gleiten-links", "kb-gleiten-rechts");
+          void imgEl.offsetWidth;
+          imgEl.classList.add(richtung > 0 ? "kb-gleiten-links" : "kb-gleiten-rechts");
+        }
         if (zoomControls) { zoomControls.resetRotation(); zoomControls.resetLock(); }
       };
 
@@ -950,19 +955,21 @@
       });
 
       // Swipe per Trackpad und Magic Mouse: waagrechte Bewegung schaltet
-      // Bilder um, angesammelte Pixel lösen je Schwelle einen Wechsel aus
+      // Bilder um, ein Bild je Wisch Geste mit Sperre und Richtungs Neustart
       let swipeRest = 0;
-      let swipePause = 0;
+      let swipeSperre = 0;
       imgContainer.addEventListener("wheel", (e) => {
+        if (!modAn("kbModSwipe")) return;
         if (Math.abs(e.deltaX) <= Math.abs(e.deltaY)) return;
         e.preventDefault();
         const jetzt = Date.now();
-        if (jetzt - swipePause < 350) return;
+        if (jetzt - swipeSperre < 650) return;
+        if ((swipeRest > 0) !== (e.deltaX > 0)) swipeRest = 0;
         swipeRest += e.deltaX;
         if (Math.abs(swipeRest) >= 40) {
           zeigeBild(swipeRest > 0 ? 1 : -1);
           swipeRest = 0;
-          swipePause = jetzt;
+          swipeSperre = jetzt;
         }
       }, { passive: false });
     }

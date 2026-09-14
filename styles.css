@@ -185,6 +185,18 @@
   transform: rotate(var(--kb-rotation, 0deg));
 }
 
+/* Galerie Übergang: Bild gleitet je Richtung ein */
+@keyframes kb-bild-links {
+  from { transform: translateX(24px); opacity: 0.3; }
+  to { transform: translateX(0); opacity: 1; }
+}
+@keyframes kb-bild-rechts {
+  from { transform: translateX(-24px); opacity: 0.3; }
+  to { transform: translateX(0); opacity: 1; }
+}
+.kb-gleiten-links { animation: kb-bild-links 0.25s ease-out; }
+.kb-gleiten-rechts { animation: kb-bild-rechts 0.25s ease-out; }
+
 .kb-image-container.kb-zoomed {
   cursor: zoom-out;
 }
