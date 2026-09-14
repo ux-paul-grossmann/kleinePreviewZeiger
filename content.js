@@ -35,6 +35,10 @@
     if (wert === undefined) return MOD_STD_AUS.indexOf(schluessel) === -1;
     return wert !== false;
   }
+  // Tether gilt nur bei Main Module Positioning an
+  function tetherAktiv() {
+    return modAn("kbModTether") && modAn("kbModPositioning");
+  }
   // Tether Werte mit Standard: Richtung Auto, Distanz 32 Pixel
   function modWert(schluessel, standard) {
     const wert = mod[schluessel];
@@ -491,7 +495,7 @@
       mouseMarker.style.top = `${e.clientY}px`;
     }
     // Tether Sub aus: Preview-Card steht fest ab Entry, kein Nachführen
-    if (modAn("kbModTether") && shouldTrack(speed)) {
+    if (tetherAktiv() && shouldTrack(speed)) {
       positionCardAtCursor();
       updateDebugOverlay();
     }
@@ -1093,7 +1097,7 @@
       // Schmale (herausgefilterte) Items: Card immer seitlich, damit der vertikale Mausweg frei bleibt
       // Engstellen Sub aus: Regel ignorieren, normale Zonen werten
       // Tether Anker gewinnt vor Zonen und Engstellen
-      const tetherAnker = modAn("kbModTether") ? modWert("kbTetherRichtung", "auto") : "auto";
+      const tetherAnker = tetherAktiv() ? modWert("kbTetherRichtung", "auto") : "auto";
       if (tetherAnker !== "auto" && TETHER_ANKER[tetherAnker]) {
         zone = TETHER_ANKER[tetherAnker];
       }

@@ -93,7 +93,8 @@ document.addEventListener("DOMContentLoaded", () => {
         const eingabe = zeile.querySelector("input");
         if (eingabe) eingabe.disabled = !aktiv;
       });
-      const tetherAn = an(r.kbModTether);
+      // Tether Einstellungen klappen ein bei Tether aus oder Positioning aus
+      const tetherAn = an(r.kbModTether) && staende.kbModPositioning;
       document.querySelectorAll('[data-kb-sub2="kbModTether"]').forEach((zeile) => {
         zeile.style.display = tetherAn ? "" : "none";
       });
