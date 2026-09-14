@@ -57,12 +57,13 @@ function sammleAppleDB() {
           const kurz = name.replace(/\s*\(.*?\)\s*/g, " ").trim().toLowerCase();
           if (kurz && kurz !== name.toLowerCase()) alias.add(kurz);
           // Größe-Alias wie "macbook pro 15" für Titel "MacBook Pro 15\" 2017"
+          // nur passende Linie (pro vs air), sonst matchen Airs auf "pro"
           const inch = name.match(/(\d{2})\s*-?inch/i);
           if (inch) {
-            const base = kurz.split(/\s+/).slice(0, 3).join(" "); // z.B. "macbook pro"
-            if (base) alias.add(`${base} ${inch[1]}`.trim().toLowerCase());
-            alias.add(`macbook pro ${inch[1]}`.toLowerCase());
-            alias.add(`macbook air ${inch[1]}`.toLowerCase());
+            const niedrig = `${name} ${identifier}`.toLowerCase();
+            if (niedrig.includes("pro")) alias.add(`macbook pro ${inch[1]}`.toLowerCase());
+            if (niedrig.includes("air")) alias.add(`macbook air ${inch[1]}`.toLowerCase());
+            if (!niedrig.includes("pro") && !niedrig.includes("air")) alias.add(`macbook ${inch[1]}`.toLowerCase());
           }
           if (identifier) alias.add(identifier.toLowerCase());
           out.push({
@@ -111,27 +112,28 @@ console.log(`AppleDB Kandidaten mit A-Nummer: ${adb.length}`);
 const ios = sammleIosList();
 console.log(`iOS-list Kandidaten: ${ios.length}`);
 
-// Dedupe nach A-Nummer, aktuell gewinnt
+// Dedupe nach Name+Identifier (nicht A-Nummer: A1502 teilen sich 2013/2014/2015)
+// aktuell gewinnt bei gleichem Identifier
 const neu = [];
-const gesehen = new Set(existA);
+const gesehenId = new Set(aktuell.map((m) => (m.namen[0] || "") + "|" + (m.a || []).join(",")));
 for (const src of [...adb, ...ios]) {
-  const neueA = src.a.filter((a) => !gesehen.has(a));
-  if (!neueA.length) continue;
-  // Nur aufnehmen wenn mindestens ein neues A dabei
-  // Baue Modell-Eintrag im Repo-Schema
-  const id = slug(`${src.name} ${src.identifier}`.trim()) || slug(neueA[0]);
-  const jahr = src.jahr || "";
+  const key = (src.alias[0] || src.name.toLowerCase()) + "|" + src.a.join(",");
+  if (gesehenId.has(key)) continue;
+  gesehenId.add(key);
+  const id = slug(`${src.name} ${src.identifier}`.trim()) || slug(src.a[0]);
+  // id eindeutig machen bei Kollision
+  let uid = id, n = 2;
+  while (neu.some((x) => x.id === uid) || aktuell.some((m) => m.id === uid)) uid = `${id}-${n++}`;
   neu.push({
-    id,
-    namen: src.alias.length ? src.alias.slice(0, 4) : [src.name.toLowerCase()].filter(Boolean),
-    a: neueA,
+    id: uid,
+    namen: src.alias.length ? src.alias.slice(0, 6) : [src.name.toLowerCase()].filter(Boolean),
+    a: src.a,
     emc: [],
-    jahr,
+    jahr: src.jahr || "",
     chip: src.chip || "",
     ram: src.ram || "",
     _src: src._src,
   });
-  neueA.forEach((a) => gesehen.add(a));
 }
 console.log(`Neue A-Nummern ergänzt: ${neu.length} Modelle (${neu.flatMap((x) => x.a).length} A-Nummern)`);
 if (neu.length) {

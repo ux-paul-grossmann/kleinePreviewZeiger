@@ -984,6 +984,10 @@
     });
     if (treffer.some((t) => t.bestIsA)) treffer = treffer.filter((t) => t.bestIsA);
     else {
+      // Generisch ohne Ziffer (z.B. nur "macbook pro", Tasche/Kabel) -> keine Tags,
+      // außer Jahr im Text stützt (z.B. "Anfang 2015" + "macbook pro")
+      if (!jahreImText.length) treffer = treffer.filter((t) => /\d/.test(t.fund));
+      if (!treffer.length) return treffer;
       const maxLen = Math.max(...treffer.map((t) => t.bestLen || 0));
       treffer = treffer.filter((t) => t.bestLen === maxLen);
     }
@@ -991,15 +995,7 @@
       const gefiltert = treffer.filter((t) => jahrPasst(t.modell.jahr, jahreImText, 1));
       if (gefiltert.length) treffer = gefiltert;
     }
-    // Jahr-Nähe, max 3
-    const jahrScore = (jahrStr) => jahrPasst(jahrStr, jahreImText, 0) ? 2 : jahrPasst(jahrStr, jahreImText, 1) ? 1 : 0;
-    treffer.sort((a, b) => {
-      const len = (b.bestLen || 0) - (a.bestLen || 0);
-      if (len !== 0) return len;
-      return jahrScore(b.modell.jahr) - jahrScore(a.modell.jahr);
-    });
-    if (treffer.length > 3) treffer = treffer.slice(0, 3);
-    // A Nummern Gruppen mit mehr als einem Modell zu Bereich Tags verdichten
+    // A Nummern Gruppen VOR dem Schnitt verdichten (gleiche Nummer -> ein Bereich)
     const gruppen = {};
     treffer.forEach((t) => {
       if (t.aNr) {
@@ -1020,8 +1016,16 @@
       if (bereich) textNeu += ` · ${bereich}`;
       if (chips.length) textNeu += ` · ${chips.join("/")}`;
       treffer = treffer.filter((t) => t.aNr !== nr);
-      treffer.push({ modell: null, fund: nr, aNr: nr, text: textNeu });
+      treffer.push({ modell: gruppe[0].modell, fund: nr, aNr: nr, bestLen: 100, text: textNeu });
     });
+    // Jahr-Nähe, max 3
+    const jahrScore = (jahrStr) => jahrPasst(jahrStr, jahreImText, 0) ? 2 : jahrPasst(jahrStr, jahreImText, 1) ? 1 : 0;
+    treffer.sort((a, b) => {
+      const len = (b.bestLen || 0) - (a.bestLen || 0);
+      if (len !== 0) return len;
+      return jahrScore(b.modell.jahr) - jahrScore(a.modell.jahr);
+    });
+    if (treffer.length > 3) treffer = treffer.slice(0, 3);
     const rohNr = (muster, markierung) => {
       const gefunden = textGross.match(muster) || [];
       gefunden.forEach((nr) => {
