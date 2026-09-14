@@ -45,6 +45,10 @@
     return wert === undefined ? standard : wert;
   }
   // Apple Identifier State: Modelle und Vorlage vorab deklarieren (kein TDZ beim Laden)
+  // Filterlisten aus Popup: Stoppwörter (null = Standard) + eigene Aliase
+  const FILTER_BLOCK_STD = ["tasche", "hülle", "huelle", "case", "cover", "ladekabel", "netzteil", "ladegerät", "ladegeraet", "adapter", "folie", "ständer", "staender", "halterung", "dock"];
+  let filterBlock = null;
+  let filterAlias = [];
   let APPLE_MODELLE = [];
   let appleVorlage = "{name} | {jahr} | {chip} | {ram}";
   // Letzte Preview-Card Daten für Live Neurender bei Modul Wechsel
@@ -326,6 +330,13 @@
       if (area === "local" && changes.kbAppleTemplate) {
         appleVorlage = changes.kbAppleTemplate.newValue || "{name} | {jahr} | {chip} | {ram}";
       }
+      // Filterlisten: Stoppwörter + eigene Aliase aus Popup übernehmen
+      if (area === "local" && changes.kbFilterBlock) {
+        filterBlock = changes.kbFilterBlock.newValue || null;
+      }
+      if (area === "local" && changes.kbFilterAlias) {
+        filterAlias = changes.kbFilterAlias.newValue || [];
+      }
       // Advanced View Module: Stand merken, offene Preview-Card live neu aufbauen
       if (area === "local") {
         let modWechsel = false;
@@ -334,7 +345,7 @@
           if (k.indexOf("kbMod") === 0 || k.indexOf("kbTether") === 0) {
             mod[k] = changes[k].newValue;
             modWechsel = true;
-            if (k === "kbModZoom" || k === "kbModDetails" || k === "kbModStandort" || k === "kbModPreis" || k === "kbModRoute" || k === "kbModArrow" || k === "kbModArrowGeometrie" || k === "kbModApple" || k === "kbAppleTemplate") {
+            if (k === "kbModZoom" || k === "kbModDetails" || k === "kbModStandort" || k === "kbModPreis" || k === "kbModRoute" || k === "kbModArrow" || k === "kbModArrowGeometrie" || k === "kbModApple" || k === "kbAppleTemplate" || k === "kbFilterBlock" || k === "kbFilterAlias") {
               renderWechsel = true;
             }
           }
@@ -367,14 +378,12 @@
     chrome.storage.local.get(MOD_SCHLUESSEL, (r) => {
       mod = r;
     });
-    // Apple Module: Modelle und Vorlage einmalig laden
+    // Apple Module: Modelle, Vorlage und Filterlisten einmalig laden
     ladeAppleModelle();
-    chrome.storage.local.get(["kbAppleTemplate"], (r) => {
+    chrome.storage.local.get(["kbAppleTemplate", "kbFilterBlock", "kbFilterAlias"], (r) => {
       if (r.kbAppleTemplate) appleVorlage = r.kbAppleTemplate;
-    });
-    // Apple Vorlage: Ausgabe Format aus Popup übernehmen
-    chrome.storage.local.get(["kbAppleTemplate"], (r) => {
-      if (r.kbAppleTemplate) appleVorlage = r.kbAppleTemplate;
+      if (Array.isArray(r.kbFilterBlock)) filterBlock = r.kbFilterBlock;
+      if (Array.isArray(r.kbFilterAlias)) filterAlias = r.kbFilterAlias;
     });
     // Popup Akzent: initial auf den Hauptknopf anwenden
     chrome.storage.local.get(["kbAccent"], (r) => {
@@ -965,6 +974,17 @@
         return !isNaN(j) && Math.abs(j - y) <= t;
       });
     };
+    // Eigene Aliase aus Popup zuerst: Phrase -> Modell, sticht alles aus
+    (filterAlias || []).forEach((eintrag) => {
+      if (!eintrag || !eintrag.phrase || !eintrag.id) return;
+      if (gesehen[eintrag.id]) return;
+      if (wortTreffer(text, eintrag.phrase)) {
+        const m = APPLE_MODELLE.find((x) => x.id === eintrag.id);
+        if (!m) return;
+        gesehen[m.id] = true;
+        treffer.push({ modell: m, fund: eintrag.phrase, bestLen: 100 + eintrag.phrase.length, bestIsA: true, aNr: "", text: wendeAppleTemplate(appleVorlage, m) });
+      }
+    });
     APPLE_MODELLE.forEach((m) => {
       let best = "", bestLen = 0, bestIsA = false;
       (m.namen || []).forEach((n) => { if (wortTreffer(text, n) && n.length > bestLen) { best = n; bestLen = n.length; bestIsA = false; } });
@@ -1001,6 +1021,9 @@
           : ["MB 13 2006–10", "MBP 13 2009–12", "MBP 15 2008–12", "MBP 17 2008–11", "MBA 2008–12"];
         return liste.map((text) => ({ text }));
       }
+      // Stoppwörter ohne Jahr im Text -> Zubehör, keine Tags
+      const block = filterBlock === null ? FILTER_BLOCK_STD : filterBlock;
+      if (!jahreImText.length && block.some((w) => wortTreffer(text, w))) return [];
       // Generisch ohne Ziffer (z.B. nur "macbook pro", Tasche) -> keine Tags,
       // außer Jahr im Text stützt (z.B. "Anfang 2015" + "macbook pro")
       if (!jahreImText.length) treffer = treffer.filter((t) => /\d/.test(t.fund));
@@ -1016,9 +1039,17 @@
       const mitGroesse = treffer.filter((t) => re.test(((t.modell.namen || []).join(" ") + " " + t.modell.id).toLowerCase()));
       if (mitGroesse.length) treffer = mitGroesse;
     }
-    if (jahreImText.length && treffer.some((t) => jahrPasst(t.modell.jahr, jahreImText, 1))) {
-      const gefiltert = treffer.filter((t) => jahrPasst(t.modell.jahr, jahreImText, 1));
-      if (gefiltert.length) treffer = gefiltert;
+    // Exaktes Jahr sticht: "2015" zeigt nur 2015er, keine 2016er daneben
+    if (jahreImText.length) {
+      const exakt = treffer.filter((t) => {
+        const s = String(t.modell.jahr || "").trim();
+        return jahreImText.some((y) => s === String(y));
+      });
+      if (exakt.length) treffer = exakt;
+      else if (treffer.some((t) => jahrPasst(t.modell.jahr, jahreImText, 1))) {
+        const gefiltert = treffer.filter((t) => jahrPasst(t.modell.jahr, jahreImText, 1));
+        if (gefiltert.length) treffer = gefiltert;
+      }
     }
     // A Nummern Gruppen VOR dem Schnitt verdichten (gleiche Nummer -> ein Bereich)
     const gruppen = {};

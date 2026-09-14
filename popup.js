@@ -176,6 +176,129 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
+  // Filter CRUD: Stoppwörter + eigene Aliase verwalten
+  const FILTER_STD = ["tasche", "hülle", "huelle", "case", "cover", "ladekabel", "netzteil", "ladegerät", "ladegeraet", "adapter", "folie", "ständer", "staender", "halterung", "dock"];
+  const blockListe = document.getElementById("filterBlockListe");
+  const blockNeu = document.getElementById("filterBlockNeu");
+  const blockAdd = document.getElementById("filterBlockAdd");
+  const aliasListe = document.getElementById("filterAliasListe");
+  const aliasNeu = document.getElementById("filterAliasNeu");
+  const aliasModell = document.getElementById("filterAliasModell");
+  const aliasAdd = document.getElementById("filterAliasAdd");
+  const leseBlock = (cb) => {
+    chrome.storage.local.get(["kbFilterBlock"], (r) => {
+      cb(Array.isArray(r.kbFilterBlock) ? r.kbFilterBlock : FILTER_STD.slice());
+    });
+  };
+  const leseAlias = (cb) => {
+    chrome.storage.local.get(["kbFilterAlias"], (r) => {
+      cb(Array.isArray(r.kbFilterAlias) ? r.kbFilterAlias : []);
+    });
+  };
+  // Klick auf Text -> Eingabefeld zum Bearbeiten
+  const bearbeitbar = (span, wert, speichern) => {
+    span.addEventListener("click", () => {
+      const feld = document.createElement("input");
+      feld.value = wert;
+      span.replaceWith(feld);
+      feld.focus();
+      feld.select();
+      const fertig = (uebernehmen) => {
+        if (uebernehmen && feld.value.trim()) speichern(feld.value.trim());
+        else maleFilter();
+      };
+      feld.addEventListener("keydown", (e) => {
+        if (e.key === "Enter") fertig(true);
+        else if (e.key === "Escape") fertig(false);
+      });
+      feld.addEventListener("blur", () => fertig(true));
+    });
+  };
+  const maleFilter = () => {
+    if (!blockListe || !aliasListe) return;
+    blockListe.innerHTML = "";
+    aliasListe.innerHTML = "";
+    leseBlock((worte) => {
+      worte.forEach((wort, i) => {
+        const zeile = document.createElement("div");
+        zeile.className = "kb-filter-zeile";
+        const text = document.createElement("span");
+        text.textContent = wort;
+        bearbeitbar(text, wort, (neu) => {
+          leseBlock((w) => { w[i] = neu; chrome.storage.local.set({ kbFilterBlock: w }, maleFilter); });
+        });
+        const del = document.createElement("button");
+        del.className = "kb-filter-del";
+        del.textContent = "×";
+        del.setAttribute("aria-label", "Stoppwort löschen");
+        del.addEventListener("click", () => {
+          leseBlock((w) => { w.splice(i, 1); chrome.storage.local.set({ kbFilterBlock: w }, maleFilter); });
+        });
+        zeile.appendChild(text);
+        zeile.appendChild(del);
+        blockListe.appendChild(zeile);
+      });
+    });
+    leseAlias((eintraege) => {
+      eintraege.forEach((eintrag, i) => {
+        const zeile = document.createElement("div");
+        zeile.className = "kb-filter-zeile";
+        const text = document.createElement("span");
+        text.textContent = `${eintrag.phrase} → ${eintrag.id}`;
+        bearbeitbar(text, eintrag.phrase, (neu) => {
+          leseAlias((e) => { e[i] = { phrase: neu, id: eintrag.id }; chrome.storage.local.set({ kbFilterAlias: e }, maleFilter); });
+        });
+        const del = document.createElement("button");
+        del.className = "kb-filter-del";
+        del.textContent = "×";
+        del.setAttribute("aria-label", "Alias löschen");
+        del.addEventListener("click", () => {
+          leseAlias((e) => { e.splice(i, 1); chrome.storage.local.set({ kbFilterAlias: e }, maleFilter); });
+        });
+        zeile.appendChild(text);
+        zeile.appendChild(del);
+        aliasListe.appendChild(zeile);
+      });
+    });
+  };
+  if (blockAdd && blockNeu) {
+    const blockHinzu = () => {
+      const wort = blockNeu.value.trim().toLowerCase();
+      if (!wort) return;
+      leseBlock((w) => {
+        if (w.indexOf(wort) === -1) w.push(wort);
+        chrome.storage.local.set({ kbFilterBlock: w }, () => { blockNeu.value = ""; maleFilter(); });
+      });
+    };
+    blockAdd.addEventListener("click", blockHinzu);
+    blockNeu.addEventListener("keydown", (e) => { if (e.key === "Enter") blockHinzu(); });
+  }
+  // Modell Dropdown aus apple-models.json füllen
+  if (aliasModell) {
+    fetch(chrome.runtime.getURL("apple-models.json")).then((a) => a.json()).then((d) => {
+      (d.modelle || []).forEach((m) => {
+        const opt = document.createElement("option");
+        opt.value = m.id;
+        opt.textContent = m.id;
+        aliasModell.appendChild(opt);
+      });
+    }).catch(() => {});
+  }
+  if (aliasAdd && aliasNeu && aliasModell) {
+    const aliasHinzu = () => {
+      const phrase = aliasNeu.value.trim().toLowerCase();
+      const id = aliasModell.value;
+      if (!phrase || !id) return;
+      leseAlias((e) => {
+        e.push({ phrase, id });
+        chrome.storage.local.set({ kbFilterAlias: e }, () => { aliasNeu.value = ""; maleFilter(); });
+      });
+    };
+    aliasAdd.addEventListener("click", aliasHinzu);
+    aliasNeu.addEventListener("keydown", (e) => { if (e.key === "Enter") aliasHinzu(); });
+  }
+  maleFilter();
+
   // Akzentfarbe: Punkte synchronisieren, Auswahl speichern (Standard mehrfarbig)
   const accentDots = [...document.querySelectorAll(".accent-dot")];
   const syncAccentDots = (wert) => {

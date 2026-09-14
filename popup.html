@@ -177,6 +177,49 @@
       font-weight: 600;
       color: var(--text-main);
     }
+    /* Filterlisten: Zeilen mit Text und Löschkreuz */
+    .kb-filter-zeile {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      padding: 4px 2px;
+      font-size: 12px;
+      color: var(--text-main);
+    }
+    .kb-filter-zeile span:first-child { cursor: text; flex: 1; }
+    .kb-filter-zeile input {
+      flex: 1;
+      padding: 4px 8px;
+      border-radius: 6px;
+      border: 1px solid var(--input-border);
+      background: var(--input-bg);
+      color: var(--input-text);
+      font-size: 12px;
+      outline: none;
+    }
+    .kb-filter-del {
+      background: none;
+      border: none;
+      padding: 2px 6px;
+      cursor: pointer;
+      color: var(--text-muted);
+      font-size: 14px;
+      line-height: 1;
+      flex-shrink: 0;
+    }
+    .kb-filter-del:hover { color: var(--text-main); }
+    #filterAliasModell {
+      width: 100%;
+      padding: 8px 10px;
+      border-radius: 8px;
+      border: 1px solid var(--input-border);
+      background: var(--input-bg);
+      color: var(--input-text);
+      font-size: 12px;
+      outline: none;
+      cursor: pointer;
+    }
     /* Info Punkt: blauer Kreis, eigene Bubble ohne Delay mit Padding */
     .kb-info {
       position: relative;
@@ -480,6 +523,23 @@
         <input id="appleTemplate" type="text" value="{name} | {jahr} | {chip} | {ram}">
       </div>
       <div class="hint">Platzhalter: {name} {jahr} {chip} {ram}, Samsung später</div>
+      <label style="margin-top:8px;">Filter <span class="kb-info" data-tip="Stoppwörter blenden Tags bei Zubehör aus. Eigene Aliase erzwingen ein Modell für eine Phrase.">i</span></label>
+      <div id="filterBlockListe"></div>
+      <div class="input-wrap" style="margin-top:6px;">
+        <input id="filterBlockNeu" type="text" placeholder="Stoppwort, z. B. Tasche">
+        <button id="filterBlockAdd" class="save-btn">Hinzufügen</button>
+      </div>
+      <div id="filterAliasListe" style="margin-top:8px;"></div>
+      <div style="margin-top:6px;">
+        <div class="input-wrap">
+          <input id="filterAliasNeu" type="text" placeholder="Phrase, z. B. Retina 13">
+        </div>
+        <div class="input-wrap" style="margin-top:6px;">
+          <select id="filterAliasModell"></select>
+          <button id="filterAliasAdd" class="save-btn">Hinzufügen</button>
+        </div>
+      </div>
+      <div class="hint">Klick auf Eintrag bearbeitet, Kreuz löscht. Standard Stoppwörter gelten bis eigene Liste gespeichert.</div>
     </div>
 
     <!-- Preview-Card: Positionierung mit Sub Modulen -->

@@ -58,12 +58,22 @@ function sammleAppleDB() {
           if (kurz && kurz !== name.toLowerCase()) alias.add(kurz);
           // Größe-Alias wie "macbook pro 15" für Titel "MacBook Pro 15\" 2017"
           // nur passende Linie (pro vs air), sonst matchen Airs auf "pro"
+          // Retina als Filterwort: "retina 13" / "13 retina" für Retina-Modelle
           const inch = name.match(/(\d{2})\s*-?inch/i);
+          const retina = /retina/i.test(name);
           if (inch) {
             const niedrig = `${name} ${identifier}`.toLowerCase();
             if (niedrig.includes("pro")) alias.add(`macbook pro ${inch[1]}`.toLowerCase());
             if (niedrig.includes("air")) alias.add(`macbook air ${inch[1]}`.toLowerCase());
             if (!niedrig.includes("pro") && !niedrig.includes("air")) alias.add(`macbook ${inch[1]}`.toLowerCase());
+            if (retina) {
+              alias.add(`retina ${inch[1]}`.toLowerCase());
+              alias.add(`${inch[1]} retina`.toLowerCase());
+              if (niedrig.includes("pro")) {
+                alias.add(`macbook pro retina ${inch[1]}`.toLowerCase());
+                alias.add(`macbook pro ${inch[1]} retina`.toLowerCase());
+              }
+            }
           }
           if (identifier) alias.add(identifier.toLowerCase());
           out.push({
